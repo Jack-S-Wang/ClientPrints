@@ -35,6 +35,7 @@
             this.全部展开ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全部折叠ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pan_mainWin1_tree = new System.Windows.Forms.Panel();
+            this.printerViewFlcok = new System.Windows.Forms.TreeView();
             this.printerViewSingle = new System.Windows.Forms.TreeView();
             this.menuStrip2 = new System.Windows.Forms.MenuStrip();
             this.单台打印ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,21 +44,19 @@
             this.pan_mianWin1_image = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btn_print = new System.Windows.Forms.Button();
             this.btn_preview = new System.Windows.Forms.Button();
             this.btn_SelectImage = new System.Windows.Forms.Button();
             this.txb_pathImage = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pB_image = new System.Windows.Forms.PictureBox();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
-            this.printerViewFlcok = new System.Windows.Forms.TreeView();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.pan_mianWin1_image.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pB_image)).BeginInit();
             this.pan_mainWin1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,6 +112,15 @@
             this.pan_mainWin1_tree.Size = new System.Drawing.Size(209, 572);
             this.pan_mainWin1_tree.TabIndex = 1;
             // 
+            // printerViewFlcok
+            // 
+            this.printerViewFlcok.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.printerViewFlcok.Font = new System.Drawing.Font("微软雅黑", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.printerViewFlcok.Location = new System.Drawing.Point(0, 25);
+            this.printerViewFlcok.Name = "printerViewFlcok";
+            this.printerViewFlcok.Size = new System.Drawing.Size(209, 547);
+            this.printerViewFlcok.TabIndex = 2;
+            // 
             // printerViewSingle
             // 
             this.printerViewSingle.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -164,7 +172,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.pictureBox1);
+            this.groupBox1.Controls.Add(this.pB_image);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -175,7 +183,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btn_print);
             this.groupBox2.Controls.Add(this.btn_preview);
             this.groupBox2.Controls.Add(this.btn_SelectImage);
             this.groupBox2.Controls.Add(this.txb_pathImage);
@@ -188,20 +195,10 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "控制界面";
             // 
-            // btn_print
-            // 
-            this.btn_print.AutoSize = true;
-            this.btn_print.Location = new System.Drawing.Point(824, 38);
-            this.btn_print.Name = "btn_print";
-            this.btn_print.Size = new System.Drawing.Size(75, 23);
-            this.btn_print.TabIndex = 4;
-            this.btn_print.Text = "打印";
-            this.btn_print.UseVisualStyleBackColor = true;
-            // 
             // btn_preview
             // 
             this.btn_preview.AutoSize = true;
-            this.btn_preview.Location = new System.Drawing.Point(699, 38);
+            this.btn_preview.Location = new System.Drawing.Point(712, 38);
             this.btn_preview.Name = "btn_preview";
             this.btn_preview.Size = new System.Drawing.Size(75, 23);
             this.btn_preview.TabIndex = 3;
@@ -217,6 +214,7 @@
             this.btn_SelectImage.TabIndex = 2;
             this.btn_SelectImage.Text = "选择";
             this.btn_SelectImage.UseVisualStyleBackColor = true;
+            this.btn_SelectImage.Click += new System.EventHandler(this.btn_SelectImage_Click);
             // 
             // txb_pathImage
             // 
@@ -235,17 +233,18 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "选择图片：";
             // 
-            // pictureBox1
+            // pB_image
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.pB_image.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackColor = System.Drawing.Color.Gray;
-            this.pictureBox1.Location = new System.Drawing.Point(17, 29);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1005, 452);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pB_image.BackColor = System.Drawing.Color.Gray;
+            this.pB_image.Location = new System.Drawing.Point(17, 29);
+            this.pB_image.Name = "pB_image";
+            this.pB_image.Size = new System.Drawing.Size(1005, 452);
+            this.pB_image.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pB_image.TabIndex = 0;
+            this.pB_image.TabStop = false;
             // 
             // pan_mainWin1
             // 
@@ -256,15 +255,6 @@
             this.pan_mainWin1.Name = "pan_mainWin1";
             this.pan_mainWin1.Size = new System.Drawing.Size(1243, 572);
             this.pan_mainWin1.TabIndex = 3;
-            // 
-            // printerViewFlcok
-            // 
-            this.printerViewFlcok.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.printerViewFlcok.Font = new System.Drawing.Font("微软雅黑", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.printerViewFlcok.Location = new System.Drawing.Point(0, 25);
-            this.printerViewFlcok.Name = "printerViewFlcok";
-            this.printerViewFlcok.Size = new System.Drawing.Size(209, 547);
-            this.printerViewFlcok.TabIndex = 2;
             // 
             // ClientMianWindows
             // 
@@ -290,7 +280,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pB_image)).EndInit();
             this.pan_mainWin1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -310,8 +300,7 @@
         private System.Windows.Forms.Panel pan_mianWin1_image;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button btn_print;
+        private System.Windows.Forms.PictureBox pB_image;
         private System.Windows.Forms.Button btn_preview;
         private System.Windows.Forms.Button btn_SelectImage;
         private System.Windows.Forms.TextBox txb_pathImage;

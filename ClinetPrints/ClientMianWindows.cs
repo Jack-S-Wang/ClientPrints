@@ -81,6 +81,7 @@ namespace ClinetPrints
                     {
                         //按画布生成节点
                         createTree(nodeClientPrints);
+                        SharMethod.limap.Clear();
                     }
                     printerViewSingle.EndUpdate();
                 }));
@@ -100,8 +101,6 @@ namespace ClinetPrints
                     printerViewSingle.EndUpdate();
                 }));
             }
-            //对原来的xml文件中获取的容器进行清理
-            SharMethod.limap.Clear();
         }
 
         /// <summary>
@@ -162,6 +161,7 @@ namespace ClinetPrints
                     tnode = SharMethod.dicTree[key.Value];
                     cnode = tnode.Nodes.Add(key.Key.onlyAlias,key.Key.interfaceMessage,key.Key.ImageIndex);
                     cnode.SelectedImageIndex = key.Key.ImageIndex;
+                    cnode.ForeColor = key.Key.color;
                     SharMethod.dicPrintTree.Add(key.Key.onlyAlias, cnode);
                     new MenuPrinterGroupAddMethod(cnode, this);  
                 }
@@ -187,7 +187,7 @@ namespace ClinetPrints
             {
                 foreach (XmlNode node in xmlDoc.ChildNodes)
                 {
-                    SharMethod.limap.Add(node.Name, node.InnerText);
+                    SharMethod.liprintmap.Add(node.Name, node.InnerText);
                 }
             }
             else
@@ -368,6 +368,25 @@ namespace ClinetPrints
             printerViewSingle.Visible = false;
             printerViewFlcok.Enabled = true;
             printerViewFlcok.Visible = true;
+        }
+
+        private void btn_SelectImage_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    this.txb_pathImage.Text = ofd.FileName;
+                    SharMethod.pathImage = ofd.FileName;
+                    Image image = Image.FromFile(this.txb_pathImage.Text);
+                    this.pB_image.Image = image;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

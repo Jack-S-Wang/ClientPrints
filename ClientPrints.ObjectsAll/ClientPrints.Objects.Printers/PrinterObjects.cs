@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace ClientPrints.ObjectsAll.ClientPrints.Objects.Printers
 {
-    public class PrinterObjects
+    public class PrinterObjects:IComparable
     {
         /// <summary>
         /// 序列号
@@ -68,5 +68,20 @@ namespace ClientPrints.ObjectsAll.ClientPrints.Objects.Printers
         /// 唯一标识
         /// </summary>
         public string onlyAlias { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            int result = 0;
+
+            PrinterObjects o = (PrinterObjects)obj;
+            if (this.stateCode > o.stateCode)
+                result = 1;
+            else if (this.stateCode == o.stateCode)
+                return onlyAlias.CompareTo(o.onlyAlias);
+            else
+                result = -1;
+
+            return result;
+        }
     }
 }

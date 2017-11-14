@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
 using ClientPrints.MethodList.ClientPrints.Method.sharMethod;
+using ClientPrints.ObjectsAll.ClientPrints.Objects.Printers;
 
 namespace ClinetPrints.MenuGroupMethod
 {
@@ -37,10 +38,12 @@ namespace ClinetPrints.MenuGroupMethod
                         {
                             if (key.Key.onlyAlias == tnode.Name)
                             {
+                                Dictionary<string, string> dicxml = new Dictionary<string, string>();
                                 key.Key.interfaceMessage = key.Key.onlyAlias + "(" + na.name + ")";
                                 tnode.Text = key.Key.onlyAlias + "(" + na.name + ")";
+                                dicxml.Add(tnode.Name,tnode.Text);
                                 //修改配置文件的信息内容
-                                SharMethod.renamePrintXmlGroup(tnode.Name, na.name,1);
+                                SharMethod.renamePrintXmlGroup(dicxml,1);
                                 break;
                             }
                         }
@@ -61,19 +64,66 @@ namespace ClinetPrints.MenuGroupMethod
                 {
                     MenuItem group = new MenuItem(key.Key);
                     group.Name = key.Key;
+                    string groupname = key.Key;
                     group.Click += (o, e) =>
                     {
                         var oldtnode = tnode;
                         //清理对应的打印机节点
                         tnode.Parent.Nodes.Remove(tnode);
                         //再添加到对应的分组上去
-                        key.Value.Nodes.Add(oldtnode);
+                        SharMethod.dicTree[groupname].Nodes.Add(oldtnode);
                         //修改xml文件内容
-                        SharMethod.renamePrintXmlGroup(oldtnode.Name, key.Value.Name, 2);
+                        Dictionary<string, string> dicxml = new Dictionary<string, string>();
+                        dicxml.Add(oldtnode.Name,groupname );
+                        SharMethod.renamePrintXmlGroup(dicxml, 2);
                     };
+                    menu2.MenuItems.Add(group);
                 }
             }
+            menu3.Click += (o, e) =>
+            {
+                Dictionary<PrinterObjects, string> dicClear = new Dictionary<PrinterObjects, string>();
+                foreach (var key in SharMethod.dicPrinterAll)
+                {
+                    if (key.Key.onlyAlias == tnode.Name && key.Key.stateCode==0)
+                    {
+                        //找到对应要清楚的打印设备
+                        dicClear.Add(key.Key, key.Key.onlyAlias);
+                    }
+                }
+                if (dicClear.Count > 0)
+                {
+                    DialogResult dr = clientForm.showException("确认删除该设备，下次该设备启用时将需要重新分配位置", "提示警告", MessageBoxButtons.OKCancel);
+                    if (dr == DialogResult.OK)
+                    {
+                        List<string> lname = new List<string>();
+                        foreach (var k in dicClear)
+                        {
+                            //删除两个集合的内容
+                            SharMethod.dicPrinterAll.Remove(k.Key);
+                            SharMethod.dicPrintTree.Remove(k.Value);
+                            tnode.Parent.Nodes.Remove(tnode);
+                            //将要修改配置文件的内容全记录下来
+                            lname.Add(k.Value);
+                        }
+                        //配置文件统一删除掉
+                        SharMethod.ClearPrinterXmlGroup(lname.ToArray());
+                    }
+                }
+                else
+                {
+                    clientForm.showException("不是离线设备不能删除！");
+                }
+            };
+            menu4.Click += (o, e) =>
+            {
+                if (SharMethod.pathImage != "")
+                {
+
+                }
+            };
             tnode.ContextMenu = new ContextMenu(new MenuItem[] { menu1, menu2, menu3, menu4 });
         }
+        
     }
 }

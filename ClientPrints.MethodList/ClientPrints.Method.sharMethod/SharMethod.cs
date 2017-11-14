@@ -20,6 +20,11 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         public static SortedDictionary<string, string> limap = new SortedDictionary<string, string>();
 
         /// <summary>
+        /// 记录从配置文件中获取的子类和父类的值
+        /// </summary>
+        public static SortedDictionary<string, string> liprintmap = new SortedDictionary<string, string>();
+
+        /// <summary>
         /// 记录在xml文档中的界面显示内容
         /// </summary>
         public static SortedDictionary<string, string> liprintInterface = new SortedDictionary<string, string>();
@@ -48,6 +53,11 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// 记录打印机没有标识信息的数量
         /// </summary>
         public static int emptyCount = 0;
+
+        /// <summary>
+        /// 导入的图片的绝对路径
+        /// </summary>
+        public static string pathImage = "";
 
         /// <summary>
         /// 清理配置文件里的信息内容
@@ -83,6 +93,42 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         }
 
         /// <summary>
+        /// 重命名分组名称
+        /// </summary>
+        /// <param name="dicxml">一个以子节点的键为键，修改的名称为值的容器</param>
+        public static void renameXmlGroup(Dictionary<string,string> dicxml,string oldname)
+        {
+            if (dicxml.Count > 0)
+            {
+                string parname = "";
+                string newname = "";
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(@"./printerXml/groupMap.xml");
+                foreach (var key in dicxml)
+                {
+                    if (key.Key != oldname)
+                    {
+                        xmlDoc.GetElementsByTagName(key.Key)[0].InnerText = key.Value;//节点的子类与父类
+                    }
+                    else//说明是修改的的那个组名
+                    {
+                        //先获取原来的父类名称并删除原来的节点
+                        parname = xmlDoc.GetElementsByTagName(key.Key)[0].InnerText;
+                        newname = key.Value;
+                        var xd = xmlDoc.GetElementsByTagName("printMap")[0];
+                        xd.RemoveChild(xmlDoc.GetElementsByTagName(key.Key)[0]);
+                    }
+                }
+                xmlDoc.Save(@"./printerXml/groupMap.xml");
+                //重新添加
+                XElement xel = XElement.Load(@"./printerXml/groupMap.xml");
+                var xelnew = xel.Element("printMap");
+                XElement xt = new XElement(newname, parname);
+                xelnew.Add(xt);
+                xel.Save(@"./printerXml/groupMap.xml");
+            }
+        }
+        /// <summary>
         /// 获取所有打印机的信息
         /// </summary>
         public static void getPrinter()
@@ -98,9 +144,11 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             List<string> li = new List<string>();
             foreach (var keyva in dicPrinterUSB)
             {
-                if (limap.ContainsKey(keyva.Value.onlyAlias))
+                if (liprintmap.ContainsKey(keyva.Value.onlyAlias))
                 {
-                    dicPrinterAll.Add(keyva.Value, limap[keyva.Value.onlyAlias]);
+                    //先把对象中的界面显示改正过来
+                    keyva.Value.interfaceMessage = liprintInterface[keyva.Value.onlyAlias];
+                    dicPrinterAll.Add(keyva.Value, liprintmap[keyva.Value.onlyAlias]);
                     li.Add(keyva.Value.onlyAlias);//要对limap进行清理
                 }
                 else
@@ -111,14 +159,12 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             //清理已经添加过的信息
             foreach (var key in li)
             {
-                limap.Remove(key);
+                liprintmap.Remove(key);
                 liprintInterface.Remove(key);
-                liprintInterface.Remove(key);
-                
             }
             li.Clear();
             //如果没有其他方式获取到的打印机信息则处理最后遗留在配置文件中没有对应打印机的信息
-            foreach (var key in limap)
+            foreach (var key in liprintmap)
             {
                 var printer = new PrinterObjects()
                 {
@@ -135,7 +181,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             //最后清理所有从配置文件中获取的信息内容
             foreach (var key in li)
             {
-                limap.Remove(key);
+                liprintmap.Remove(key);
                 liprintInterface.Remove(key);
             }
             li.Clear();
@@ -274,10 +320,9 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             string Child = tnode.Name;
             string printInterface=tnode.Text;
             XElement xel = XElement.Load(@"./printerXml/printerMap.xml");
-            var elm = xel.Element(tnode.Name);
-            if (elm == null)
+            var elm = xel.Element("printMap");
+            if (elm.Element(Child) == null)
             {
-                elm = xel.Element("printMap");
                 XElement xt = new XElement(Child, father);
                 elm.Add(xt);
                 elm = xel.Element("printInterface");
@@ -285,21 +330,25 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
                 elm.Add(xt);
                 xel.Save(@"./printerXml/printerMap.xml");
             }
+            
         }
 
         /// <summary>
         /// 删除设备到xml文件中
         /// </summary>
         /// <param name="tnode">子节点</param>
-        public static void ClearPrinterXmlGroup(string liName)
+        public static void ClearPrinterXmlGroup(string[] liName)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/printerGroup.xml");
+            xmlDoc.Load(@"./printerXml/printerMap.xml");
             var xd = xmlDoc.GetElementsByTagName("printMap")[0];
-            xd.RemoveChild(xmlDoc.GetElementsByTagName(liName)[0]);
-            xd = xmlDoc.GetElementsByTagName("printInterface")[0];
-            xd.RemoveChild(xmlDoc.GetElementsByTagName(liName)[0]);
-            xmlDoc.Save(@"./printerXml/printerGroup.xml");
+            foreach (var name in liName)
+            {
+                xd.RemoveChild(xmlDoc.GetElementsByTagName(name)[0]);
+                xd = xmlDoc.GetElementsByTagName("printInterface")[0];
+                xd.RemoveChild(xmlDoc.GetElementsByTagName(name)[0]);
+            }
+            xmlDoc.Save(@"./printerXml/printerMap.xml");
         }
 
         /// <summary>
@@ -308,19 +357,22 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// <param name="name">xml节点的键值</param>
         /// <param name="innerText">修改的信息</param>
         /// <param name="type">1-重命名，2-移位</param>
-        public static void renamePrintXmlGroup(string name,string innerText,int type)
+        public static void renamePrintXmlGroup(Dictionary<string,string> dicxml,int type)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/printerGroup.xml");
-            if (type == 1)
+            xmlDoc.Load(@"./printerXml/printerMap.xml");
+            foreach (var key in dicxml)
             {
-                xmlDoc.GetElementsByTagName(name)[1].InnerText = innerText;//节点的子类与见面显示内容
+                if (type == 1)
+                {
+                    xmlDoc.GetElementsByTagName(key.Key)[1].InnerText = key.Value;//节点的子类与见面显示内容
+                }
+                else
+                {
+                    xmlDoc.GetElementsByTagName(key.Key)[0].InnerText = key.Value;//节点的子类与父类
+                }
             }
-            else
-            {
-                xmlDoc.GetElementsByTagName(name)[0].InnerText = innerText;//节点的子类与父类
-            }
-            xmlDoc.Save(@"./printerXml/printerGroup.xml");
+            xmlDoc.Save(@"./printerXml/printerMap.xml");
         }
 
         /// <summary>
