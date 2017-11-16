@@ -242,7 +242,6 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
                 dmYResolution=0,
                 dmTag=0x01
             };
-
             var dsp = new structBmpClass.DS_PARAMETER()
             {
                 devp = devProt,
@@ -254,18 +253,16 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             {
                 IntPtr bites = DevBmpDllMethod.GetBits();
                 int len = DevBmpDllMethod.GetLength();
-                
-                    uint outLen = 0;
-                if(WDevDllMethod.dllFunc_WriteEx(pHandle,bites,(uint)len,(uint)2,IntPtr.Zero))
-                    //if (WDevDllMethod.dllFunc_Write(pHandle, bites, (uint)len, out outLen, IntPtr.Zero))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-               
+                //uint outLen = 0;
+                //if (WDevDllMethod.dllFunc_Write(pHandle, bites, (uint)len, out outLen, IntPtr.Zero))
+                if (WDevDllMethod.dllFunc_WriteEx(pHandle, bites, (uint)len, (uint)2, IntPtr.Zero))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
