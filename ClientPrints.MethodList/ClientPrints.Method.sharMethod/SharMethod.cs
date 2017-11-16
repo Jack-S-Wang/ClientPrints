@@ -9,6 +9,7 @@ using ClientPrints.ObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll;
 using System.Threading;
 using System.Drawing;
+using ClientPrints.MethodList.ClientPrints.Method.Interfaces;
 
 namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
 {
@@ -192,9 +193,9 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// </summary>
         private static void getUSBPrinter()
         {
-            var usbMethod = new PrinterUSBMethod();
+            IPrinterMethod usbMethod=new PrinterUSBMethod();
             string[] path = usbMethod.EnumPath();
-            int phandle=-1;
+            IntPtr phandle=new IntPtr(-1);
             foreach (string pathAddress in path)
             {
                 phandle = usbMethod.openPrinter(pathAddress);
@@ -209,7 +210,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// <param name="usbMethod">调用的对象方法</param>
         /// <param name="pathAddress">枚举的地址信息</param>
         /// <param name="pHandle">句柄值</param>
-        private static void printerMessage(PrinterUSBMethod usbMethod,string pathAddress, int pHandle)
+        private static void printerMessage(IPrinterMethod usbMethod,string pathAddress, IntPtr pHandle)
         {
             string onlyAlias="";
             int imageIndex = 0;
@@ -379,7 +380,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// 获取设备的状态信息
         /// </summary>
         /// <returns>Dictionary<int ,string>键值对，获取状态的优先级排位和信息内容</returns>
-        private static Dictionary<int, string> getOtherState(PrinterUSBMethod usbMethod,int pHandle)
+        private static Dictionary<int, string> getOtherState(IPrinterMethod usbMethod,IntPtr pHandle)
         {
             Dictionary<int, string> dicr = new Dictionary<int, string>();
             string strReady = "";

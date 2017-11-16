@@ -23,7 +23,7 @@ namespace ClientPrints.ObjectsAll.ClientPrints.Objects.Printers
         /// <summary>
         /// 句柄值
         /// </summary>
-        public int pHandle { get; set; }
+        public IntPtr pHandle { get; set; }
         /// <summary>
         /// 图片的序号
         /// </summary>

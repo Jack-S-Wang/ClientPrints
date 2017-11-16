@@ -32,7 +32,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <remarks>最多可以同时打开10个设备端口，一个有效的句柄代表一个设备端口。
         /// 可以设置PORTINFO中portMode为控制端口PORTINFO_PMODE_CTRL、数据端口PORTINFO_PMODE_DATA或两者同时有效的方式打开设备。</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int dllFunc_OpenDev(ref structClassDll.LPPORTINFO lpInfo);
+        public static extern IntPtr dllFunc_OpenDev(ref structClassDll.LPPORTINFO lpInfo);
 
         /// <summary>
         /// 打开设备控制数据
@@ -45,7 +45,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>必须打开设备的控制端口。当ctrlCodeStr为“CTRL_DEVCMD_ST”，inDtas[0]的应为设备命令码。</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_DevIoCtrl(int pHandle, string ctrlCodeStr, ref byte[] inDats, uint inLen, [In,Out] ref structClassDll.DEVACK_INFO outDats);
+        public static extern bool dllFunc_DevIoCtrl(IntPtr pHandle, string ctrlCodeStr, ref byte[] inDats, uint inLen, [In,Out] ref structClassDll.DEVACK_INFO outDats);
 
         /// <summary>
         /// 写数据到设备的数据端口
@@ -58,8 +58,10 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>必须打开设备的数据端口</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_Write(int pHandle, ref byte[] inDats, uint inLen, [Out] uint outLen, ref structClassDll.OVERLAPPED lpOvlpd);
+        public static extern bool dllFunc_Write(IntPtr pHandle, IntPtr inDats, uint inLen, out uint outLen, IntPtr overlapped);
 
+          [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
+        public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [Out] IntPtr lpOut);
         /// <summary>
         /// 读数据到设备的数据端口
         /// </summary>
@@ -71,7 +73,9 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>v</returns>
         /// <remarks>必须打开设备的数据端口</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_Read(int pHandle, byte[] inDats, uint inLen, [Out] uint outLen, ref structClassDll.OVERLAPPED lpOvlpd);
+        public static extern bool dllFunc_Read(IntPtr pHandle, byte[] inDats, uint inLen, [Out] uint outLen, ref structClassDll.OVERLAPPED lpOvlpd);
+
+      
 
         /// <summary>
         /// 关闭设备端口
@@ -80,7 +84,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE；</returns>
         /// <remarks>设备的数据/控制端口都将关闭，并释放设备句柄，如果有设备打开将重新被使用</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_CloseDev(int pHandle);
+        public static extern bool dllFunc_CloseDev(IntPtr pHandle);
 
         /// <summary>
         /// 获取端口的系统设备句柄
@@ -90,7 +94,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>INVALID_HANDLE_VALUE表示FALSE</returns>
         /// <remarks></remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern int dllFunc_GetDevHandle(int pHandle, ushort pType);
+        public static extern int dllFunc_GetDevHandle(IntPtr pHandle, ushort pType);
 
         /// <summary>
         /// 启用设备日志
@@ -116,7 +120,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// </summary>
         /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern void dllFunc_CloseLog(int pHandle);
+        public static extern void dllFunc_CloseLog(IntPtr pHandle);
 
         /// <summary>
         /// 获取日志中的字符信息
@@ -136,7 +140,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>必须打开设备的控制端口</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_OpenDfu(int pHandle, string filePath, IntPtr hWnd);
+        public static extern bool dllFunc_OpenDfu(IntPtr pHandle, string filePath, IntPtr hWnd);
 
         /// <summary>
         /// 关闭固件更新
@@ -144,7 +148,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_CloseDfu(int pHandle);
+        public static extern bool dllFunc_CloseDfu(IntPtr pHandle);
 
         /// <summary>
         /// 获取固件信息
@@ -154,7 +158,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <param name="getMode">TRUE表示从固件中获取，FALSE表示设置</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_fwInfo(int pHandle, [In, Out] ref structClassDll.DFU_FWINFO fwInfo, bool getMode);
+        public static extern bool dllFunc_fwInfo(IntPtr pHandle, [In, Out] ref structClassDll.DFU_FWINFO fwInfo, bool getMode);
 
         /// <summary>
         /// 开始固件更新
@@ -166,7 +170,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>tags可按或(or)设置，包括 DFU_TAG_RESTART 表示更新后需启动设备</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_DFUStart(int pHandle, uint tags, [In, Out] ref structClassDll.DFU_FWINFO fwInfo, bool getMode);
+        public static extern bool dllFunc_DFUStart(IntPtr pHandle, uint tags, [In, Out] ref structClassDll.DFU_FWINFO fwInfo, bool getMode);
 
         /// <summary>
         /// 加载设备配置的格式信息
@@ -176,7 +180,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>格式信息以XML的格式表述，如果设备pHandle有效，则从设备中加载，此时设备应处于连接状态。否则从xmlPath中加载</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_LoadDevCfg(int pHandle, string xmlPath);
+        public static extern bool dllFunc_LoadDevCfg(IntPtr pHandle, string xmlPath);
 
         /// <summary>
         /// 获取设备配置数据
@@ -192,7 +196,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// lpParam为指向字符串(LPCTSTR)的配置项名。
         /// 返回FALSE时，如果cnts也为0表示超出配置项的范围获取失败，cnts不为0表示需要缓冲的长度。</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_GetDevCfgInfo(int pHandle,object lpParam,out string buf,[In,Out] ref ushort cnts, ushort tag,ushort noLoad);
+        public static extern bool dllFunc_GetDevCfgInfo(IntPtr pHandle,object lpParam,out string buf,[In,Out] ref ushort cnts, ushort tag,ushort noLoad);
 
         /// <summary>
         /// 设置设备配置数据
@@ -204,7 +208,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <param name="saveToDev">将配置数据发送到设备</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_SetDevCfgInfo(int pHandle, string name, string val, ushort cnts, ushort saveToDev);
+        public static extern bool dllFunc_SetDevCfgInfo(IntPtr pHandle, string name, string val, ushort cnts, ushort saveToDev);
 
         /// <summary>
         /// 将用户数据解析成设备请求数据,或设备数据解析成用户数据

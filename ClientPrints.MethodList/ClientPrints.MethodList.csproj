@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientPrints.Method.DevBmpDll\DevBmpDllMethod.cs" />
+    <Compile Include="ClientPrints.Method.DevBmpDll\structBmpClass.cs" />
+    <Compile Include="ClientPrints.Method.Interfaces\IPrinterMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\PrinterUSBMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\SharMethod.cs" />
     <Compile Include="ClientPrints.Method.WDevDll\structClassDll.cs" />
@@ -56,6 +59,7 @@
       <Name>ClientPrints.ObjectsAll</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

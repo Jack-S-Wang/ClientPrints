@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
 using ClientPrints.MethodList.ClientPrints.Method.sharMethod;
 using ClientPrints.ObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrints.MethodList.ClientPrints.Method.Interfaces;
 
 namespace ClinetPrints.MenuGroupMethod
 {
@@ -119,7 +120,18 @@ namespace ClinetPrints.MenuGroupMethod
             {
                 if (SharMethod.pathImage != "")
                 {
-
+                    foreach (var key in SharMethod.dicPrinterAll)
+                    {
+                        if (key.Key.onlyAlias == tnode.Name)
+                        {
+                            var method = key.Key.Methods as IPrinterMethod;
+                            method.writeDataToDev(SharMethod.pathImage, key.Key.pHandle);
+                        }
+                    }
+                }
+                else
+                {
+                    clientForm.showException("请先选择图片再打印！");
                 }
             };
             tnode.ContextMenu = new ContextMenu(new MenuItem[] { menu1, menu2, menu3, menu4 });

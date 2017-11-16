@@ -7,10 +7,12 @@ using ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll;
 using System.Threading;
 using System.Runtime.InteropServices;
 using ClientPrints.ObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrints.MethodList.ClientPrints.Method.Interfaces;
+using ClientPrints.MethodList.ClientPrints.Method.DevBmpDll;
 
 namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
 {
-    public class PrinterUSBMethod
+    public class PrinterUSBMethod:IPrinterMethod
     {
         /// <summary>
         /// 枚举出地址信息
@@ -53,9 +55,9 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public int openPrinter(string path)
+        public IntPtr openPrinter(string path)
         {
-            int pHandle = -1;
+            IntPtr pHandle = new IntPtr(-1);
              structClassDll.LPPORTINFO lpInfo = new structClassDll.LPPORTINFO()
             {
                 path = path,
@@ -76,7 +78,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
                  Thread.Sleep(200);
                  pHandle = WDevDllMethod.dllFunc_OpenDev(ref lpInfo);
              }
-             while (pHandle == -1);
+             while (pHandle == new IntPtr(-1));
              return pHandle;
         }
 
@@ -86,10 +88,11 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// <summary>
         /// 获取对应指令的信息内容
         /// </summary>
-        /// <param name="code">命令字符串</param>
+        /// <param name="ctrlCodeStr">命令字符串</param>
         /// <param name="pHandle">句柄值</param>
+        /// <param name="data">指令数据</param>
         /// <returns></returns>
-        public  string reInformation(string ctrlCodeStr, int pHandle,byte[] data)
+        public  string reInformation(string ctrlCodeStr, IntPtr pHandle,byte[] data)
         {
             string LogText = "";
             structClassDll.DEVACK_INFO outDats = new structClassDll.DEVACK_INFO()
@@ -221,5 +224,54 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             return strCode;
         }
 
+        /// <summary>
+        /// 对指定图片进行打印
+        /// </summary>
+        /// <param name="pathFile">图片路径</param>
+        /// <param name="pHandle">句柄值</param>
+        public bool writeDataToDev(string pathFile,IntPtr pHandle)
+        {
+            if (pathFile == "")
+                return false;
+            var devProt = new structBmpClass.DeviceProterty()
+            {
+                dmThicken=1,//01指2位数，就是2色的意思
+                nWidth=1016,
+                nHeight=648,
+                dmPrintQuality=0,
+                dmYResolution=0,
+                dmTag=0x01
+            };
+
+            var dsp = new structBmpClass.DS_PARAMETER()
+            {
+                devp = devProt,
+                RGBPalete = IntPtr.Zero,
+                RGBParameter = IntPtr.Zero
+            };
+            DevBmpDllMethod.setDeviceProterty(ref devProt);
+            if (DevBmpDllMethod.LoadBitmapFilePara(pathFile, ref dsp))
+            {
+                IntPtr bites = DevBmpDllMethod.GetBits();
+                int len = DevBmpDllMethod.GetLength();
+                
+                    uint outLen = 0;
+                if(WDevDllMethod.dllFunc_WriteEx(pHandle,bites,(uint)len,(uint)2,IntPtr.Zero))
+                    //if (WDevDllMethod.dllFunc_Write(pHandle, bites, (uint)len, out outLen, IntPtr.Zero))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+               
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
     }
 }
