@@ -49,6 +49,8 @@ namespace ClinetPrints
                 AddMunConten();
                 //添加分组的排布
                 AddGroupMap();
+                //添加群打印机分组排布
+               AddFlockGroupMap();
                 //添加打印机信息
                 AddPrinterMap();
                 
@@ -60,7 +62,31 @@ namespace ClinetPrints
         }
 
         #region.........//进入页面加载时所使用的方法内容
-        
+
+        /// <summary>
+        /// 添加群打印组
+        /// </summary>
+        private void AddFlockGroupMap()
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(@"./printerXml/groupFlockMap.xml");
+            XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
+            TreeNode flockNode = new TreeNode();
+            flockNode = this.printerViewFlcok.Nodes.Add("打印机群", "打印机群", 0);
+            SharMethod.dicFlockTree.Add("打印机群", flockNode);
+            new MenuFlockGroupMethod(flockNode, this);
+            if (xnode.ChildNodes.Count > 0)
+            {
+                TreeNode cnode = new TreeNode();
+                foreach (XmlNode xmlNode in xnode.ChildNodes)
+                {
+                    cnode = flockNode.Nodes.Add(xmlNode.Name, xmlNode.Name, 0);
+                    SharMethod.dicFlockTree.Add(xmlNode.Name, cnode);
+                    new MenuFlockGroupMethod(cnode, this);
+                }
+            }
+        }
+
         /// <summary>
         /// 添加分组的排布
         /// </summary>
@@ -235,6 +261,7 @@ namespace ClinetPrints
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413424.ico"));//在线报错
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413428.ico"));//离线
             printerViewSingle.ImageList = imageList1;
+            printerViewFlcok.ImageList = imageList1;
         }
 
         #endregion

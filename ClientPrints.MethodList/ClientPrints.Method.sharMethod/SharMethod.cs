@@ -36,6 +36,16 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         public static SortedDictionary<string, TreeNode> dicTree = new SortedDictionary<string, TreeNode>();
 
         /// <summary>
+        /// 记录树形分组群的键和节点
+        /// </summary>
+        public static SortedDictionary<string, TreeNode> dicFlockTree = new SortedDictionary<string, TreeNode>();
+
+        /// <summary>
+        /// 记录群打印机的树形节点信息
+        /// </summary>
+        public static SortedDictionary<string, TreeNode> dicFlockPrintTree = new SortedDictionary<string, TreeNode>();
+
+        /// <summary>
         /// 记录树形打印机的键值和节点
         /// </summary>
         public static SortedDictionary<string, TreeNode> dicPrintTree = new SortedDictionary<string, TreeNode>();
@@ -64,17 +74,25 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// 清理配置文件里的信息内容
         /// </summary>
         /// <param name="liName">要处理的数据集合</param>
-        public static void ClearXmlData(List<string> liName)
+        /// <param name="type">1-单，2-群</param>
+        public static void ClearXmlData(List<string> liName,int type)
         {
-
+            string file = "";
+            if (type == 1)
+            {
+                file = @"./printerXml/groupMap.xml";
+            }else
+            {
+                file = @"./printerXml/groupFlockMap.xml";
+            }
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/groupMap.xml");
+            xmlDoc.Load(file);
             var xd = xmlDoc.GetElementsByTagName("printMap")[0];
             foreach (string name in liName)
             {
                 xd.RemoveChild(xmlDoc.GetElementsByTagName(name)[0]);
             }
-            xmlDoc.Save(@"./printerXml/groupMap.xml");
+            xmlDoc.Save(file);
             
         }
 
@@ -82,52 +100,70 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// 添加新增的分组信息到配置文件
         /// </summary>
         /// <param name="tnode">树形节点</param>
-        public static void setXmlGroup(TreeNode tnode)
+        /// <param name="type">1-单，2-群</param>
+        public static void setXmlGroup(TreeNode tnode,int type)
         {
             string father = tnode.Parent.Name;
             string Child = tnode.Name;
-            XElement xel = XElement.Load(@"./printerXml/groupMap.xml");
+            string file = "";
+            if (type == 1)
+            {
+                file = @"./printerXml/groupMap.xml";
+            }
+            else
+            {
+                file = @"./printerXml/groupFlockMap.xml";
+            }
+            XElement xel = XElement.Load(file);
             var xelnew = xel.Element("printMap");
             XElement xt = new XElement(Child, father);
             xelnew.Add(xt);
-            xel.Save(@"./printerXml/groupMap.xml");
+            xel.Save(file);
         }
 
         /// <summary>
         /// 重命名分组名称
         /// </summary>
         /// <param name="dicxml">一个以子节点的键为键，修改的名称为值的容器</param>
-        public static void renameXmlGroup(Dictionary<string,string> dicxml,string oldname)
+        /// <param name="oldname">要命名的原组名称</param>
+        /// <param name="type">1-单，2-群</param>
+        public static void renameXmlGroup(Dictionary<string,string> dicxml,string oldname,int type)
         {
-            if (dicxml.Count > 0)
+            string parname = "";
+            string newname = "";
+            string file = "";
+            if (type == 1)
             {
-                string parname = "";
-                string newname = "";
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(@"./printerXml/groupMap.xml");
-                foreach (var key in dicxml)
-                {
-                    if (key.Key != oldname)
-                    {
-                        xmlDoc.GetElementsByTagName(key.Key)[0].InnerText = key.Value;//节点的子类与父类
-                    }
-                    else//说明是修改的的那个组名
-                    {
-                        //先获取原来的父类名称并删除原来的节点
-                        parname = xmlDoc.GetElementsByTagName(key.Key)[0].InnerText;
-                        newname = key.Value;
-                        var xd = xmlDoc.GetElementsByTagName("printMap")[0];
-                        xd.RemoveChild(xmlDoc.GetElementsByTagName(key.Key)[0]);
-                    }
-                }
-                xmlDoc.Save(@"./printerXml/groupMap.xml");
-                //重新添加
-                XElement xel = XElement.Load(@"./printerXml/groupMap.xml");
-                var xelnew = xel.Element("printMap");
-                XElement xt = new XElement(newname, parname);
-                xelnew.Add(xt);
-                xel.Save(@"./printerXml/groupMap.xml");
+                file = @"./printerXml/groupMap.xml";
             }
+            else
+            {
+                file = @"./printerXml/groupFlockMap.xml";
+            }
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(file);
+            foreach (var key in dicxml)
+            {
+                if (key.Key != oldname)
+                {
+                    xmlDoc.GetElementsByTagName(key.Key)[0].InnerText = key.Value;//节点的子类与父类
+                }
+                else//说明是修改的的那个组名
+                {
+                    //先获取原来的父类名称并删除原来的节点
+                    parname = xmlDoc.GetElementsByTagName(key.Key)[0].InnerText;
+                    newname = key.Value;
+                    var xd = xmlDoc.GetElementsByTagName("printMap")[0];
+                    xd.RemoveChild(xmlDoc.GetElementsByTagName(key.Key)[0]);
+                }
+            }
+            xmlDoc.Save(file);
+            //重新添加
+            XElement xel = XElement.Load(file);
+            var xelnew = xel.Element("printMap");
+            XElement xt = new XElement(newname, parname);
+            xelnew.Add(xt);
+            xel.Save(file);
         }
         /// <summary>
         /// 获取所有打印机的信息
@@ -315,21 +351,33 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// 添加设备到xml文档中
         /// </summary>
         /// <param name="tnode">子节点</param>
-        public static void addPeinterXmlGroup(TreeNode tnode)
+        /// <param name="type">1-单，2-群</param>
+        public static void addPeinterXmlGroup(TreeNode tnode,int type)
         {
+            string file = "";
+            if (type == 1)
+            {
+                file = @"./printerXml/printerMap.xml";
+            }else
+            {
+                file = @"./printerXml/printerFlockMap.xml";
+            }
             string father = tnode.Parent.Name;
             string Child = tnode.Name;
             string printInterface=tnode.Text;
-            XElement xel = XElement.Load(@"./printerXml/printerMap.xml");
+            XElement xel = XElement.Load(file);
             var elm = xel.Element("printMap");
             if (elm.Element(Child) == null)
             {
                 XElement xt = new XElement(Child, father);
                 elm.Add(xt);
-                elm = xel.Element("printInterface");
-                xt = new XElement(Child, printInterface);
-                elm.Add(xt);
-                xel.Save(@"./printerXml/printerMap.xml");
+                if (type == 1)
+                {
+                    elm = xel.Element("printInterface");
+                    xt = new XElement(Child, printInterface);
+                    elm.Add(xt);
+                }
+                xel.Save(file);
             }
             
         }
@@ -338,10 +386,20 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
         /// 删除设备到xml文件中
         /// </summary>
         /// <param name="tnode">子节点</param>
-        public static void ClearPrinterXmlGroup(string[] liName)
+        /// <param name="type">1-单，2-群</param>
+        public static void ClearPrinterXmlGroup(string[] liName,int type)
         {
+            string file = "";
+            if (type == 1)
+            {
+                file = @"./printerXml/printerMap.xml";
+            }
+            else
+            {
+                file = @"./printerXml/printerFlockMap.xml";
+            }
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/printerMap.xml");
+            xmlDoc.Load(file);
             var xd = xmlDoc.GetElementsByTagName("printMap")[0];
             foreach (var name in liName)
             {
@@ -349,19 +407,28 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
                 xd = xmlDoc.GetElementsByTagName("printInterface")[0];
                 xd.RemoveChild(xmlDoc.GetElementsByTagName(name)[0]);
             }
-            xmlDoc.Save(@"./printerXml/printerMap.xml");
+            xmlDoc.Save(file);
         }
 
         /// <summary>
         /// 重命名打印机的界面显示内容或移位到不同分组
         /// </summary>
-        /// <param name="name">xml节点的键值</param>
-        /// <param name="innerText">修改的信息</param>
         /// <param name="type">1-重命名，2-移位</param>
-        public static void renamePrintXmlGroup(Dictionary<string,string> dicxml,int type)
+        /// <param name="dicxml">要处理的对象容器</param>
+        /// <param name="singleOrFlock">1-单，2-群</param>
+        public static void renamePrintXmlGroup(Dictionary<string, string> dicxml, int type, int singleOrFlock)
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/printerMap.xml");
+            string file = "";
+            if (singleOrFlock == 1)
+            {
+                file = @"./printerXml/printerMap.xml";
+            }
+            else
+            {
+                file = @"./printerXml/printerFlockMap.xml";
+            }
+                xmlDoc.Load(file);
             foreach (var key in dicxml)
             {
                 if (type == 1)
@@ -373,7 +440,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
                     xmlDoc.GetElementsByTagName(key.Key)[0].InnerText = key.Value;//节点的子类与父类
                 }
             }
-            xmlDoc.Save(@"./printerXml/printerMap.xml");
+            xmlDoc.Save(file);
         }
 
         /// <summary>

@@ -57,6 +57,7 @@
     <Compile Include="ClientMianWindows.Designer.cs">
       <DependentUpon>ClientMianWindows.cs</DependentUpon>
     </Compile>
+    <Compile Include="MenuGroupMethod\MenuFlockGroupMethod.cs" />
     <Compile Include="MenuGroupMethod\MenuGroupAddMethod.cs" />
     <Compile Include="MenuGroupMethod\MenuPrinterGroupAddMethod.cs" />
     <Compile Include="Program.cs" />
@@ -112,13 +113,15 @@
     <Content Include="IocOrImage\ooopic_1502413436.ico" />
     <Content Include="IocOrImage\ooopic_1502413453.ico" />
     <Content Include="IocOrImage\ooopic_1502413456.ico" />
+    <Content Include="printerXml\groupFlockMap.xml" />
     <Content Include="printerXml\groupMap.xml" />
+    <Content Include="printerXml\printerFlockMap.xml" />
     <Content Include="printerXml\printerMap.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"
-xcopy /S /I /Y "$(ProjectDir)printerXml" "$(ProjectDir)$(OutDir)printerXml"</PreBuildEvent>
+    <PreBuildEvent>if not exist "$(ProjectDir)IocOrImage" xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"
+if not exist "$(ProjectDir)printerXml" xcopy /S /I /Y "$(ProjectDir)printerXml" "$(ProjectDir)$(OutDir)printerXml"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

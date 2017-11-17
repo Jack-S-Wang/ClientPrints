@@ -38,7 +38,7 @@ namespace ClinetPrints.MenuGroupMethod
                                 new MenuPrinterGroupAddMethod(key.Value, clientForm);
                             }
                             //将处理过的数据获取到并发送给服务器保存
-                            SharMethod.setXmlGroup(nodeChild);
+                            SharMethod.setXmlGroup(nodeChild,1);
                         }
                         else
                         {
@@ -72,7 +72,7 @@ namespace ClinetPrints.MenuGroupMethod
                             forTreeNodeName(node);
                             liName.Add(node.Name);
                             //对配置文件中的相关数据进行清理
-                            SharMethod.ClearXmlData(liName);
+                            SharMethod.ClearXmlData(liName,1);
                             foreach (string name in liName)
                             {
                                 SharMethod.dicTree.Remove(name);
@@ -84,7 +84,7 @@ namespace ClinetPrints.MenuGroupMethod
                             {
                                 dicxml.Add(nd.Name, nd.Text);
                             }
-                            SharMethod.renamePrintXmlGroup(dicxml, 2);
+                            SharMethod.renamePrintXmlGroup(dicxml, 2,1);
                             foreach (var key in SharMethod.dicPrintTree)
                             {
                                 new MenuPrinterGroupAddMethod(key.Value, clientForm);
@@ -95,7 +95,7 @@ namespace ClinetPrints.MenuGroupMethod
                     {
                         liName.Add(node.Name);
                         //对配置文件中的相关数据进行清理
-                        SharMethod.ClearXmlData(liName);
+                        SharMethod.ClearXmlData(liName,1);
                         foreach (string name in liName)
                         {
                             SharMethod.dicTree.Remove(name);
@@ -109,7 +109,6 @@ namespace ClinetPrints.MenuGroupMethod
                 };
                 menuItemGroup3.Click += (o, e) =>
                 {
-
                     groupName na = new groupName();
                     na.Owner = ClientMianWindows.ActiveForm;
                     na.StartPosition = FormStartPosition.CenterParent;
@@ -119,7 +118,7 @@ namespace ClinetPrints.MenuGroupMethod
                     {
                         if (!SharMethod.dicTree.ContainsKey(na.name))
                         {
-                           string oldname=node.Name;
+                            string oldname = node.Name;
                             SharMethod.dicTree.Remove(node.Name);
                             node.Name = na.name;
                             node.Text = na.name;
@@ -141,10 +140,10 @@ namespace ClinetPrints.MenuGroupMethod
                                     }
                                 }
                                 dicGroupxml.Add(oldname, na.name);
-                                SharMethod.renameXmlGroup(dicGroupxml, oldname);
-                                SharMethod.renamePrintXmlGroup(dicPrintxml, 2);
+                                SharMethod.renameXmlGroup(dicGroupxml, oldname,1);
+                                SharMethod.renamePrintXmlGroup(dicPrintxml, 2,1);
                             }
-                          
+
 
                         }
                         else
@@ -152,7 +151,7 @@ namespace ClinetPrints.MenuGroupMethod
                             clientForm.showException("已经定义过改名称！");
                         }
 
-                       
+
                     }
                     else
                     {
