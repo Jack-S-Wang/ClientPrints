@@ -253,9 +253,14 @@ namespace ClientPrints.MethodList.ClientPrints.Method.sharMethod
             {
                 IntPtr bites = DevBmpDllMethod.GetBits();
                 int len = DevBmpDllMethod.GetLength();
+                //IntPtr outBites = IntPtr.Zero;
+                //int outSize = len+1;
+                //int output = 0;
+                //outBites = Marshal.AllocCoTaskMem(len+1);
+                //output = DevBmpDllMethod.DS_Compress(7, bites, len,  outBites, out outSize);
                 //uint outLen = 0;
-                //if (WDevDllMethod.dllFunc_Write(pHandle, bites, (uint)len, out outLen, IntPtr.Zero))
-                if (WDevDllMethod.dllFunc_WriteEx(pHandle, bites, (uint)len, (uint)2, IntPtr.Zero))
+                //if (WDevDllMethod.dllFunc_Write(pHandle, outBites, (uint)output, out outLen, IntPtr.Zero))
+                if (WDevDllMethod.dllFunc_WriteEx(pHandle, bites, (uint)len, (uint)1, IntPtr.Zero))
                 {
                     return true;
                 }

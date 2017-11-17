@@ -35,7 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ooopic_1502413445.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -92,9 +93,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ooopic_1502413445.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ClientPrints.MethodList\ClientPrints.MethodList.csproj">
       <Project>{8EE0204A-59E4-4515-8EE9-D0484D9CF066}</Project>
       <Name>ClientPrints.MethodList</Name>
@@ -104,7 +102,24 @@
       <Name>ClientPrints.ObjectsAll</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="IocOrImage\ooopic_1502413293.ico" />
+    <Content Include="IocOrImage\ooopic_1502413400.ico" />
+    <Content Include="IocOrImage\ooopic_1502413404.ico" />
+    <Content Include="IocOrImage\ooopic_1502413424.ico" />
+    <Content Include="IocOrImage\ooopic_1502413428.ico" />
+    <Content Include="IocOrImage\ooopic_1502413432.ico" />
+    <Content Include="IocOrImage\ooopic_1502413436.ico" />
+    <Content Include="IocOrImage\ooopic_1502413453.ico" />
+    <Content Include="IocOrImage\ooopic_1502413456.ico" />
+    <Content Include="printerXml\groupMap.xml" />
+    <Content Include="printerXml\printerMap.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"
+xcopy /S /I /Y "$(ProjectDir)printerXml" "$(ProjectDir)$(OutDir)printerXml"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

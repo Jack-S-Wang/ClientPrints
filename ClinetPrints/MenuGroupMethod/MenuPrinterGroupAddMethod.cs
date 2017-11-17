@@ -126,6 +126,7 @@ namespace ClinetPrints.MenuGroupMethod
                         {
                             var method = key.Key.Methods as IPrinterMethod;
                             method.writeDataToDev(SharMethod.pathImage, key.Key.pHandle);
+                            break;
                         }
                     }
                 }

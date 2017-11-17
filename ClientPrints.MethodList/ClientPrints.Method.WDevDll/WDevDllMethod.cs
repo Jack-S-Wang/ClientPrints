@@ -54,13 +54,22 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <param name="inDats">需要写到设备的数据</param>
         /// <param name="inLen">数据长度，字节单位</param>
         /// <param name="outLen">实际写到设备的数据长度</param>
-        /// <param name="lpOvlpd">windows的结构体，吴工已经编写好了，直接new对象就行了</param>
+        /// <param name="lpOvlpd">同步则直接IntPtr.Zero,异步则调用结构体，并获取当前地址所对应的值</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>必须打开设备的数据端口</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
         public static extern bool dllFunc_Write(IntPtr pHandle, IntPtr inDats, uint inLen, out uint outLen, IntPtr overlapped);
 
-          [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
+        /// <summary>
+        /// 写数据到设备的数据端口，已压缩过的数据
+        /// </summary>
+        /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
+        /// <param name="inDats">需要写到设备的数据</param>
+        /// <param name="inLen">数据长度，字节单位</param>
+        /// <param name="modeTag">1-完整性数据发送，2-位图数据分批发送</param>
+        /// <param name="lpOut">输出的指针信息</param>
+        /// <returns></returns>
+        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
         public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [Out] IntPtr lpOut);
         /// <summary>
         /// 读数据到设备的数据端口

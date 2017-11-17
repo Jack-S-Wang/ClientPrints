@@ -37,5 +37,18 @@ namespace ClientPrints.MethodList.ClientPrints.Method.DevBmpDll
         /// <returns></returns>
         [DllImport("ds_dev_bmp.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         public static extern Int32 GetLength();
+
+        /// <summary>
+        /// 压缩处理
+        /// </summary>
+        /// <param name="SupportedCompressMth">支持的压缩方式bit0: 
+        /// 1 支持RLE，0：不支持bit1: 1 支持LZW，0：不支持  bit2: 1 支持Huffman，0：不支持,全支持选7</param>
+        /// <param name="indata">输入的数据</param>
+        /// <param name="inSize">输入的长度</param>
+        /// <param name="Outdata">输出的数据</param>
+        /// <param name="Outsize">输入时请指定输出空间大小，</param>
+        /// <returns></returns>
+        [DllImport("ds_dev_data.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
+        public static extern Int32 DS_Compress(byte SupportedCompressMth, IntPtr indata, int inSize, [Out] IntPtr Outdata,out int Outsize);
     }
 }

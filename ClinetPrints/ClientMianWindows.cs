@@ -51,6 +51,7 @@ namespace ClinetPrints
                 AddGroupMap();
                 //添加打印机信息
                 AddPrinterMap();
+                
             }
             catch (Exception ex)
             {
