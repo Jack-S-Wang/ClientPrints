@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll
+namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
 {
     public class WDevCmdObjects
     {
@@ -39,7 +39,7 @@ namespace ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll
         /// </summary>
         public const string DEV_GET_USERDAT = "CTRL_CMDGET_USERDAT";   //
         /// <summary>
-        /// 设置自定义标识 08 现在不能实现
+        /// 设置自定义标识 08 
         /// </summary>
         public const string DEV_SET_USERDAT = "CTRL_CMDSET_USERDAT";  //
         /// <summary>
@@ -71,7 +71,7 @@ namespace ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll
         /// </summary>
         public const string DEV_GET_STATISINFO = "CTRL_CMDGET_STATISINFO";	//
         /// <summary>
-        /// 获取设备维修信息 10  现在不能实现
+        /// 获取设备维修信息 10  
         /// </summary>
         public const string DEV_GET_MAINTAININFO = "CTRL_CMDGET_MAINTAININFO";  //     
         /// <summary>
@@ -99,7 +99,7 @@ namespace ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll
         /// </summary>
         public const string DEV_GET_CFGINFOS = "CTRL_CMDGET_CFGINFOS";  // 
         /// <summary>
-        /// 设备配置 18 现在不能实现
+        /// 设备配置 18 
         /// </summary>
         public const string DEV_SET_CFGINFOS = "CTRL_CMDSET_CFGINFOS";	//
         /// <summary>
@@ -107,15 +107,15 @@ namespace ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll
         /// </summary>
         public const string DEV_GET_CFGFMT = "CTRL_CMDGET_CFGFMT";	//
         /// <summary>
-        /// 设置设备系统参数 1B 现在不能实现，指令是1B却写成了1C，转换了
+        /// 设置设备系统参数 1B 
         /// </summary>
         public const string DEV_SET_SYSPARAM = "CTRL_CMDSET_SYSPARAM";	//
         /// <summary>
-        /// 获取设备系统参数 1C 现在不能实现
+        /// 获取设备系统参数 1C 
         /// </summary>
         public const string DEV_GET_SYSPARAM = "CTRL_CMDGET_SYSPARAM";	// 
         /// <summary>
-        /// 设备控制操作 1D 现在不能实现
+        /// 设备控制操作 1D 
         /// </summary>
         public const string DEV_SET_OPER = "CTRL_CMDSET_OPER";		//
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
-using ClientPrints.MethodList.ClientPrints.Method.sharMethod;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using System.Xml.Linq;
 using System.Xml;
 
@@ -142,6 +142,10 @@ namespace ClinetPrints.MenuGroupMethod
                                 dicGroupxml.Add(oldname, na.name);
                                 SharMethod.renameXmlGroup(dicGroupxml, oldname,1);
                                 SharMethod.renamePrintXmlGroup(dicPrintxml, 2,1);
+                                foreach(var key in SharMethod.dicPrintTree)
+                                {
+                                    new MenuPrinterGroupAddMethod(key.Value, clientForm);
+                                }
                             }
 
 

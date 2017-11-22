@@ -9,8 +9,10 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using ClinetPrints.SettingWindows;
-using ClientPrints.MethodList.ClientPrints.Method.sharMethod;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.MenuGroupMethod;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using System.Threading;
 
 namespace ClinetPrints
 {
@@ -47,13 +49,17 @@ namespace ClinetPrints
                 AddImage();
                 //主程序任务栏中右键显示的控制
                 AddMunConten();
+
                 //添加分组的排布
                 AddGroupMap();
-                //添加群打印机分组排布
-               AddFlockGroupMap();
                 //添加打印机信息
                 AddPrinterMap();
-                
+
+                //添加群打印机分组排布
+                AddFlockGroupMap();
+                //添加群打印机
+                AddFlockPrinterMap();
+
             }
             catch (Exception ex)
             {
@@ -98,35 +104,25 @@ namespace ClinetPrints
             {
                 XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
                 GetMapPrints(xnode,1);
-                printerViewSingle.BeginInvoke(new MethodInvoker(() =>
+                nodeClientPrints = this.printerViewSingle.Nodes.Add("打印机序列", "打印机序列", 0);
+                SharMethod.dicTree.Add("打印机序列", nodeClientPrints);
+                new MenuGroupAddMethod(nodeClientPrints, this);
+                if (SharMethod.limap.Count > 0)
                 {
-                    printerViewSingle.BeginUpdate();
-                    nodeClientPrints = this.printerViewSingle.Nodes.Add("打印机序列", "打印机序列",0);
-                    SharMethod.dicTree.Add("打印机序列", nodeClientPrints);
-                    new MenuGroupAddMethod(nodeClientPrints,this);
-                    if (SharMethod.limap.Count > 0)
-                    {
-                        //按画布生成节点
-                        createTree(nodeClientPrints);
-                        SharMethod.limap.Clear();
-                    }
-                    printerViewSingle.EndUpdate();
-                }));
+                    //按画布生成节点
+                    createTree(nodeClientPrints);
+                    SharMethod.limap.Clear();
+                }
             }
             else
             {
-                printerViewSingle.BeginInvoke(new MethodInvoker(() =>
-                {
-                    printerViewSingle.BeginUpdate();
-                    //定义树形节点
-                    nodeClientPrints = this.printerViewSingle.Nodes.Add("打印机序列", "打印机序列",0);
-                    SharMethod.dicTree.Add("打印机序列", nodeClientPrints);
-                    new MenuGroupAddMethod(nodeClientPrints,this);
-                    TreeNode cnode=nodeClientPrints.Nodes.Add("所有打印机", "所有打印机",0);
-                    SharMethod.dicTree.Add("所有打印机", cnode);
-                    new MenuGroupAddMethod(cnode,this);
-                    printerViewSingle.EndUpdate();
-                }));
+                //定义树形节点
+                nodeClientPrints = this.printerViewSingle.Nodes.Add("打印机序列", "打印机序列", 0);
+                SharMethod.dicTree.Add("打印机序列", nodeClientPrints);
+                new MenuGroupAddMethod(nodeClientPrints, this);
+                TreeNode cnode = nodeClientPrints.Nodes.Add("所有打印机", "所有打印机", 0);
+                SharMethod.dicTree.Add("所有打印机", cnode);
+                new MenuGroupAddMethod(cnode, this);
             }
         }
 
@@ -143,12 +139,46 @@ namespace ClinetPrints
             GetMapPrints(xnode, 3);
             //处理所有打印机
             SharMethod.getPrinter();
-            printerViewSingle.BeginInvoke(new MethodInvoker(() =>
+            createPrintTree(); 
+        }
+
+        /// <summary>
+        /// 添加打印机到群组上
+        /// </summary>
+        private void AddFlockPrinterMap()
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(@"./printerXml/printerFlockMap.xml");
+            XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
+            foreach (XmlNode node in xnode.ChildNodes)
             {
-                printerViewSingle.BeginUpdate();
-                createPrintTree();
-                printerViewSingle.EndUpdate();
-            }));             
+                SharMethod.liprinterFlockMap.Add(node.Name, node.InnerText);
+            }
+            //处理所有打印机
+            TreeNode cnode;
+            foreach (var key in SharMethod.liprinterFlockMap)
+            {
+                foreach (var parkey in SharMethod.dicFlockTree)
+                {
+                    if (key.Value == parkey.Key)
+                    {
+                        cnode = parkey.Value.Nodes.Add(key.Key, SharMethod.dicPrintTree[key.Key].Text, SharMethod.dicPrintTree[key.Key].ImageIndex);
+                        cnode.ForeColor = SharMethod.dicPrintTree[key.Key].ForeColor;
+                        cnode.SelectedImageIndex = SharMethod.dicPrintTree[key.Key].ImageIndex;
+                        var flockPrinter = new PrinterObjects()
+                        {
+                            onlyAlias = key.Key,
+                            ImageIndex = 6,
+                            interfaceMessage = SharMethod.liprintInterface[key.Key],
+                            stateMessage = "离线",
+                            color = Color.Gray,
+                            stateCode = 0
+                        };
+                        SharMethod.dicFlockPrintTree.Add(key.Key, cnode);
+                        new MenuPrinterFlockGroupMethod(cnode, this);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -186,13 +216,16 @@ namespace ClinetPrints
                 if (SharMethod.dicTree.ContainsKey(key.Value))
                 {
                     tnode = SharMethod.dicTree[key.Value];
-                    cnode = tnode.Nodes.Add(key.Key.onlyAlias,key.Key.interfaceMessage,key.Key.ImageIndex);
+                    cnode = tnode.Nodes.Add(key.Key.onlyAlias, key.Key.interfaceMessage, key.Key.ImageIndex);
                     cnode.SelectedImageIndex = key.Key.ImageIndex;
                     cnode.ForeColor = key.Key.color;
+                    SharMethod.dicPrinterObjectTree.Add(key.Key, cnode);
                     SharMethod.dicPrintTree.Add(key.Key.onlyAlias, cnode);
-                    new MenuPrinterGroupAddMethod(cnode, this);  
+                    new MenuPrinterGroupAddMethod(cnode, this);
                 }
             }
+            //用完容器则清理
+            SharMethod.dicPrinterAll.Clear();
         }
 
        
@@ -256,9 +289,10 @@ namespace ClinetPrints
         {
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413453.ico"));//主图
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413456.ico"));//在线正常
-            this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413432.ico"));//在线警告
+            this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413436.ico"));//在线工作中
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413404.ico"));//在线繁忙
-            this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413424.ico"));//在线报错
+            this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413432.ico"));//在线暂停
+            this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413424.ico"));//在线异常
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413428.ico"));//离线
             printerViewSingle.ImageList = imageList1;
             printerViewFlcok.ImageList = imageList1;
@@ -304,7 +338,15 @@ namespace ClinetPrints
                         }
                         else
                         {
-
+                            if (SharMethod.dicFlockTree.ContainsKey(gn.name))
+                            {
+                                //递归的找到父类，从第一层开始展开
+                                seriatimExpand(SharMethod.dicFlockTree[gn.name]);
+                            }
+                            else
+                            {
+                                MessageBox.Show("未找到对应的组名信息！");
+                            }
                         }
                     }
                     else
@@ -416,5 +458,75 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
+
+        #region....//单打印节点的控制方法
+        private void printerViewSingle_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+        public Form Information;
+        private void printerViewSingle_MouseLeave(object sender, EventArgs e)
+        {
+            if (Information != null)
+                Information.Close();
+        }
+
+        private void printerViewSingle_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+        {
+            if (SharMethod.dicPrinterObjectTree.ContainsValue(e.Node))
+            {
+                PrinterInformation Info = new PrinterInformation();
+                Information = Info;
+                Info.AutoSize = true;
+                Info.lb_showInformation.AutoSize = true;
+                foreach (var key in SharMethod.dicPrinterObjectTree)
+                {
+                    if (key.Value == e.Node)
+                    {
+                        Info.printerInformation = key.Key.stateMessage;
+                        int width = Info.lb_showInformation.Width;//代表了一行的宽度
+                        int height = Info.lb_showInformation.Height;//代表了一行的高度
+                        double fontNum = Info.printerInformation.Length;//字体实际长度
+                        double stipluteNum = 25;//规定一行显示25个字
+                        int ColNum = 0;//列数
+                        if ((fontNum / stipluteNum) <= 0)
+                        {
+                            //小于一行则设置为一行
+                            ColNum = 1;
+                        }
+                        else
+                        {
+                            if (fontNum % stipluteNum == 0)
+                            {
+                                ColNum = (int)(fontNum / stipluteNum);
+                            }
+                            else
+                            {
+                                ColNum = (int)(fontNum / stipluteNum) + 1;
+                            }
+                        }
+                        double fontWidth = width / fontNum;//一个字的宽度
+                        double fontHeight = height;//一个字的高度
+                                                   //显示界面的宽度和高度
+                        if (ColNum == 1)
+                        {
+                            Info.Width = width + 10;
+                            Info.Height = height + 10;
+                        }
+                        else
+                        {
+                            Info.lb_showInformation.Width = (int)fontWidth * 25;
+                            Info.lb_showInformation.Height = (int)FontHeight * ColNum;
+                            Info.Width = Info.lb_showInformation.Width + 10;
+                            Info.Height = Info.lb_showInformation.Height + 10;
+                        }
+                        Info.Location = this.PointToClient(MousePosition);
+                        Info.ShowDialog();
+                    }
+                }
+
+            }
+        }
+        #endregion
     }
 }

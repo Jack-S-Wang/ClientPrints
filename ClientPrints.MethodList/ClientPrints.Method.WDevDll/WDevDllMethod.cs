@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
+namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
 {
     public class WDevDllMethod
     {
@@ -45,7 +45,7 @@ namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>必须打开设备的控制端口。当ctrlCodeStr为“CTRL_DEVCMD_ST”，inDtas[0]的应为设备命令码。</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_DevIoCtrl(IntPtr pHandle, string ctrlCodeStr, ref byte[] inDats, uint inLen, [In,Out] ref structClassDll.DEVACK_INFO outDats);
+        public static extern bool dllFunc_DevIoCtrl(IntPtr pHandle, string ctrlCodeStr, [In] byte[] inDats, uint inLen, [In,Out] ref structClassDll.DEVACK_INFO outDats);
 
         /// <summary>
         /// 写数据到设备的数据端口

@@ -66,7 +66,7 @@
             this.快速查询ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1243, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(1263, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -129,6 +129,9 @@
             this.printerViewSingle.Name = "printerViewSingle";
             this.printerViewSingle.Size = new System.Drawing.Size(209, 547);
             this.printerViewSingle.TabIndex = 0;
+            this.printerViewSingle.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.printerViewSingle_NodeMouseHover);
+            this.printerViewSingle.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewSingle_AfterSelect);
+            this.printerViewSingle.MouseLeave += new System.EventHandler(this.printerViewSingle_MouseLeave);
             // 
             // menuStrip2
             // 
@@ -164,9 +167,10 @@
             // pan_mianWin1_image
             // 
             this.pan_mianWin1_image.Controls.Add(this.groupBox1);
-            this.pan_mianWin1_image.Location = new System.Drawing.Point(197, 3);
+            this.pan_mianWin1_image.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pan_mianWin1_image.Location = new System.Drawing.Point(209, 0);
             this.pan_mianWin1_image.Name = "pan_mianWin1_image";
-            this.pan_mianWin1_image.Size = new System.Drawing.Size(1034, 572);
+            this.pan_mianWin1_image.Size = new System.Drawing.Size(1054, 572);
             this.pan_mianWin1_image.TabIndex = 2;
             // 
             // groupBox1
@@ -176,7 +180,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1034, 572);
+            this.groupBox1.Size = new System.Drawing.Size(1054, 572);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "打印界面";
@@ -190,7 +194,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox2.Location = new System.Drawing.Point(3, 487);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1028, 82);
+            this.groupBox2.Size = new System.Drawing.Size(1048, 82);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "控制界面";
@@ -241,7 +245,7 @@
             this.pB_image.BackColor = System.Drawing.Color.Gray;
             this.pB_image.Location = new System.Drawing.Point(17, 29);
             this.pB_image.Name = "pB_image";
-            this.pB_image.Size = new System.Drawing.Size(1005, 452);
+            this.pB_image.Size = new System.Drawing.Size(1025, 452);
             this.pB_image.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pB_image.TabIndex = 0;
             this.pB_image.TabStop = false;
@@ -253,14 +257,14 @@
             this.pan_mainWin1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pan_mainWin1.Location = new System.Drawing.Point(0, 25);
             this.pan_mainWin1.Name = "pan_mainWin1";
-            this.pan_mainWin1.Size = new System.Drawing.Size(1243, 572);
+            this.pan_mainWin1.Size = new System.Drawing.Size(1263, 572);
             this.pan_mainWin1.TabIndex = 3;
             // 
             // ClientMianWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1243, 597);
+            this.ClientSize = new System.Drawing.Size(1263, 597);
             this.Controls.Add(this.pan_mainWin1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;

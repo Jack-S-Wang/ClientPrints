@@ -1,4 +1,4 @@
-﻿using ClientPrints.MethodList.ClientPrints.Method.sharMethod;
+﻿using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.SettingWindows;
 using System;
 using System.Collections.Generic;
@@ -29,9 +29,17 @@ namespace ClinetPrints.MenuGroupMethod
                             TreeNode nodeChild = tnode.Nodes.Add(na.name, na.name);
                             //添加容器中对应的分组信息
                             SharMethod.dicFlockTree.Add(na.name, nodeChild);
-                            new MenuFlockGroupMethod(nodeChild, clientForm);
                             //将处理过的数据获取到并发送给服务器保存
                             SharMethod.setXmlGroup(nodeChild,2);
+                            foreach(var key in SharMethod.dicPrintTree)
+                            {
+                                new MenuPrinterGroupAddMethod(key.Value, clientForm);
+                            }
+                            foreach(var key in SharMethod.dicFlockPrintTree)
+                            {
+                            new MenuPrinterFlockGroupMethod(key.Value, clientForm);
+                            }
+                            new MenuFlockGroupMethod(nodeChild, clientForm);
                         }
                         else
                         {
@@ -58,7 +66,7 @@ namespace ClinetPrints.MenuGroupMethod
                         if (!SharMethod.dicFlockTree.ContainsKey(na.name))
                         {
                             string oldname = tnode.Name;
-                            SharMethod.dicFlockTree.Remove(tnode.Name);
+                            SharMethod.dicFlockTree.Remove(oldname);
                             tnode.Name = na.name;
                             tnode.Text = na.name;
                             SharMethod.dicFlockTree.Add(na.name, tnode);
@@ -77,6 +85,15 @@ namespace ClinetPrints.MenuGroupMethod
                             }
                             dicGroupxml.Add(oldname, na.name);
                             SharMethod.renameXmlGroup(dicGroupxml, oldname, 2);
+                            foreach(var key in SharMethod.dicPrintTree)
+                            {
+                                new MenuPrinterGroupAddMethod(key.Value, clientForm);
+                            }
+                           foreach(var key in SharMethod.dicFlockPrintTree)
+                            {
+                            new MenuPrinterFlockGroupMethod(key.Value, clientForm);
+                            }
+                            new MenuFlockGroupMethod(tnode, clientForm);
                         }
                         else
                         {
@@ -94,6 +111,7 @@ namespace ClinetPrints.MenuGroupMethod
                     List<string> liname = new List<string>();
                     liname.Add(tnode.Name);
                     SharMethod.ClearXmlData(liname,2);
+                    SharMethod.dicFlockTree.Remove(tnode.Name);
                     foreach (string name in liname)
                     {
                         SharMethod.dicFlockPrintTree.Remove(name);
@@ -105,7 +123,12 @@ namespace ClinetPrints.MenuGroupMethod
                         dicxml.Add(cnode.Name);
                     }
                     SharMethod.ClearPrinterXmlGroup(dicxml.ToArray(), 2);
+                    TreeNode oldnode = tnode;
                     tnode.Parent.Nodes.Remove(tnode);
+                    foreach(var key in SharMethod.dicPrintTree)
+                    {
+                        new MenuPrinterGroupAddMethod(key.Value, clientForm);
+                    }
                 };
                 menu4.Click += (o, e) =>
                 {

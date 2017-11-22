@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
-using ClientPrsints.ObjectsAll.ClientPrints.Objects.DevDll;
+using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 
-namespace ClientPrints.MethodList.ClientPrints.Method.WDevDll
+namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
 {
     public class structClassDll
     {

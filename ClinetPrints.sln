@@ -1,15 +1,17 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinetPrints", "ClinetPrints\ClinetPrints.csproj", "{ECA37FEB-A5E6-4EBF-9D8A-DABF2B0DB9DD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientPrints.Method", "ClientPrints.Method", "{D27E8174-C7F1-4E04-A04E-98D6C19BC811}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientPrints.MethodList", "ClientPrints.MethodList\ClientPrints.MethodList.csproj", "{8EE0204A-59E4-4515-8EE9-D0484D9CF066}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientPrintsMethodList", "ClientPrints.MethodList\ClientPrintsMethodList.csproj", "{8EE0204A-59E4-4515-8EE9-D0484D9CF066}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientPrints.Objects", "ClientPrints.Objects", "{AC1751F8-D573-4CF0-A128-9B8B222D8084}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientPrints.ObjectsAll", "ClientPrints.ObjectsAll\ClientPrints.ObjectsAll.csproj", "{43B0B3A4-E5BC-4010-AF20-B7842FCB2A7F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientPrintsObjectsAll", "ClientPrints.ObjectsAll\ClientPrintsObjectsAll.csproj", "{43B0B3A4-E5BC-4010-AF20-B7842FCB2A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

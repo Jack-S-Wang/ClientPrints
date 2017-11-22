@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{43B0B3A4-E5BC-4010-AF20-B7842FCB2A7F}</ProjectGuid>
+    <ProjectGuid>{8EE0204A-59E4-4515-8EE9-D0484D9CF066}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClientPrints.ObjectsAll</RootNamespace>
-    <AssemblyName>ClientPrints.ObjectsAll</AssemblyName>
+    <RootNamespace>ClientPrintsMethodList</RootNamespace>
+    <AssemblyName>ClientPrintsMethodList</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,9 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,9 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientPrints.Objects.DevDll\WDevCmdObjects.cs" />
-    <Compile Include="ClientPrints.Objects.Printers\PrinterObjects.cs" />
+    <Compile Include="ClientPrints.Method.DevBmpDll\DevBmpDllMethod.cs" />
+    <Compile Include="ClientPrints.Method.DevBmpDll\structBmpClass.cs" />
+    <Compile Include="ClientPrints.Method.GeneralPrintersMethod\ClientPrints.Method.GeneralPrintersMethod.USBPrinters\PrinterDC1300.cs" />
+    <Compile Include="ClientPrints.Method.GeneralPrintersMethod\ClientPrints.Method.GeneralPrintersMethod.USBPrinters\PrintersGeneralFunction.cs" />
+    <Compile Include="ClientPrints.Method.Interfaces\IPrinterMethod.cs" />
+    <Compile Include="ClientPrints.Method.Interfaces\IUSBPrinterOnlyMethod.cs" />
+    <Compile Include="ClientPrints.Method.sharMethod\PrinterUSBMethod.cs" />
+    <Compile Include="ClientPrints.Method.sharMethod\SharMethod.cs" />
+    <Compile Include="ClientPrints.Method.WDevDll\structClassDll.cs" />
+    <Compile Include="ClientPrints.Method.WDevDll\WDevDllMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClientPrints.ObjectsAll\ClientPrintsObjectsAll.csproj">
+      <Project>{43B0B3A4-E5BC-4010-AF20-B7842FCB2A7F}</Project>
+      <Name>ClientPrintsObjectsAll</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

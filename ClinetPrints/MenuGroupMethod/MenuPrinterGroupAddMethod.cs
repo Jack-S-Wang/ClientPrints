@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
-using ClientPrints.MethodList.ClientPrints.Method.sharMethod;
-using ClientPrints.ObjectsAll.ClientPrints.Objects.Printers;
-using ClientPrints.MethodList.ClientPrints.Method.Interfaces;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrsintsMethodList.ClientPrints.Method.Interfaces;
 
 namespace ClinetPrints.MenuGroupMethod
 {
     class MenuPrinterGroupAddMethod
     {
-        public MenuPrinterGroupAddMethod(TreeNode tnode,ClientMianWindows clientForm)
+        public MenuPrinterGroupAddMethod(TreeNode tnode, ClientMianWindows clientForm)
         {
             //对没有设置到xml文档里添加进去
-            SharMethod.addPeinterXmlGroup(tnode,1);
+            SharMethod.addPeinterXmlGroup(tnode, 1);
             //打印机重命名
             MenuItem menu1 = new MenuItem("重命名");
             //打印机移位
@@ -37,13 +35,14 @@ namespace ClinetPrints.MenuGroupMethod
                 {
                     if (na.name != "")
                     {
-                        foreach (var key in SharMethod.dicPrinterAll)
+                        foreach (var key in SharMethod.dicPrinterObjectTree)
                         {
                             if (key.Key.onlyAlias == tnode.Name)
                             {
                                 Dictionary<string, string> dicxml = new Dictionary<string, string>();
-                                key.Key.interfaceMessage = key.Key.onlyAlias + "(" + na.name + ")";
-                                tnode.Text = key.Key.onlyAlias + "(" + na.name + ")";
+                                key.Key.alias = na.name;
+                                key.Key.interfaceMessage = key.Key.alias + "(" + key.Key.model + ")";
+                                tnode.Text = key.Key.interfaceMessage;
                                 dicxml.Add(tnode.Name,tnode.Text);
                                 //修改配置文件的信息内容
                                 SharMethod.renamePrintXmlGroup(dicxml,1,1);
@@ -86,7 +85,7 @@ namespace ClinetPrints.MenuGroupMethod
             menu3.Click += (o, e) =>
             {
                 Dictionary<PrinterObjects, string> dicClear = new Dictionary<PrinterObjects, string>();
-                foreach (var key in SharMethod.dicPrinterAll)
+                foreach (var key in SharMethod.dicPrinterObjectTree)
                 {
                     if (key.Key.onlyAlias == tnode.Name && key.Key.stateCode==0)
                     {
@@ -103,8 +102,8 @@ namespace ClinetPrints.MenuGroupMethod
                         foreach (var k in dicClear)
                         {
                             //删除两个集合的内容
-                            SharMethod.dicPrinterAll.Remove(k.Key);
                             SharMethod.dicPrintTree.Remove(k.Value);
+                            SharMethod.dicPrinterObjectTree.Remove(k.Key);
                             tnode.Parent.Nodes.Remove(tnode);
                             //将要修改配置文件的内容全记录下来
                             lname.Add(k.Value);
@@ -122,7 +121,7 @@ namespace ClinetPrints.MenuGroupMethod
             {
                 if (SharMethod.pathImage != "")
                 {
-                    foreach (var key in SharMethod.dicPrinterAll)
+                    foreach (var key in SharMethod.dicPrinterObjectTree)
                     {
                         if (key.Key.onlyAlias == tnode.Name)
                         {
@@ -151,17 +150,46 @@ namespace ClinetPrints.MenuGroupMethod
                             TreeNode cnode = flockNode.Nodes.Add(tnode.Name, tnode.Text, tnode.ImageIndex);
                             cnode.ForeColor = tnode.ForeColor;
                             SharMethod.dicFlockPrintTree.Add(cnode.Name, cnode);
+                            foreach (var keyObject in SharMethod.dicPrinterObjectTree)
+                            {
+                                if (keyObject.Value == tnode)
+                                {
+                                    SharMethod.dicFlockPrinterObjectTree.Add(keyObject.Key, cnode);
+                                    break;
+                                }
+                            }
                             SharMethod.addPeinterXmlGroup(tnode, 2);
                         }else
                         {
-                            clientForm.showException("已经在群组了！");
+                            DialogResult dr = clientForm.showException("该打印机已经分配到一个组中，是否将它分配到现在的组中？", "提示警告", MessageBoxButtons.OKCancel);
+                            if (dr == DialogResult.OK)
+                            {
+                                TreeNode cNode = SharMethod.dicFlockPrintTree[tnode.Name];
+                                TreeNode parnode = cNode.Parent;
+                                SharMethod.dicFlockPrintTree.Remove(tnode.Name);
+                                parnode.Nodes.Remove(cNode);
+                                cNode = flockNode.Nodes.Add(tnode.Name, tnode.Text, tnode.ImageIndex);
+                                cNode.ForeColor = tnode.ForeColor;
+                                SharMethod.dicFlockPrintTree.Add(cNode.Name, cNode);
+                                foreach (var keyObject in SharMethod.dicPrinterObjectTree)
+                                {
+                                    if (keyObject.Value == tnode)
+                                    {
+                                        SharMethod.dicFlockPrinterObjectTree.Add(keyObject.Key, cNode);
+                                        break;
+                                    }
+                                }
+                                var dicxml = new Dictionary<string, string>();
+                                dicxml.Add(tnode.Name, flockNode.Name);
+                                SharMethod.renamePrintXmlGroup(dicxml, 2, 2);
+                            }
                         }
                     };
                     menu5.MenuItems.Add(groupMenu);
                 }
             }
-            tnode.ContextMenu = new ContextMenu(new MenuItem[] { menu1, menu2, menu3, menu4,menu5 });
+            tnode.ContextMenu = new ContextMenu(new MenuItem[] { menu1, menu2, menu3, menu4, menu5 });
         }
-        
+
     }
 }

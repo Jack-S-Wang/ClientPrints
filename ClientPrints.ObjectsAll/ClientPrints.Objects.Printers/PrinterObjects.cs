@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace ClientPrints.ObjectsAll.ClientPrints.Objects.Printers
+namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 {
     public class PrinterObjects:IComparable
     {
