@@ -49,68 +49,18 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             }
         }
 
-        public PrintersGeneralFunction general;
+      
+       /// <summary>
+       /// 获取USB型的打印机信息
+       /// </summary>
         public void getPrinterObjects()
         {
             string[] path = EnumPath();
-            
+            WDevDllMethod.dllFunc_OpenLog(@"./wDevObj.log");
             foreach (string pathAddress in path)
             {
-                general = new PrintersGeneralFunction(pathAddress,this);
-                
+                new PrintersGeneralFunction(pathAddress);
             }
         }
-
-        /// <summary>
-        /// 对指定图片进行打印
-        /// </summary>
-        /// <param name="pathFile">图片路径</param>
-        /// <param name="pHandle">句柄值</param>
-        public bool writeDataToDev(string pathFile,IntPtr pHandle)
-        {
-            if (pathFile == "")
-                return false;
-            var devProt = new structBmpClass.DeviceProterty()
-            {
-                dmThicken=1,//01指2位数，就是2色的意思
-                nWidth=1016,
-                nHeight=648,
-                dmPrintQuality=0,
-                dmYResolution=0,
-                dmTag=0x01
-            };
-            var dsp = new structBmpClass.DS_PARAMETER()
-            {
-                devp = devProt,
-                RGBPalete = IntPtr.Zero,
-                RGBParameter = IntPtr.Zero
-            };
-            DevBmpDllMethod.setDeviceProterty(ref devProt);
-            if (DevBmpDllMethod.LoadBitmapFilePara(pathFile, ref dsp))
-            {
-                IntPtr bites = DevBmpDllMethod.GetBits();
-                int len = DevBmpDllMethod.GetLength();
-                //IntPtr outBites = IntPtr.Zero;
-                //int outSize = len+1;
-                //int output = 0;
-                //outBites = Marshal.AllocCoTaskMem(len+1);
-                //output = DevBmpDllMethod.DS_Compress(7, bites, len,  outBites, out outSize);
-                //uint outLen = 0;
-                //if (WDevDllMethod.dllFunc_Write(pHandle, outBites, (uint)output, out outLen, IntPtr.Zero))
-                if (WDevDllMethod.dllFunc_WriteEx(pHandle, bites, (uint)len, (uint)1, IntPtr.Zero))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
     }
 }

@@ -10,6 +10,50 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 {
     public class PrinterDC1300 : IUSBPrinterOnlyMethod
     {
+        public string getDevInfo(byte[] data)
+        {
+            string jsonstr = "";
+            if (data[1] == 1)
+            {
+                jsonstr = Encoding.UTF8.GetString(data, 3, data.Length - 3).Replace('\0',' ').Trim();
+            }else if (data[1] == 2)
+            {
+                int InCache = (data[2] << 24) + (data[3] << 16) + (data[4] << 8) + data[5];
+                int maxFrames = (data[6] << 24) + (data[7] << 16) + (data[8] << 8) + data[9];
+                byte compressType = data[10];
+                var info = new PrinterJson.PrinterDC1300DataInfo()
+                {
+                    InCache=InCache,
+                    maxFrames=maxFrames,
+                    compressType=compressType
+                };
+                jsonstr = JsonConvert.SerializeObject(info);
+            }else if (data[1] == 3)
+            {
+                int maxWidth = (data[2] << 8) + data[3];
+                int maxHeight = (data[4] << 8) + data[5];
+                int confin = (data[6] << 24) + (data[7] << 16) + (data[8] << 8) + data[9];
+                int xDPL = data[10];
+                int yDOPL = data[11];
+                int colorDepth = data[12];
+                byte pixelformat = data[13];
+                byte isSupport = data[14];
+                var info = new PrinterJson.PrinterDC1300PageInfo()
+                {
+                    maxWidth=maxWidth,
+                    maxHeight=maxHeight,
+                    colorDepth=colorDepth,
+                    confin=confin,
+                    isSupport=isSupport,
+                    pixelformat=pixelformat,
+                    xDPL=xDPL,
+                    yDPL=yDOPL
+                };
+                jsonstr = JsonConvert.SerializeObject(info);
+            }
+            return jsonstr;
+        }
+
         public string getPrinterState(byte[] data)
         {
             string jsonstr = "";

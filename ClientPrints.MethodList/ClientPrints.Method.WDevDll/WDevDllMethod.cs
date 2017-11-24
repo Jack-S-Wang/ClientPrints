@@ -66,11 +66,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
         /// <param name="inDats">需要写到设备的数据</param>
         /// <param name="inLen">数据长度，字节单位</param>
-        /// <param name="modeTag">1-完整性数据发送，2-位图数据分批发送</param>
+        /// <param name="modeTag">1-完整性数据发送，2-位图数据,3-两者都有</param>
         /// <param name="lpOut">输出的指针信息</param>
         /// <returns></returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [Out] IntPtr lpOut);
+        public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, ref structClassDll.UNCMPR_INFO lpOut);
         /// <summary>
         /// 读数据到设备的数据端口
         /// </summary>

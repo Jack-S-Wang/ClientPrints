@@ -301,5 +301,174 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// </summary>
             public byte ackCode;
         }
+
+        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+        public struct UNCMPR_INFO
+        {
+            /// <summary>
+            /// 压缩数据长度
+            /// </summary>
+            public uint cmprLen;
+            /// <summary>
+            /// 解压后的数据长度
+            /// </summary>
+            public uint uncmprLen;
+            /// <summary>
+            /// 结果状态
+            /// </summary>
+            public uint resultTag;
+            /// <summary>
+            /// 状态
+            /// </summary>                
+            public uint stat;
+            /// <summary>
+            /// 工作号
+            /// </summary>
+            public ushort jobNumber;
+            /// <summary>
+            /// 帧号从零开始
+            /// </summary>
+            public ushort frmIdx;
+            /// <summary>
+            /// 压缩类型
+            /// </summary>
+            public byte cmprType;
+            /// <summary>
+            /// 用户传入的设备全部参数
+            /// </summary>
+            public DEV_BMP userParm;
+        }
+
+        /// <summary>
+        /// 数据发送中需要的全部设备参数信息
+        /// </summary>
+       [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+       public struct DEV_BMP
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public ushort ID;     //
+            /// <summary>
+            /// 打印设备最大dpi
+            /// </summary>
+            public ushort dpi;    //
+            /// <summary>
+            /// 左上角坐标X
+            /// </summary>
+            public ushort posX;   //
+            /// <summary>
+            /// 左上角坐标Y
+            /// </summary>
+            public ushort posY;
+
+            /// <summary>
+            /// 位图宽
+            /// </summary>
+            public ushort pixelW;
+            /// <summary>
+            /// 前景位图高
+            /// </summary>
+            public ushort txPixelH;   //
+            /// <summary>
+            /// 背景位图高
+            /// </summary>
+            public ushort bkPixelH;   //
+            /// <summary>
+            /// 像素颜色深度(bits)
+            /// </summary>
+            public ushort bpps;        //
+            /// <summary>
+            /// 设备位图类型，1：光栅位图
+            /// </summary>
+            public ushort bmpType; //设备位图类型，1：光栅位图
+            /// <summary>
+            /// 4
+            /// </summary>
+            public byte[] ret;//4
+            /// <summary>
+            /// 设备参数传入
+            /// </summary>
+            public DEVPROP_INFO devInfo;
+            /// <summary>
+            /// 前景和背景位图数据
+            /// </summary>
+            public IntPtr BmpDats;	//
+        }
+
+        /// <summary>
+        /// 设备参数传入
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct DEVPROP_INFO
+        {
+            public ushort size;
+            public byte[] revs;//2
+            public DEVPROP_PRNOUT prnProp;
+        }
+
+        /// <summary>
+        /// 设备打印机的参数
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+        public struct DEVPROP_PRNOUT
+        {
+            /// <summary>
+            /// 结构体的大小
+            /// </summary>
+            public byte propSize;    //
+            /// <summary>
+            /// BMP_DEVPROP_PRN 0x81
+            /// </summary>
+            public byte devType; //
+            /// <summary>
+            /// BMP_DEVPROP_BKNONE 0
+            /// </summary>
+            public byte bkBmpID; //
+            /// <summary>
+            /// 卡类型 -- 0:mblack, 1:mblue,2:rblack
+            /// </summary>
+            public byte cardType;    // 
+            /// <summary>
+            /// 进卡方式 -- 0:AutoFeed, 1:manual Feed , 2:Auto Select
+            /// </summary>
+            public byte cardInputMode;// 
+            /// <summary>
+            /// 出卡方式 -- 0:装卡盒接收,1:手动接收,2:后退卡,3:不退卡
+            /// </summary>
+            public byte cardOutputMode;// 
+            /// <summary>
+            /// 打印温度 -- 0 <= t <= 20
+            /// </summary>
+            public byte printTemp;   // 
+            /// <summary>
+            /// 打印对比度 -- 0 <= t <= 20
+            /// </summary>
+            public byte printContrast;// 
+            /// <summary>
+            /// 打印速度 -- 0 <= s <= 20
+            /// </summary>
+            public byte printSpeed;  // 
+            /// <summary>
+            /// 灰度温度 -- 0 <= t <= 20
+            /// </summary>
+            public byte grayTemp;    // 
+            /// <summary>
+            /// 擦除速度 -- 0 <= s <= 20
+            /// </summary>
+            public byte graySpeed;   // 
+            /// <summary>
+            /// 设置擦除温度 -- 0 <= t <= 20
+            /// </summary>
+            public byte eraseTemp;   // 
+            /// <summary>
+            /// 0:Card Print, 1:Card Erase
+            /// </summary>
+            public byte printMode;   // 
+            /// <summary>
+            /// 3
+            /// </summary>
+            public byte[] revs;//3
+        }
     }
 }

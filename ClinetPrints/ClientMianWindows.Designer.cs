@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClientMianWindows));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.快速查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.分组名称查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,6 +121,8 @@
             this.printerViewFlcok.Name = "printerViewFlcok";
             this.printerViewFlcok.Size = new System.Drawing.Size(209, 547);
             this.printerViewFlcok.TabIndex = 2;
+            this.printerViewFlcok.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.printerViewFlcok_NodeMouseHover);
+            this.printerViewFlcok.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewFlcok_AfterSelect);
             // 
             // printerViewSingle
             // 
@@ -131,7 +134,6 @@
             this.printerViewSingle.TabIndex = 0;
             this.printerViewSingle.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.printerViewSingle_NodeMouseHover);
             this.printerViewSingle.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewSingle_AfterSelect);
-            this.printerViewSingle.MouseLeave += new System.EventHandler(this.printerViewSingle_MouseLeave);
             // 
             // menuStrip2
             // 
@@ -267,6 +269,7 @@
             this.ClientSize = new System.Drawing.Size(1263, 597);
             this.Controls.Add(this.pan_mainWin1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ClientMianWindows";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

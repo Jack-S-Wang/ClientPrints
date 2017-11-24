@@ -193,7 +193,23 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
 
         //---设备解析标识---
         public static int RAWMODE_DEV_REQ = 0x01;	//解析成设备请求
-        public static int RAWMODE_DEV_RESP = 0x02;	//解析设备响应数据
+        public static int RAWMODE_DEV_RESP = 0x02;  //解析设备响应数据
+
+        //-------设备运行时的系统参数属性----------------
+        public static int BMP_DEVPROP_NONE = 0xff;
+        public static int BMP_DEVPROP_PRN = 0x81;   //print out param
+        public static int SYS_MAX_PARAMPROP = 0x81;
+
+
+        public static int BMP_DEVPROP_BKNONE = 0;   //不擦除背景
+        public static int BMP_DEVPROP_BKFULL = 1;   //卡片全部擦除
+        public static int BMP_DEVPROP_BKBMP = 2;    //按前景位图大小擦除
+        public static int BMP_DEVPROP_BKUSER = 3;   //按用户自定的位图擦除
+
+        public static int BMP_DEVPROP_PMODE_PRINT = 0;  //打印且擦除
+        public static int BMP_DEVPROP_PMODE_ERASE = 1;  //只擦除
+        public static int BMP_DEVPROP_PMODE_PRNONLY = 2;//只打印
+
         #endregion
     }
 }

@@ -19,12 +19,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
     public class PrintersGeneralFunction
     {
         public string path = "";
-        public IPrinterMethod usbMethod;
         public string printerModel = "";
-        public PrintersGeneralFunction(string address,IPrinterMethod usbMethod)
+        public PrintersGeneralFunction(string address)
         {
             this.path = address;
-            this.usbMethod = usbMethod;
             //打开设备
             IntPtr phandle = openPrinter(path);
             //添加打印机对象
@@ -114,7 +112,32 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             }
             string alias = onlyAlias;
             //厂商
-            string vendor = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[0]);
+            string vendor = "DASCOM";
+            //设备通用信息
+            string DevInfo=reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 1 });
+            //设备数据信息
+            string dataInfo= reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 2 });
+            var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
+            //设备页面信息
+            string pageInfo= reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 3 });
+            var Pagejson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PageInfo>(pageInfo);
+
+            var printerParams = new PrinterParams()
+            {
+                devInfo=DevInfo,
+                InCache=Datajson.InCache,
+                maxFrames=Datajson.maxFrames,
+                compressType=Datajson.compressType,
+                colorDepth=Pagejson.colorDepth,
+                confin=Pagejson.confin,
+                isSupport=Pagejson.isSupport,
+                maxHeight=Pagejson.maxHeight,
+                maxWidth=Pagejson.maxWidth,
+                pixelformat=Pagejson.pixelformat,
+                xDPL=Pagejson.xDPL,
+                yDPL=Pagejson.yDPL
+            };
+
 
             var printers = new PrinterObjects()
             {
@@ -124,7 +147,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 alias = alias,
                 vedor = vendor,
                 pHandle = pHandle,
-                Methods = usbMethod,
+                MethodsObject = this,
                 addressMessage = pathAddress,
                 onlyAlias = onlyAlias,
                 color = cl,
@@ -132,7 +155,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 interfaceMessage = alias + "(" + model + ")",
                 stateMessage = stateMessage,
                 state = state,
-                stateCode = stateType
+                stateCode = stateType,
+                pParams=printerParams
             };
             SharMethod.dicPrinterUSB.Add(pathAddress, printers);
         }
@@ -257,9 +281,11 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     strCode = "" + Convert.ToInt32(reData[0]);
                     break;
                 case WDevCmdObjects.DEV_GET_DEVINFO://设备信息
-                    strCode = Encoding.GetEncoding("GBK").GetString(reData, 0, 16).Replace('\0', ' ').TrimEnd();
-                    strCode += ";";
-                    strCode = strCode + Encoding.GetEncoding("GBK").GetString(reData, 16, 17).Replace('\0', ' ').TrimEnd();
+                    if (printerModel.Contains("DC-1300"))
+                    {
+                        IUSBPrinterOnlyMethod onlyMethod = new PrinterDC1300();
+                        strCode = onlyMethod.getDevInfo(reData);
+                    }
                     break;
                 case WDevCmdObjects.DEV_GET_WORKMODE://工作模式
                     strCode = "" + Convert.ToInt32(reData[0]);
@@ -311,7 +337,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// </summary>
         /// <param name="pathFile">图片路径</param>
         /// <param name="pHandle">句柄值</param>
-        public bool writeDataToDev(string pathFile, IntPtr pHandle)
+        public bool writeDataToDev(string pathFile, PrinterObjects po)
         {
             if (pathFile == "")
                 return false;
@@ -342,8 +368,20 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 //output = DevBmpDllMethod.DS_Compress(7, bites, len,  outBites, out outSize);
                 //uint outLen = 0;
                 //if (WDevDllMethod.dllFunc_Write(pHandle, outBites, (uint)output, out outLen, IntPtr.Zero))
-                if (WDevDllMethod.dllFunc_WriteEx(pHandle, bites, (uint)len, (uint)1, IntPtr.Zero))
+                var lope = new structClassDll.UNCMPR_INFO()
                 {
+                    cmprLen = (UInt32)len,
+                    uncmprLen = (UInt32)len + 1,
+                    stat = 0,
+                    jobNumber = 1,
+                    resultTag = 0,
+                    cmprType = 0,
+                    frmIdx = 0
+
+                };
+                if (WDevDllMethod.dllFunc_WriteEx(po.pHandle, bites, (uint)len, (uint)3, ref lope))
+                {
+                    WDevDllMethod.dllFunc_CloseLog(po.pHandle);
                     return true;
                 }
                 else
@@ -356,5 +394,6 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 return false;
             }
         }
+
     }
 }

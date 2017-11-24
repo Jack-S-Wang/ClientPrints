@@ -17,11 +17,8 @@ namespace ClinetPrints.SettingWindows
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            timer1.Interval = 10000;
-            timer1.Enabled = true;
-            this.Close();
         }
-        public string printerInformation = "";
+        public static string printerInformation = "";
         private void PrinterInformation_Load(object sender, EventArgs e)
         {
             this.lb_showInformation.Text = printerInformation;

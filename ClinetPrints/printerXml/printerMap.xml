@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Prints>
   <printMap>
-   
+    <D300RW>所有打印机</D300RW>
   </printMap>
   <printInterface>
-   
+    <D300RW>D300RW(DC-1300)</D300RW>
   </printInterface>
 </Prints>

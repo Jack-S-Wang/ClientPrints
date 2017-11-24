@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 {
-    public class PrinterObjects:IComparable
+    public class PrinterObjects : IComparable
     {
         /// <summary>
         /// 序列号
@@ -63,11 +63,16 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// <summary>
         /// 对应获取执行打印方法的对象
         /// </summary>
-        public Object Methods { get; set; }
+        public Object MethodsObject { get; set; }
         /// <summary>
         /// 唯一标识
         /// </summary>
         public string onlyAlias { get; set; }
+        /// <summary>
+        /// 设备的参数信息
+        /// </summary>
+        public PrinterParams pParams { get; set; }
+
 
         public int CompareTo(object obj)
         {

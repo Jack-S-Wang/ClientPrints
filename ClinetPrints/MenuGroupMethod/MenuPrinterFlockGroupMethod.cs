@@ -29,6 +29,7 @@ namespace ClinetPrints.MenuGroupMethod
                 }
                 if (pobject != null)
                     SharMethod.dicFlockPrinterObjectTree.Remove(pobject);
+                SharMethod.dicFlockPrintTree.Remove(name[0]);
                 SharMethod.ClearPrinterXmlGroup(name,2);
                 tnode.Parent.Nodes.Remove(tnode);
             };

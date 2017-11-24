@@ -45,18 +45,18 @@ namespace ClinetPrints
                 printerViewSingle.Visible = true;
                 printerViewFlcok.Enabled = false;
                 printerViewFlcok.Visible = false;
+                printerViewSingle.ShowNodeToolTips = true;
+                printerViewFlcok.ShowNodeToolTips = true;
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
                 AddMunConten();
-
                 //添加分组的排布
                 AddGroupMap();
-                //添加打印机信息
-                AddPrinterMap();
-
                 //添加群打印机分组排布
                 AddFlockGroupMap();
+                //添加打印机信息
+                AddPrinterMap();
                 //添加群打印机
                 AddFlockPrinterMap();
 
@@ -154,6 +154,11 @@ namespace ClinetPrints
             {
                 SharMethod.liprinterFlockMap.Add(node.Name, node.InnerText);
             }
+            xnode= xmlDoc.GetElementsByTagName("printInterface")[0];
+            foreach(XmlNode node in xnode.ChildNodes)
+            {
+                SharMethod.liprintFlockInterface.Add(node.Name, node.InnerText);
+            }
             //处理所有打印机
             TreeNode cnode;
             foreach (var key in SharMethod.liprinterFlockMap)
@@ -162,21 +167,41 @@ namespace ClinetPrints
                 {
                     if (key.Value == parkey.Key)
                     {
-                        cnode = parkey.Value.Nodes.Add(key.Key, SharMethod.dicPrintTree[key.Key].Text, SharMethod.dicPrintTree[key.Key].ImageIndex);
-                        cnode.ForeColor = SharMethod.dicPrintTree[key.Key].ForeColor;
-                        cnode.SelectedImageIndex = SharMethod.dicPrintTree[key.Key].ImageIndex;
-                        var flockPrinter = new PrinterObjects()
+                        bool isExist = false;
+                        foreach(var printerTree in SharMethod.dicPrinterObjectTree)
                         {
-                            onlyAlias = key.Key,
-                            ImageIndex = 6,
-                            interfaceMessage = SharMethod.liprintInterface[key.Key],
-                            stateMessage = "离线",
-                            color = Color.Gray,
-                            stateCode = 0
-                        };
-                        SharMethod.dicFlockPrintTree.Add(key.Key, cnode);
-                        new MenuPrinterFlockGroupMethod(cnode, this);
-                    }
+                            if (key.Key == printerTree.Key.onlyAlias)
+                            {
+                                cnode = parkey.Value.Nodes.Add(key.Key, printerTree.Key.interfaceMessage, printerTree.Key.ImageIndex);
+                                cnode.ForeColor = printerTree.Key.color;
+                                cnode.SelectedImageIndex = printerTree.Key.ImageIndex;
+                                SharMethod.dicFlockPrinterObjectTree.Add(printerTree.Key, cnode);
+                                SharMethod.dicFlockPrintTree.Add(key.Key, cnode);
+                                new MenuPrinterFlockGroupMethod(cnode, this);
+                                isExist = true;
+                                break;
+                            }
+                        }
+                        if (!isExist)
+                        {
+                            cnode = parkey.Value.Nodes.Add(key.Key, SharMethod.liprintFlockInterface[key.Key], 6);
+                            cnode.ForeColor = System.Drawing.Color.Gray;
+                            cnode.SelectedImageIndex = 6;
+                            var flockPrinter = new PrinterObjects()
+                            {
+                                onlyAlias = key.Key,
+                                ImageIndex = 6,
+                                interfaceMessage = SharMethod.liprintFlockInterface[key.Key],
+                                stateMessage = "离线",
+                                color = Color.Gray,
+                                stateCode = 0
+                            };
+                            SharMethod.dicFlockPrinterObjectTree.Add(flockPrinter, cnode);
+                            SharMethod.dicFlockPrintTree.Add(key.Key, cnode);
+                            new MenuPrinterFlockGroupMethod(cnode, this);
+                        }
+                        break;
+                    }  
                 }
             }
         }
@@ -430,6 +455,7 @@ namespace ClinetPrints
             printerViewSingle.Visible = true;
             printerViewFlcok.Enabled = false;
             printerViewFlcok.Visible = false;
+            printerViewSingle.Focus();
         }
 
         private void 群打印ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -438,6 +464,7 @@ namespace ClinetPrints
             printerViewSingle.Visible = false;
             printerViewFlcok.Enabled = true;
             printerViewFlcok.Visible = true;
+            printerViewFlcok.Focus();
         }
 
         private void btn_SelectImage_Click(object sender, EventArgs e)
@@ -464,69 +491,45 @@ namespace ClinetPrints
         {
 
         }
-        public Form Information;
-        private void printerViewSingle_MouseLeave(object sender, EventArgs e)
-        {
-            if (Information != null)
-                Information.Close();
-        }
-
+          
         private void printerViewSingle_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
         {
             if (SharMethod.dicPrinterObjectTree.ContainsValue(e.Node))
             {
-                PrinterInformation Info = new PrinterInformation();
-                Information = Info;
-                Info.AutoSize = true;
-                Info.lb_showInformation.AutoSize = true;
+                
                 foreach (var key in SharMethod.dicPrinterObjectTree)
                 {
                     if (key.Value == e.Node)
                     {
-                        Info.printerInformation = key.Key.stateMessage;
-                        int width = Info.lb_showInformation.Width;//代表了一行的宽度
-                        int height = Info.lb_showInformation.Height;//代表了一行的高度
-                        double fontNum = Info.printerInformation.Length;//字体实际长度
-                        double stipluteNum = 25;//规定一行显示25个字
-                        int ColNum = 0;//列数
-                        if ((fontNum / stipluteNum) <= 0)
-                        {
-                            //小于一行则设置为一行
-                            ColNum = 1;
-                        }
-                        else
-                        {
-                            if (fontNum % stipluteNum == 0)
-                            {
-                                ColNum = (int)(fontNum / stipluteNum);
-                            }
-                            else
-                            {
-                                ColNum = (int)(fontNum / stipluteNum) + 1;
-                            }
-                        }
-                        double fontWidth = width / fontNum;//一个字的宽度
-                        double fontHeight = height;//一个字的高度
-                                                   //显示界面的宽度和高度
-                        if (ColNum == 1)
-                        {
-                            Info.Width = width + 10;
-                            Info.Height = height + 10;
-                        }
-                        else
-                        {
-                            Info.lb_showInformation.Width = (int)fontWidth * 25;
-                            Info.lb_showInformation.Height = (int)FontHeight * ColNum;
-                            Info.Width = Info.lb_showInformation.Width + 10;
-                            Info.Height = Info.lb_showInformation.Height + 10;
-                        }
-                        Info.Location = this.PointToClient(MousePosition);
-                        Info.ShowDialog();
+                        
+                        e.Node.ToolTipText = key.Key.stateMessage;
                     }
                 }
-
             }
         }
+
+
         #endregion
+
+        private void printerViewFlcok_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        private void printerViewFlcok_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+        {
+            if (SharMethod.dicFlockPrinterObjectTree.ContainsValue(e.Node))
+            {
+
+                foreach (var key in SharMethod.dicFlockPrinterObjectTree)
+                {
+                    if (key.Value == e.Node)
+                    {
+
+                        e.Node.ToolTipText = key.Key.stateMessage;
+                    }
+                }
+            }
+        }
     }
 }

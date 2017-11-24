@@ -34,7 +34,12 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         /// 记录在xml文档中的群打印机的子类和父类
         /// </summary>
         public static SortedDictionary<string, string> liprinterFlockMap = new SortedDictionary<string, string>();
- 
+
+        /// <summary>
+        /// 记录在xml文档中的界面显示内容
+        /// </summary>
+        public static SortedDictionary<string, string> liprintFlockInterface = new SortedDictionary<string, string>();
+
         /// <summary>
         ///记录树形分组的键值和节点
         /// </summary>
@@ -70,7 +75,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         public static SortedDictionary<string, PrinterObjects> dicPrinterUSB = new SortedDictionary<string, PrinterObjects>();
 
         /// <summary>
-        /// 所有打印机的对象和父类节点的名称
+        /// 所有打印机的对象和父类节点的名称,处理完毕就清理
         /// </summary>
         public static SortedDictionary<PrinterObjects,string> dicPrinterAll = new SortedDictionary<PrinterObjects,string>();
 
@@ -279,12 +284,9 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             {
                 XElement xt = new XElement(Child, father);
                 elm.Add(xt);
-                if (type == 1)
-                {
-                    elm = xel.Element("printInterface");
-                    xt = new XElement(Child, printInterface);
-                    elm.Add(xt);
-                }
+                elm = xel.Element("printInterface");
+                xt = new XElement(Child, printInterface);
+                elm.Add(xt);
                 xel.Save(file);
             }
             

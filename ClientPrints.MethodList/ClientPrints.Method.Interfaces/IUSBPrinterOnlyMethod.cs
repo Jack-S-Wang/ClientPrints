@@ -13,5 +13,11 @@ namespace ClientPrintsMethodList.ClientPrints.Method.Interfaces
         /// <param name="data"></param>
         /// <returns></returns>
         string getPrinterState(byte[] data);
+        /// <summary>
+        /// 获取设备信息格式内容
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        string getDevInfo(byte[] data);
     }
 }
