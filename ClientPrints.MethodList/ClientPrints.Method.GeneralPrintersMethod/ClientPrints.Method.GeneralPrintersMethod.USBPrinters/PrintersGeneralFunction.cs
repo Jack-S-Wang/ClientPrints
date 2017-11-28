@@ -2,13 +2,11 @@
 using ClientPrintsMethodList.ClientPrints.Method.Interfaces;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
-using ClientPrsintsMethodList.ClientPrints.Method.Interfaces;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -37,10 +35,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="pHandle">句柄值</param>
         private void printerMessage(string pathAddress, IntPtr pHandle)
         {
-            int imageIndex = 0;
             string stateMessage = "";
             string state = "";
-            Color cl = Color.Gray;
             int stateType = 0;
             //打开设备连接默认没有密码
             if (reInformation(WDevCmdObjects.DEV_CMD_CONNT, pHandle, new byte[0]).Equals("false"))
@@ -64,40 +60,28 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             switch (stateType)
             {
                 case 1://空闲
-                    imageIndex = 1;
                     stateMessage = keyState.majorState + ":" + keyState.StateMessage;
                     state = keyState.majorState;
-                    cl = System.Drawing.Color.Green;
                     break;
                 case 2://就绪
-                    imageIndex = 1;
                     stateMessage = keyState.majorState + ":" + keyState.StateMessage;
                     state = keyState.majorState;
-                    cl = System.Drawing.Color.Green;
                     break;
                 case 3://工作中
-                    imageIndex = 2;
                     stateMessage = keyState.majorState + ":" + keyState.StateMessage;
                     state = keyState.majorState;
-                    cl = System.Drawing.Color.Blue;
                     break;
                 case 4://繁忙
-                    imageIndex = 3;
-                    stateMessage = keyState.majorState+":"+keyState.StateMessage;
+                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
                     state = keyState.majorState;
-                    cl = System.Drawing.Color.Yellow;
                     break;
                 case 5://暂停
-                    imageIndex = 4;
                     stateMessage = keyState.majorState + ":" + keyState.StateMessage;
                     state = keyState.majorState;
-                    cl = System.Drawing.Color.Orange;
                     break;
                 case 6://异常
-                    imageIndex = 5;
                     stateMessage = keyState.majorState + ":" + keyState.StateMessage;
                     state = keyState.majorState;
-                    cl = System.Drawing.Color.Red;
                     break;
             }
             if (onlyAlias == "")
@@ -150,9 +134,6 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 MethodsObject = this,
                 addressMessage = pathAddress,
                 onlyAlias = onlyAlias,
-                color = cl,
-                ImageIndex = imageIndex,
-                interfaceMessage = alias + "(" + model + ")",
                 stateMessage = stateMessage,
                 state = state,
                 stateCode = stateType,

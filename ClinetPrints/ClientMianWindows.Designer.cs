@@ -121,7 +121,6 @@
             this.printerViewFlcok.Name = "printerViewFlcok";
             this.printerViewFlcok.Size = new System.Drawing.Size(209, 547);
             this.printerViewFlcok.TabIndex = 2;
-            this.printerViewFlcok.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.printerViewFlcok_NodeMouseHover);
             this.printerViewFlcok.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewFlcok_AfterSelect);
             // 
             // printerViewSingle
@@ -132,7 +131,6 @@
             this.printerViewSingle.Name = "printerViewSingle";
             this.printerViewSingle.Size = new System.Drawing.Size(209, 547);
             this.printerViewSingle.TabIndex = 0;
-            this.printerViewSingle.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.printerViewSingle_NodeMouseHover);
             this.printerViewSingle.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewSingle_AfterSelect);
             // 
             // menuStrip2
@@ -302,7 +300,6 @@
         private System.Windows.Forms.ToolStripMenuItem 全部展开ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 全部折叠ToolStripMenuItem;
         private System.Windows.Forms.Panel pan_mainWin1_tree;
-        private System.Windows.Forms.TreeView printerViewSingle;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Panel pan_mianWin1_image;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -316,7 +313,8 @@
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem 单台打印ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 群打印ToolStripMenuItem;
-        private System.Windows.Forms.TreeView printerViewFlcok;
+        public System.Windows.Forms.TreeView printerViewFlcok;
+        public System.Windows.Forms.TreeView printerViewSingle;
     }
 }
 

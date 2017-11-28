@@ -13,6 +13,9 @@ using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.MenuGroupMethod;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using System.Threading;
+using System.Runtime.Serialization.Formatters.Binary;
+using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
+using System.IO;
 
 namespace ClinetPrints
 {
@@ -74,22 +77,21 @@ namespace ClinetPrints
         /// </summary>
         private void AddFlockGroupMap()
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/groupFlockMap.xml");
-            XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
-            TreeNode flockNode = new TreeNode();
-            flockNode = this.printerViewFlcok.Nodes.Add("打印机群", "打印机群", 0);
-            SharMethod.dicFlockTree.Add("打印机群", flockNode);
-            new MenuFlockGroupMethod(flockNode, this);
-            if (xnode.ChildNodes.Count > 0)
+            var bf = new BinaryFormatter();
+            TreeNode tnode;
+            FileStream file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
+            if (file.Length != 0)
             {
-                TreeNode cnode = new TreeNode();
-                foreach (XmlNode xmlNode in xnode.ChildNodes)
-                {
-                    cnode = flockNode.Nodes.Add(xmlNode.Name, xmlNode.Name, 0);
-                    SharMethod.dicFlockTree.Add(xmlNode.Name, cnode);
-                    new MenuFlockGroupMethod(cnode, this);
-                }
+                tnode = bf.Deserialize(file) as GroupTreeNode;
+                this.printerViewFlcok.Nodes.Add(tnode);
+                SharMethod.FileClose(file);
+            }
+            else
+            {
+                tnode = new GroupTreeNode("打印机群", 0);
+                this.printerViewFlcok.Nodes.Add(tnode);
+                new MenuFlockGroupMethod(tnode, this);
+                SharMethod.SavePrinter(tnode, file);
             }
         }
 
@@ -98,31 +100,25 @@ namespace ClinetPrints
         /// </summary>
         private void AddGroupMap()
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/groupMap.xml");
-            if (xmlDoc.ChildNodes.Count > 0)
+            var bf = new BinaryFormatter();
+            TreeNode tnode;
+            FileStream file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+            if (file.Length!=0)
             {
-                XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
-                GetMapPrints(xnode,1);
-                nodeClientPrints = this.printerViewSingle.Nodes.Add("打印机序列", "打印机序列", 0);
-                SharMethod.dicTree.Add("打印机序列", nodeClientPrints);
-                new MenuGroupAddMethod(nodeClientPrints, this);
-                if (SharMethod.limap.Count > 0)
-                {
-                    //按画布生成节点
-                    createTree(nodeClientPrints);
-                    SharMethod.limap.Clear();
-                }
-            }
+                tnode = bf.Deserialize(file) as GroupTreeNode;
+                this.printerViewSingle.Nodes.Add(tnode);
+                SharMethod.FileClose(file);
+                new MenuGroupAddMethod(tnode, this);
+            } 
             else
             {
-                //定义树形节点
-                nodeClientPrints = this.printerViewSingle.Nodes.Add("打印机序列", "打印机序列", 0);
-                SharMethod.dicTree.Add("打印机序列", nodeClientPrints);
-                new MenuGroupAddMethod(nodeClientPrints, this);
-                TreeNode cnode = nodeClientPrints.Nodes.Add("所有打印机", "所有打印机", 0);
-                SharMethod.dicTree.Add("所有打印机", cnode);
+                tnode = new GroupTreeNode("打印机序列",0);
+                this.printerViewSingle.Nodes.Add(tnode);
+                new MenuGroupAddMethod(tnode, this);
+                TreeNode cnode = new GroupTreeNode("所有打印机", 0);
+                tnode.Nodes.Add(cnode);
                 new MenuGroupAddMethod(cnode, this);
+                SharMethod.SavePrinter(tnode, file);
             }
         }
 
@@ -131,15 +127,39 @@ namespace ClinetPrints
         /// </summary>
         private void AddPrinterMap()
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/printerMap.xml");
-            XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
-            GetMapPrints(xnode, 2);
-            xnode = xmlDoc.GetElementsByTagName("printInterface")[0];
-            GetMapPrints(xnode, 3);
+            TreeNode tnode=this.printerViewSingle.Nodes[0];
             //处理所有打印机
             SharMethod.getPrinter();
-            createPrintTree(); 
+            SharMethod.ForEachNode(tnode, (node) =>
+            {
+                if (node is PrinterTreeNode)
+                {
+                    var ptn = node as PrinterTreeNode;
+                    ptn.SetOffline();
+                    new MenuPrinterGroupAddMethod(ptn, this);
+                }
+            });
+            foreach (var keyva in SharMethod.liAllPrinter)
+            {
+                var results = tnode.Nodes.Find(keyva.onlyAlias, true);
+                if (results.Length > 0)
+                {
+                    if (results[0] is PrinterTreeNode)
+                    {
+                        (results[0] as PrinterTreeNode).PrinterObject = keyva;
+                        new MenuPrinterGroupAddMethod(results[0], this);
+                    }
+                }
+                else
+                {
+                    var all = tnode.Nodes.Find("所有打印机", false)[0];
+                    var cnode = new PrinterTreeNode(keyva);
+                    all.Nodes.Add(cnode);
+                    new MenuPrinterGroupAddMethod(cnode, this);
+                }
+            }
+            FileStream fileSingle = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+            SharMethod.SavePrinter(tnode, fileSingle);
         }
 
         /// <summary>
@@ -147,143 +167,33 @@ namespace ClinetPrints
         /// </summary>
         private void AddFlockPrinterMap()
         {
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"./printerXml/printerFlockMap.xml");
-            XmlNode xnode = xmlDoc.GetElementsByTagName("printMap")[0];
-            foreach (XmlNode node in xnode.ChildNodes)
+            TreeNode tnode=printerViewFlcok.Nodes[0];
+            SharMethod.ForEachNode(tnode, (node) =>
             {
-                SharMethod.liprinterFlockMap.Add(node.Name, node.InnerText);
-            }
-            xnode= xmlDoc.GetElementsByTagName("printInterface")[0];
-            foreach(XmlNode node in xnode.ChildNodes)
-            {
-                SharMethod.liprintFlockInterface.Add(node.Name, node.InnerText);
-            }
-            //处理所有打印机
-            TreeNode cnode;
-            foreach (var key in SharMethod.liprinterFlockMap)
-            {
-                foreach (var parkey in SharMethod.dicFlockTree)
+                if (node is PrinterTreeNode)
                 {
-                    if (key.Value == parkey.Key)
-                    {
-                        bool isExist = false;
-                        foreach(var printerTree in SharMethod.dicPrinterObjectTree)
-                        {
-                            if (key.Key == printerTree.Key.onlyAlias)
-                            {
-                                cnode = parkey.Value.Nodes.Add(key.Key, printerTree.Key.interfaceMessage, printerTree.Key.ImageIndex);
-                                cnode.ForeColor = printerTree.Key.color;
-                                cnode.SelectedImageIndex = printerTree.Key.ImageIndex;
-                                SharMethod.dicFlockPrinterObjectTree.Add(printerTree.Key, cnode);
-                                SharMethod.dicFlockPrintTree.Add(key.Key, cnode);
-                                new MenuPrinterFlockGroupMethod(cnode, this);
-                                isExist = true;
-                                break;
-                            }
-                        }
-                        if (!isExist)
-                        {
-                            cnode = parkey.Value.Nodes.Add(key.Key, SharMethod.liprintFlockInterface[key.Key], 6);
-                            cnode.ForeColor = System.Drawing.Color.Gray;
-                            cnode.SelectedImageIndex = 6;
-                            var flockPrinter = new PrinterObjects()
-                            {
-                                onlyAlias = key.Key,
-                                ImageIndex = 6,
-                                interfaceMessage = SharMethod.liprintFlockInterface[key.Key],
-                                stateMessage = "离线",
-                                color = Color.Gray,
-                                stateCode = 0
-                            };
-                            SharMethod.dicFlockPrinterObjectTree.Add(flockPrinter, cnode);
-                            SharMethod.dicFlockPrintTree.Add(key.Key, cnode);
-                            new MenuPrinterFlockGroupMethod(cnode, this);
-                        }
-                        break;
-                    }  
+                    var ptn = node as PrinterTreeNode;
+                    ptn.SetOffline();
+                    new MenuPrinterFlockGroupMethod(ptn,this);
                 }
-            }
-        }
-
-        /// <summary>
-        /// 按布局生成节点
-        /// </summary>
-        /// <param name="tnode">节点</param>
-        private void createTree(TreeNode tnode)
-        {
-            TreeNode cnode = new TreeNode();
-            for (int i = 0; i < SharMethod.limap.Count; i++)
+            });
+            foreach (var keyva in SharMethod.liAllPrinter)
             {
-                if (tnode.Name == SharMethod.limap.ElementAt(i).Value)//父类相同则生成子类
+                var results = tnode.Nodes.Find(keyva.onlyAlias, true);
+                if (results.Length > 0)
                 {
-                    cnode = tnode.Nodes.Add(SharMethod.limap.ElementAt(i).Key, SharMethod.limap.ElementAt(i).Key, 0);
-                    cnode.SelectedImageIndex = 0;
-                    SharMethod.dicTree.Add(SharMethod.limap.ElementAt(i).Key, cnode);
-                    new MenuGroupAddMethod(cnode,this);
-                    if (SharMethod.limap.ContainsValue(cnode.Name))//子类当中是否还有子类
+                    if (results[0] is PrinterTreeNode)
                     {
-                        createTree(cnode);
+                        (results[0] as PrinterTreeNode).PrinterObject = keyva;
+                        new MenuPrinterGroupAddMethod(results[0], this);
                     }
                 }
             }
+            FileStream file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
+            SharMethod.SavePrinter(tnode, file);
         }
 
-        /// <summary>
-        ///按打印机信息进行布局生成节点
-        /// </summary>
-        private void createPrintTree()
-        {
-            var tnode = new TreeNode();
-            var cnode = new TreeNode();
-            foreach (var key in SharMethod.dicPrinterAll)
-            {
-                if (SharMethod.dicTree.ContainsKey(key.Value))
-                {
-                    tnode = SharMethod.dicTree[key.Value];
-                    cnode = tnode.Nodes.Add(key.Key.onlyAlias, key.Key.interfaceMessage, key.Key.ImageIndex);
-                    cnode.SelectedImageIndex = key.Key.ImageIndex;
-                    cnode.ForeColor = key.Key.color;
-                    SharMethod.dicPrinterObjectTree.Add(key.Key, cnode);
-                    SharMethod.dicPrintTree.Add(key.Key.onlyAlias, cnode);
-                    new MenuPrinterGroupAddMethod(cnode, this);
-                }
-            }
-            //用完容器则清理
-            SharMethod.dicPrinterAll.Clear();
-        }
-
-       
-        /// <summary>
-        /// 从xml文件中获取画布内容
-        /// </summary>
-        /// <param name="xmlDoc">xml文档的节点</param>
-        /// <param name="type">1-分组，2-打印机,3-打印机的界面显示内容</param>
-        private void GetMapPrints(XmlNode xmlDoc,int type)
-        {
-            if (type == 1)
-            {
-                foreach (XmlNode node in xmlDoc.ChildNodes)
-                {
-                    SharMethod.limap.Add(node.Name, node.InnerText);
-                }
-            }
-            else if (type == 2)
-            {
-                foreach (XmlNode node in xmlDoc.ChildNodes)
-                {
-                    SharMethod.liprintmap.Add(node.Name, node.InnerText);
-                }
-            }
-            else
-            {
-                foreach (XmlNode node in xmlDoc.ChildNodes)
-                {
-                    SharMethod.liprintInterface.Add(node.Name, node.InnerText);
-                }
-            }
-        }
-        /// <summary>
+         /// <summary>
         /// 主程序右键所控制的按钮控件
         /// </summary>
         private void AddMunConten()
@@ -351,10 +261,14 @@ namespace ClinetPrints
                     {
                         if (printerViewSingle.Enabled)
                         {
-                            if (SharMethod.dicTree.ContainsKey(gn.name))
+                            TreeNode[] nodes = printerViewSingle.Nodes[0].Nodes.Find(gn.name, true);
+                            if (nodes.Length>0)
                             {
-                                //递归的找到父类，从第一层开始展开
-                                seriatimExpand(SharMethod.dicTree[gn.name]);
+                                for(int i = 0; i < nodes.Length; i++)
+                                {
+                                    nodes[i].EnsureVisible();
+                                }
+                               
                             }
                             else
                             {
@@ -363,10 +277,13 @@ namespace ClinetPrints
                         }
                         else
                         {
-                            if (SharMethod.dicFlockTree.ContainsKey(gn.name))
+                            TreeNode[] nodes = printerViewFlcok.Nodes[0].Nodes.Find(gn.name, true);
+                            if (nodes.Length>0)
                             {
-                                //递归的找到父类，从第一层开始展开
-                                seriatimExpand(SharMethod.dicFlockTree[gn.name]);
+                               for(int i = 0; i < nodes.Length; i++)
+                                {
+                                    nodes[i].EnsureVisible();
+                                }
                             }
                             else
                             {
@@ -386,22 +303,7 @@ namespace ClinetPrints
             }
         }
 
-        /// <summary>
-        /// 用递归的方式找到最顶级的父类，从父类开始逐一地全部展开到所要查找的节点
-        /// </summary>
-        /// <param name="node"></param>
-        private void seriatimExpand(TreeNode node)
-        {
-            if (node.Parent != null)
-            {
-                seriatimExpand(node.Parent);
-                node.Expand();
-            }
-            else
-            {
-                node.Expand();
-            }
-        }
+      
 
         private void 全部展开ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -492,21 +394,7 @@ namespace ClinetPrints
 
         }
           
-        private void printerViewSingle_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
-        {
-            if (SharMethod.dicPrinterObjectTree.ContainsValue(e.Node))
-            {
-                
-                foreach (var key in SharMethod.dicPrinterObjectTree)
-                {
-                    if (key.Value == e.Node)
-                    {
-                        
-                        e.Node.ToolTipText = key.Key.stateMessage;
-                    }
-                }
-            }
-        }
+     
 
 
         #endregion
@@ -514,22 +402,6 @@ namespace ClinetPrints
         private void printerViewFlcok_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
-        }
-
-        private void printerViewFlcok_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
-        {
-            if (SharMethod.dicFlockPrinterObjectTree.ContainsValue(e.Node))
-            {
-
-                foreach (var key in SharMethod.dicFlockPrinterObjectTree)
-                {
-                    if (key.Value == e.Node)
-                    {
-
-                        e.Node.ToolTipText = key.Key.stateMessage;
-                    }
-                }
-            }
         }
     }
 }

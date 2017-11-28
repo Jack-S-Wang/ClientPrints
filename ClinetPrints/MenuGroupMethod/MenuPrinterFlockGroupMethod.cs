@@ -1,4 +1,5 @@
 ﻿using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using System;
 using System.Collections.Generic;
@@ -12,47 +13,32 @@ namespace ClinetPrints.MenuGroupMethod
     {
         public MenuPrinterFlockGroupMethod(TreeNode tnode,ClientMianWindows clientForm)
         {
+            TreeNode nodeParFlock = clientForm.printerViewFlcok.Nodes[0];
             tnode.ContextMenu = null;
-            MenuItem menu1 = new MenuItem("删除");
-            MenuItem menu2 = new MenuItem("移位");
-            menu1.Click += (o, e) =>
+            MenuItem clearPrinter = new MenuItem("删除");
+            MenuItem remove = new MenuItem("移位");
+            clearPrinter.Click += (o, e) =>
             {
-                string[] name = new string[] { tnode.Name };
-                PrinterObjects pobject = new PrinterObjects();
-                foreach(var key in SharMethod.dicFlockPrinterObjectTree)
-                {
-                    if (key.Value == tnode)
-                    {
-                        pobject = key.Key;
-                        break;
-                    }
-                }
-                if (pobject != null)
-                    SharMethod.dicFlockPrinterObjectTree.Remove(pobject);
-                SharMethod.dicFlockPrintTree.Remove(name[0]);
-                SharMethod.ClearPrinterXmlGroup(name,2);
-                tnode.Parent.Nodes.Remove(tnode);
+                tnode.Remove();
+                var file=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                SharMethod.SavePrinter(nodeParFlock, file);
             };
-            foreach(var key in SharMethod.dicFlockTree)
+            foreach(TreeNode nod in nodeParFlock.Nodes)
             {
-                string name = key.Key;
-                TreeNode cnode = key.Value;
-                TreeNode parNode = tnode.Parent;
-                if (name != "打印机群")
+                //局部定义
+                TreeNode cnode = nod;
+                MenuItem group = new MenuItem(cnode.Name);
+                group.Click += (o, e) =>
                 {
-                    MenuItem group = new MenuItem(name);
-                    group.Click += (o, e) =>
-                    {
-                        parNode.Nodes.Remove(tnode);
-                        cnode.Nodes.Add(tnode);
-                        var dicxml = new Dictionary<string, string>();
-                        dicxml.Add(tnode.Name, name);
-                        SharMethod.renamePrintXmlGroup(dicxml, 2, 2);
-                    };
-                    menu2.MenuItems.Add(group);
-                } 
+                    var node = tnode as PrinterTreeNode;
+                    tnode.Remove();
+                    cnode.Nodes.Add(node);
+                    var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                    SharMethod.SavePrinter(nodeParFlock, file);
+                };
+                remove.MenuItems.Add(group);
             }
-            tnode.ContextMenu = new ContextMenu(new MenuItem[] { menu1, menu2 });
+            tnode.ContextMenu = new ContextMenu(new MenuItem[] { clearPrinter, remove });
         }
     }
 }

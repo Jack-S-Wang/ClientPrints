@@ -6,6 +6,7 @@ using System.Drawing;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 {
+    [Serializable]
     public class PrinterObjects : IComparable
     {
         /// <summary>
@@ -24,14 +25,8 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 句柄值
         /// </summary>
         public IntPtr pHandle { get; set; }
-        /// <summary>
-        /// 图片的序号
-        /// </summary>
-        public int ImageIndex { get; set; }
-        /// <summary>
-        /// 界面显示的信息内容
-        /// </summary>
-        public string interfaceMessage { get; set; }
+       
+       
         /// <summary>
         /// 储存的地址信息
         /// </summary>
@@ -48,10 +43,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 状态的信息内容
         /// </summary>
         public string stateMessage { get; set; }
-        /// <summary>
-        /// 获取颜色
-        /// </summary>
-        public Color color { get; set; }
+       
         /// <summary>
         /// 别名信息
         /// </summary>
@@ -63,7 +55,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// <summary>
         /// 对应获取执行打印方法的对象
         /// </summary>
-        public Object MethodsObject { get; set; }
+        public object MethodsObject { get; set; }
         /// <summary>
         /// 唯一标识
         /// </summary>

@@ -49,6 +49,7 @@
     <Compile Include="ClientPrints.Objects.Printers\PrinterObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterParams.cs" />
     <Compile Include="ClientPrints.Objects.TreeNode\GroupTreeNode.cs" />
+    <Compile Include="ClientPrints.Objects.TreeNode\PrinterTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

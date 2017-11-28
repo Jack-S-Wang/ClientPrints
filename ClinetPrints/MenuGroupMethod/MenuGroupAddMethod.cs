@@ -7,6 +7,8 @@ using ClinetPrints.SettingWindows;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using System.Xml.Linq;
 using System.Xml;
+using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
+using System.IO;
 
 namespace ClinetPrints.MenuGroupMethod
 {
@@ -14,6 +16,7 @@ namespace ClinetPrints.MenuGroupMethod
     {
         public MenuGroupAddMethod(TreeNode node,ClientMianWindows clientForm)
         {
+            TreeNode nodePar = clientForm.printerViewSingle.Nodes[0];
             //添加控件
             MenuItem menuItemGroup1 = new MenuItem("添加分组");//选择哪个节点就在那个节点上进行分组
             menuItemGroup1.Click += (o, e) =>
@@ -27,18 +30,24 @@ namespace ClinetPrints.MenuGroupMethod
 
                     if (na.name != "")
                     {
-                        if (!SharMethod.dicTree.ContainsKey(na.name))//是否定义过
+                        if (!node.Nodes.ContainsKey(na.name))//对该节点所对应的组是不允许有重复名，不在同一级是可以的
                         {
-                            TreeNode nodeChild = node.Nodes.Add(na.name, na.name);
+                            TreeNode nodeChild = new GroupTreeNode(na.name, 0);
+                            node.Nodes.Add(nodeChild);
                             //添加容器中对应的分组信息
-                            SharMethod.dicTree.Add(na.name, nodeChild);
                             new MenuGroupAddMethod(nodeChild, clientForm);
-                            foreach (var key in SharMethod.dicPrintTree)
+                            SharMethod.ForEachNode(nodePar, (nd) =>
                             {
-                                new MenuPrinterGroupAddMethod(key.Value, clientForm);
-                            }
-                            //将处理过的数据获取到并发送给服务器保存
-                            SharMethod.setXmlGroup(nodeChild,1);
+                                if (nd is PrinterTreeNode)
+                                {
+                                    var newnd=nd as PrinterTreeNode;
+                                    new MenuPrinterGroupAddMethod(newnd, clientForm);
+                                }
+                            });
+
+                            //将处理过的数据获取到并发送给配置文件保存
+                            FileStream file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                            SharMethod.SavePrinter(nodePar, file);
                         }
                         else
                         {
@@ -68,44 +77,42 @@ namespace ClinetPrints.MenuGroupMethod
                         DialogResult dr = clientForm.showException("该组有其他数据，确认将所有的设备放置到所有列表中", "提示信息", MessageBoxButtons.OK);
                         if (dr == DialogResult.OK)
                         {
-                            //遍历找到对应要清理的节点名称，并进行容器的清理
-                            forTreeNodeName(node);
-                            liName.Add(node.Name);
-                            //对配置文件中的相关数据进行清理
-                            SharMethod.ClearXmlData(liName,1);
-                            foreach (string name in liName)
-                            {
-                                SharMethod.dicTree.Remove(name);
-                            }
-                            node.Parent.Nodes.Remove(node);
-                            //对存在于该组的打印机重新分配到所有打印机的列表中
-                            Dictionary<string, string> dicxml = new Dictionary<string, string>();
-                            foreach (var nd in liPrintName)
-                            {
-                                dicxml.Add(nd.Name, nd.Text);
-                            }
-                            SharMethod.renamePrintXmlGroup(dicxml, 2,1);
-                            foreach (var key in SharMethod.dicPrintTree)
-                            {
-                                new MenuPrinterGroupAddMethod(key.Value, clientForm);
-                            }
+                            
+                            SharMethod.ForEachNode(nodePar, (no) => {
+                                if(no is PrinterTreeNode)
+                                {
+                                    var newno = no as PrinterTreeNode;
+                                    no.Remove();
+                                    nodePar.Nodes["所有打印机"].Nodes.Add(newno);
+                                   
+                                }
+                            });
+                            node.Remove();
+                            SharMethod.ForEachNode(nodePar, (no) => {
+                                if (no is PrinterTreeNode)
+                                {
+                                    var newno = no as PrinterTreeNode;
+                                    new MenuPrinterGroupAddMethod(newno, clientForm);
+                                }
+                            });
+                            FileStream file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                            SharMethod.SavePrinter(nodePar, file);
                         }
                     }
                     else
                     {
-                        liName.Add(node.Name);
-                        //对配置文件中的相关数据进行清理
-                        SharMethod.ClearXmlData(liName,1);
-                        foreach (string name in liName)
-                        {
-                            SharMethod.dicTree.Remove(name);
-                        }
-                        node.Parent.Nodes.Remove(node);
-                        foreach (var key in SharMethod.dicPrintTree)
-                        {
-                            new MenuPrinterGroupAddMethod(key.Value, clientForm);
-                        }
+                        node.Remove();
+                        SharMethod.ForEachNode(nodePar, (no) => {
+                            if (no is PrinterTreeNode)
+                            {
+                                var newno = no as PrinterTreeNode;
+                                new MenuPrinterGroupAddMethod(newno, clientForm);
+                            }
+                        });
+                        FileStream file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                        SharMethod.SavePrinter(nodePar, file);
                     }
+                    
                 };
                 menuItemGroup3.Click += (o, e) =>
                 {
@@ -116,39 +123,22 @@ namespace ClinetPrints.MenuGroupMethod
                     na.ShowDialog();
                     if (na.name != "")
                     {
-                        if (!SharMethod.dicTree.ContainsKey(na.name))
+                        if (!node.Parent.Nodes.ContainsKey(na.name))
                         {
-                            string oldname = node.Name;
-                            SharMethod.dicTree.Remove(node.Name);
                             node.Name = na.name;
                             node.Text = na.name;
-                            SharMethod.dicTree.Add(na.name, node);
                             if (node.Nodes.Count > 0)
                             {
-                                //记录要修改配置文件的那些内容，以子节点的键为键
-                                Dictionary<string, string> dicGroupxml = new Dictionary<string, string>();
-                                Dictionary<string, string> dicPrintxml = new Dictionary<string, string>();
-                                foreach (TreeNode cnode in node.Nodes)
-                                {
-                                    if (SharMethod.dicTree.ContainsKey(cnode.Name))//如果是分组信息
+                                SharMethod.ForEachNode(nodePar, (no) => {
+                                    if (no is PrinterTreeNode)
                                     {
-                                        dicGroupxml.Add(cnode.Name, na.name);
+                                        var noGroup = no as PrinterTreeNode;
+                                        new MenuPrinterGroupAddMethod(nodePar, clientForm);
                                     }
-                                    if (SharMethod.dicPrintTree.ContainsKey(cnode.Name))//如果是打印机信息
-                                    {
-                                        dicPrintxml.Add(cnode.Name, na.name);
-                                    }
-                                }
-                                dicGroupxml.Add(oldname, na.name);
-                                SharMethod.renameXmlGroup(dicGroupxml, oldname,1);
-                                SharMethod.renamePrintXmlGroup(dicPrintxml, 2,1);
-                                foreach(var key in SharMethod.dicPrintTree)
-                                {
-                                    new MenuPrinterGroupAddMethod(key.Value, clientForm);
-                                }
+                                });
                             }
-
-
+                            var file=SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                            SharMethod.SavePrinter(nodePar, file);
                         }
                         else
                         {
@@ -171,33 +161,6 @@ namespace ClinetPrints.MenuGroupMethod
                 node.ContextMenu = new ContextMenu(new MenuItem[] { menuItemGroup1 });
             }
 
-        }
-
-       
-
-        List<string> liName = new List<string>();
-        List<TreeNode> liPrintName = new List<TreeNode>();
-        /// <summary>
-        /// 获取要清理的分组名称
-        /// </summary>
-        /// <param name="tnode"></param>
-        private void forTreeNodeName(TreeNode tnode)
-        {
-            foreach (TreeNode nd in tnode.Nodes)
-            {
-                if (nd.Nodes.Count > 0)
-                {
-                    forTreeNodeName(nd);
-                }
-                if (SharMethod.dicTree.ContainsKey(nd.Name))//找到组的节点
-                {
-                    liName.Add(nd.Name);
-                }
-                if (SharMethod.dicPrintTree.ContainsKey(nd.Name))//找到打印机的节点
-                {
-                    liPrintName.Add(nd);
-                }
-            }
         }
        
     }

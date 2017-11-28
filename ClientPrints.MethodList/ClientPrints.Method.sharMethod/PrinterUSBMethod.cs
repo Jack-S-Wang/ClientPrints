@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
-using System.Threading;
-using System.Runtime.InteropServices;
-using ClientPrsintsMethodList.ClientPrints.Method.Interfaces;
-using ClientPrintsMethodList.ClientPrints.Method.DevBmpDll;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 
 namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 {
-    public class PrinterUSBMethod:IPrinterMethod
+    public class PrinterUSBMethod
     {
         
         /// <summary>
