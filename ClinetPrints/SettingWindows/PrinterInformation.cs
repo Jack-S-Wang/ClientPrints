@@ -21,7 +21,7 @@ namespace ClinetPrints.SettingWindows
         public static string printerInformation = "";
         private void PrinterInformation_Load(object sender, EventArgs e)
         {
-            this.lb_showInformation.Text = printerInformation;
+            
         }
     }
 }

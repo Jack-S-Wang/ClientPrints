@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
-using System.Xml.Linq;
-using System.Xml;
-using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
 using System.IO;
+using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 
 namespace ClinetPrints.MenuGroupMethod
 {

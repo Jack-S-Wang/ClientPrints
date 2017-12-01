@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
-using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
-using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
+using System.Threading;
+using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 
 namespace ClinetPrints.MenuGroupMethod
 {
@@ -66,7 +65,17 @@ namespace ClinetPrints.MenuGroupMethod
             };
             remove.Click += (o, e) =>
             {
-
+                var threadShow = new Thread((d) =>
+                  {
+                      RemoveToOther removeTo = new RemoveToOther(tnode,clientForm);
+                      removeTo.tnode = nodeParSingle;
+                      removeTo.Enabled = true;
+                      removeTo.StartPosition = FormStartPosition.CenterParent;
+                      removeTo.ShowDialog();
+                      var thread = Thread.CurrentThread;
+                      thread.Abort();
+                  });
+                threadShow.Start();
             };
             
             clearPrinter.Click += (o, e) =>
@@ -139,10 +148,17 @@ namespace ClinetPrints.MenuGroupMethod
                     TreeNode flockNode = nod;
                     groupMenu.Click += (o, e) =>
                     {
+                        var np = tnode as PrinterTreeNode;
                         if (nodeParFlock.Nodes.Find(tnode.Name,true).Length<=0)
                         {
-                            var np = tnode as PrinterTreeNode;
-                            TreeNode cnode = np;
+                            PrinterTreeNode cnode;
+                            if (np.StateCode.ToString().Equals("0"))
+                            {
+                                 cnode = new PrinterTreeNode(np.Name, np.Text);
+                            }else
+                            {
+                                 cnode = new PrinterTreeNode(np.PrinterObject);
+                            }
                             flockNode.Nodes.Add(cnode);
                             new MenuPrinterFlockGroupMethod(cnode, clientForm);
                         }else
@@ -150,8 +166,15 @@ namespace ClinetPrints.MenuGroupMethod
                             DialogResult dr = clientForm.showException("该打印机已经分配到一个组中，是否将它分配到现在的组中？", "提示警告", MessageBoxButtons.OKCancel);
                             if (dr == DialogResult.OK)
                             {
-                                var np = tnode as PrinterTreeNode;
-                                TreeNode cnode = np;
+                                PrinterTreeNode cnode;
+                                if (np.StateCode.ToString().Equals("0"))
+                                {
+                                    cnode = new PrinterTreeNode(np.Name, np.Text);
+                                }
+                                else
+                                {
+                                    cnode = new PrinterTreeNode(np.PrinterObject);
+                                }
                                 nodeParFlock.Nodes.Find(tnode.Name, true)[0].Remove();
                                 flockNode.Nodes.Add(cnode);
                                 new MenuPrinterFlockGroupMethod(cnode, clientForm); 

@@ -1,10 +1,6 @@
-﻿using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.SettingWindows;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ClinetPrints.MenuGroupMethod
@@ -37,7 +33,7 @@ namespace ClinetPrints.MenuGroupMethod
                             TreeNode nodeChild = new GroupTreeNode(na.name,0);
                             tnode.Nodes.Add(nodeChild);
                             new MenuFlockGroupMethod(nodeChild, clientForm);
-                            SharMethod.ForEachNode(nodeParFlock, (no) =>
+                            SharMethod.ForEachNode(tnode, (no) =>
                             {
                                 if(no is PrinterTreeNode)
                                 {
@@ -53,7 +49,7 @@ namespace ClinetPrints.MenuGroupMethod
                                 }
                             });
                             var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
-                            SharMethod.SavePrinter(nodeParFlock, file);
+                            SharMethod.SavePrinter(tnode, file);
                             file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                             SharMethod.SavePrinter(nodeParSingle, file);                         
                         }

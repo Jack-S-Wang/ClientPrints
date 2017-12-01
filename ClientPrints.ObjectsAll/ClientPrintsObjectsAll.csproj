@@ -48,8 +48,8 @@
     <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objects.Printers.JSON\PrinterJson.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterParams.cs" />
-    <Compile Include="ClientPrints.Objects.TreeNode\GroupTreeNode.cs" />
-    <Compile Include="ClientPrints.Objects.TreeNode\PrinterTreeNode.cs" />
+    <Compile Include="ClientPrints.Objects.treeNodeObject\GroupTreeNode.cs" />
+    <Compile Include="ClientPrints.Objects.treeNodeObject\PrinterTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

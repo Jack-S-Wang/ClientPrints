@@ -210,6 +210,10 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         public static int BMP_DEVPROP_PMODE_ERASE = 1;  //只擦除
         public static int BMP_DEVPROP_PMODE_PRNONLY = 2;//只打印
 
+        /// <summary>
+        /// 数据打印时的ID值
+        /// </summary>
+        public static int DEVBMP_ID = 0x4250;
         #endregion
     }
 }

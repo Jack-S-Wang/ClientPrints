@@ -46,9 +46,9 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         public struct DEVACK_INFO
         {
             /// <summary>
-            /// 设备返回的数据
+            /// 设备返回的数据，必须先设置非托管内存大小
             /// </summary>
-            public IntPtr lpBuf;		//设备返回的数据
+            public IntPtr lpBuf;		//设备返回的数据,
             /// <summary>
             /// 缓冲大小
             /// </summary>
@@ -334,9 +334,9 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// </summary>
             public byte cmprType;
             /// <summary>
-            /// 用户传入的设备全部参数
+            /// 调试输出文件的文件名。
             /// </summary>
-            public DEV_BMP userParm;
+            public string userParm;
         }
 
         /// <summary>
@@ -377,23 +377,24 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 像素颜色深度(bits)
             /// </summary>
-            public ushort bpps;        //
+            public byte bpps;        //
             /// <summary>
             /// 设备位图类型，1：光栅位图
             /// </summary>
-            public ushort bmpType; //设备位图类型，1：光栅位图
+            public byte bmpType; //设备位图类型，1：光栅位图
             /// <summary>
             /// 4
             /// </summary>
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             public byte[] ret;//4
             /// <summary>
             /// 设备参数传入
             /// </summary>
             public DEVPROP_INFO devInfo;
             /// <summary>
-            /// 前景和背景位图数据
+            /// 前景和背景位图数据,位图数据要拼凑进去
             /// </summary>
-            public IntPtr BmpDats;	//
+            //public IntPtr BmpDats;
         }
 
         /// <summary>
@@ -403,7 +404,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         public struct DEVPROP_INFO
         {
             public ushort size;
-            public byte[] revs;//2
+            /// <summary>
+            /// 2
+            /// </summary>
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+            public byte[] revs;
             public DEVPROP_PRNOUT prnProp;
         }
 
@@ -438,27 +443,27 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// </summary>
             public byte cardOutputMode;// 
             /// <summary>
-            /// 打印温度 -- 0 <= t <= 20
+            /// 打印温度 -- 0 -20
             /// </summary>
             public byte printTemp;   // 
             /// <summary>
-            /// 打印对比度 -- 0 <= t <= 20
+            /// 打印对比度 -- 0 -20
             /// </summary>
             public byte printContrast;// 
             /// <summary>
-            /// 打印速度 -- 0 <= s <= 20
+            /// 打印速度 -- 0-20
             /// </summary>
             public byte printSpeed;  // 
             /// <summary>
-            /// 灰度温度 -- 0 <= t <= 20
+            /// 灰度温度 -- 0-20
             /// </summary>
             public byte grayTemp;    // 
             /// <summary>
-            /// 擦除速度 -- 0 <= s <= 20
+            /// 擦除速度 -- 0-20
             /// </summary>
             public byte graySpeed;   // 
             /// <summary>
-            /// 设置擦除温度 -- 0 <= t <= 20
+            /// 设置擦除温度 --0-20
             /// </summary>
             public byte eraseTemp;   // 
             /// <summary>
@@ -468,6 +473,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 3
             /// </summary>
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public byte[] revs;//3
         }
     }

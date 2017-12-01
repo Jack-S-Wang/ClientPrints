@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
 using ClinetPrints.SettingWindows;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.MenuGroupMethod;
-using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
-using System.Threading;
 using System.Runtime.Serialization.Formatters.Binary;
-using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
 using System.IO;
+using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 
 namespace ClinetPrints
 {
@@ -85,6 +76,14 @@ namespace ClinetPrints
                 tnode = bf.Deserialize(file) as GroupTreeNode;
                 this.printerViewFlcok.Nodes.Add(tnode);
                 SharMethod.FileClose(file);
+                SharMethod.ForEachNode(tnode, (nod) =>
+                {
+                    if (nod is GroupTreeNode)
+                    {
+                        var n = nod as GroupTreeNode;
+                        new MenuFlockGroupMethod(n, this);
+                    }
+                });
             }
             else
             {
@@ -108,7 +107,14 @@ namespace ClinetPrints
                 tnode = bf.Deserialize(file) as GroupTreeNode;
                 this.printerViewSingle.Nodes.Add(tnode);
                 SharMethod.FileClose(file);
-                new MenuGroupAddMethod(tnode, this);
+                SharMethod.ForEachNode(tnode, (nod) =>
+                {
+                    if(nod is GroupTreeNode)
+                    {
+                        var n = nod as GroupTreeNode;
+                        new MenuGroupAddMethod(n, this);
+                    }  
+                });
             } 
             else
             {
@@ -185,7 +191,7 @@ namespace ClinetPrints
                     if (results[0] is PrinterTreeNode)
                     {
                         (results[0] as PrinterTreeNode).PrinterObject = keyva;
-                        new MenuPrinterGroupAddMethod(results[0], this);
+                        new MenuPrinterFlockGroupMethod(results[0], this);
                     }
                 }
             }
@@ -268,7 +274,6 @@ namespace ClinetPrints
                                 {
                                     nodes[i].EnsureVisible();
                                 }
-                               
                             }
                             else
                             {

@@ -8,6 +8,7 @@ using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using Newtonsoft.Json;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -322,11 +323,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         {
             if (pathFile == "")
                 return false;
+
+           
             var devProt = new structBmpClass.DeviceProterty()
             {
                 dmThicken = 1,//01指2位数，就是2色的意思
-                nWidth = 1016,
-                nHeight = 648,
+                nWidth = 648,
+                nHeight = 1016,
                 dmPrintQuality = 0,
                 dmYResolution = 0,
                 dmTag = 0x01
@@ -342,33 +345,74 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             {
                 IntPtr bites = DevBmpDllMethod.GetBits();
                 int len = DevBmpDllMethod.GetLength();
-                //IntPtr outBites = IntPtr.Zero;
-                //int outSize = len+1;
-                //int output = 0;
-                //outBites = Marshal.AllocCoTaskMem(len+1);
-                //output = DevBmpDllMethod.DS_Compress(7, bites, len,  outBites, out outSize);
-                //uint outLen = 0;
-                //if (WDevDllMethod.dllFunc_Write(pHandle, outBites, (uint)output, out outLen, IntPtr.Zero))
+
+                var devprop = new structClassDll.DEVPROP_PRNOUT()
+                {
+                    bkBmpID = (byte)WDevCmdObjects.BMP_DEVPROP_BKNONE,
+                    cardInputMode = 1,
+                    cardOutputMode = 1,
+                    cardType = 0,
+                    devType = (byte)WDevCmdObjects.BMP_DEVPROP_PRN,
+                    eraseTemp = 10,
+                    graySpeed = 10,
+                    grayTemp = 10,
+                    printContrast = 10,
+                    printMode = 0,
+                    printSpeed = 10,
+                    printTemp = 15,
+                    revs = new byte[3],
+                    propSize=(byte)Marshal.SizeOf(typeof(structClassDll.DEVPROP_PRNOUT))
+                };
+                
+                var devinfo = new structClassDll.DEVPROP_INFO()
+                {
+                    revs = new byte[2],
+                    size=(ushort)(4+devprop.propSize),
+                    prnProp=devprop
+                   
+                };
+                var devbm = new structClassDll.DEV_BMP()
+                {
+                    bkPixelH = 0,
+                    txPixelH = 1016,
+                    bmpType = po.pParams.pixelformat,
+                    bpps = (byte)po.pParams.colorDepth,
+                    dpi = (ushort)po.pParams.DIP,
+                    ID = (ushort)WDevCmdObjects.DEVBMP_ID,
+                    pixelW = 648,
+                    posX=0,
+                    posY=0,
+                    ret=new byte[4],
+                    devInfo=devinfo
+                };
+              
+                var tmp = new byte[len];
+                Marshal.Copy(bites, tmp, 0, len);
+
+                var memblockSize = Marshal.SizeOf(devbm) + len;
+                var memblock = Marshal.AllocHGlobal(memblockSize);
+
+                Marshal.StructureToPtr(devbm, memblock, false);
+                var bmpPtr = IntPtr.Add(memblock, Marshal.SizeOf(devbm));
+                Marshal.Copy(tmp, 0, bmpPtr, len);
+
                 var lope = new structClassDll.UNCMPR_INFO()
                 {
-                    cmprLen = (UInt32)len,
-                    uncmprLen = (UInt32)len + 1,
+                    cmprLen =0,
+                    uncmprLen =0,
                     stat = 0,
                     jobNumber = 1,
                     resultTag = 0,
                     cmprType = 0,
-                    frmIdx = 0
-
+                    frmIdx = 0,
+                    userParm= "wDevObj.log"
                 };
-                if (WDevDllMethod.dllFunc_WriteEx(po.pHandle, bites, (uint)len, (uint)3, ref lope))
-                {
-                    WDevDllMethod.dllFunc_CloseLog(po.pHandle);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                tmp = null;
+                bool success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
+                Marshal.FreeHGlobal(memblock);
+                WDevDllMethod.dllFunc_CloseLog(po.pHandle);
+                return success;
+               
             }
             else
             {

@@ -64,13 +64,14 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// 写数据到设备的数据端口，已压缩过的数据
         /// </summary>
         /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
-        /// <param name="inDats">需要写到设备的数据</param>
-        /// <param name="inLen">数据长度，字节单位</param>
+        /// <param name="inDats">DEV_BMP的首地址</param>
+        /// <param name="inLen">DEV_BMP以及跟在它后面的图像数据的总长，字节单位</param>
         /// <param name="modeTag">1-完整性数据发送，2-位图数据,3-两者都有</param>
         /// <param name="lpOut">输出的指针信息</param>
         /// <returns></returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, ref structClassDll.UNCMPR_INFO lpOut);
+        //public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [Out] structClassDll.UNCMPR_INFO lpOut);
+        public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [In,Out]ref structClassDll.UNCMPR_INFO lpOut);
         /// <summary>
         /// 读数据到设备的数据端口
         /// </summary>
@@ -82,7 +83,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <returns>v</returns>
         /// <remarks>必须打开设备的数据端口</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_Read(IntPtr pHandle, byte[] inDats, uint inLen, [Out] uint outLen, ref structClassDll.OVERLAPPED lpOvlpd);
+        public static extern bool dllFunc_Read(IntPtr pHandle, byte[] inDats, uint inLen, out uint outLen, ref structClassDll.OVERLAPPED lpOvlpd);
 
       
 

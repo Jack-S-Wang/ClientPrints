@@ -8,6 +8,13 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
     public class PrinterParams
     {
         /// <summary>
+        /// 设备最大的dip值
+        /// </summary>
+        public int DIP
+        {
+            get { return 203; }
+        }
+        /// <summary>
         /// 设备信息
         /// </summary>
         public string devInfo { get; set; }

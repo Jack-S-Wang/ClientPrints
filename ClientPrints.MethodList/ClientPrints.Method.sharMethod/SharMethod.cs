@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
-using System.Drawing;
 using System.IO;
-using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
 
@@ -59,11 +55,6 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             {
                 ForEachNode(n, action);
             }
-
-            if (node.NextNode != null)
-            {
-                ForEachNode(node.NextNode, action);
-            }
         }
 
         /// <summary>
@@ -87,11 +78,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             FileStream file;
             if (type == 1)
             {
-                file = new FileStream(@"./printerXml/printerSingle.bin", FileMode.Create);
+                file = new FileStream(@"./printerXml/printerSingle.bin", FileMode.OpenOrCreate);
 
             }else
             {
-                file = new FileStream(@"./printerXml/printerFlock.bin", FileMode.Create);
+                file = new FileStream(@"./printerXml/printerFlock.bin", FileMode.OpenOrCreate);
             }
             return file;
         }

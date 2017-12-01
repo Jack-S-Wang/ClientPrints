@@ -1,10 +1,5 @@
-﻿using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
-using ClientPrintsObjectsAll.ClientPrints.Objects.TreeNode;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ClinetPrints.MenuGroupMethod
