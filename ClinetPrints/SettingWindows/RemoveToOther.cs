@@ -22,16 +22,17 @@ namespace ClinetPrints.SettingWindows
         /// <summary>
         /// 将对应节点传入
         /// </summary>
-        public TreeNode tnode;
+        public TreeNode PtNode;
 
         private void RemoveToOther_Load(object sender, EventArgs e)
         {
+            this.listView1.ShowItemToolTips = true;
             this.toolStBtn_back.Enabled = false;
-            if (tnode != null)
+            if (PtNode != null)
             {
                 this.listView1.Columns.RemoveAt(0);
-                this.listView1.Columns.Add(new RemoveColumns(tnode));
-                SharMethod.ForEachNode(tnode, (node) =>
+                this.listView1.Columns.Add(new RemoveColumns(PtNode));
+                SharMethod.ForEachNode(PtNode, (node) =>
                 {
                     if (node is GroupTreeNode)
                     {
@@ -48,8 +49,11 @@ namespace ClinetPrints.SettingWindows
         public TreeNode sureNode;
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if (e.Item != null)
+            {
             var item = e.Item as RemoveItems;
             sureNode = item.itemNode;
+            }
         }
         /// <summary>
         /// 返回
@@ -81,7 +85,7 @@ namespace ClinetPrints.SettingWindows
             this.listView1.Columns.RemoveAt(0);
             this.listView1.Columns.Add(new RemoveColumns(Pnode));
             this.listView1.Items.Clear();
-            SharMethod.ForEachNode(tnode, (node) =>
+            SharMethod.ForEachNode(PtNode, (node) =>
             {
                 if (node is GroupTreeNode)
                 {
@@ -91,6 +95,7 @@ namespace ClinetPrints.SettingWindows
                         if (nod.Parent.Name == Pnode.Name && nod.Level-1 == Pnode.Level)
                         {
                             this.listView1.Items.Add(new RemoveItems(nod));
+                            
                         }
                     }
                 }
@@ -102,7 +107,14 @@ namespace ClinetPrints.SettingWindows
             try
             {
                 var col = this.listView1.Columns[0] as RemoveColumns;
-                setViewItems(col.Coltnode.Parent, Back);
+                if (col.ColPnode != null)
+                {
+                    setViewItems(col.ColPnode, Back);
+                }
+                else
+                {
+                    setViewItems(col.Coltnode.Parent, Back);
+                }
             }
             catch (Exception ex)
             {
@@ -122,7 +134,7 @@ namespace ClinetPrints.SettingWindows
                 }
                 else
                 {
-                    MessageBox.Show("前先选择要往下级寻找的组！");
+                    MessageBox.Show("请先选择要往下级寻找的组！");
                 }
             }
             catch (Exception ex)
@@ -151,11 +163,13 @@ namespace ClinetPrints.SettingWindows
             {
                 if (toolStTxb_groupName.Text != "")
                 {
-                    var colum = this.listView1.Columns[0] as RemoveColumns;
-                    colum.setText("模糊查询的组");
+                    this.toolStBtn_back.Enabled = true;
+                    var col=this.listView1.Columns[0] as RemoveColumns;
+                    this.listView1.Columns.RemoveAt(0);
+                    this.listView1.Columns.Add(new RemoveColumns(col.Coltnode,PtNode, toolStTxb_groupName.Text.Trim()));
                     this.listView1.Items.Clear();
                     int count = 0;
-                    SharMethod.ForEachNode(tnode, (node) =>
+                    SharMethod.ForEachNode(PtNode, (node) =>
                     {
                         if (node is GroupTreeNode)
                         {
@@ -185,14 +199,18 @@ namespace ClinetPrints.SettingWindows
         {
             try
             {
-                SharMethod.ForEachNode(tnode, (node) =>
+                this.toolStBtn_back.Enabled = false;
+                this.listView1.Items.Clear();
+                this.listView1.Columns.RemoveAt(0);
+                this.listView1.Columns.Add(new RemoveColumns(PtNode));
+                SharMethod.ForEachNode(PtNode, (node) =>
                 {
                     if (node is GroupTreeNode)
                     {
                         var nod = node as GroupTreeNode;
                         if (nod.Level == 1)
                         {
-                            this.listView1.Items.Add(nod.Name);
+                            this.listView1.Items.Add(new RemoveItems(nod));
                         }
                     }
                 });
@@ -204,6 +222,9 @@ namespace ClinetPrints.SettingWindows
             }
         }
 
+
+        delegate void closeForm();
+        delegate DialogResult messageShow(string str);
         private void toolStBtn_sure_Click(object sender, EventArgs e)
         {
             try
@@ -220,7 +241,6 @@ namespace ClinetPrints.SettingWindows
 
                             if (cnode.PrinterObject != null)
                             {
-
                                 nowNode = new PrinterTreeNode(cnode.PrinterObject);
                                 sureNode.Nodes.Add(nowNode);
                                 cnode.Remove();
@@ -233,8 +253,14 @@ namespace ClinetPrints.SettingWindows
                             }
                             new MenuPrinterGroupAddMethod(nowNode, clientForm);
                             var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
-                            SharMethod.SavePrinter(tnode, file);
-                            MessageBox.Show("移位成功！");
+                            SharMethod.SavePrinter(PtNode, file);
+                            #region.....//这是设置主程序在其他线程中关闭时调用的委托
+                            if (this.InvokeRequired)
+                            {
+                                this.Invoke(new messageShow(MessageBox.Show), "移位成功！");
+                                this.Invoke(new closeForm(this.Close));
+                            }
+                            #endregion
                         }else
                         {
                             MessageBox.Show("已经存在该打印机了！");
@@ -255,6 +281,7 @@ namespace ClinetPrints.SettingWindows
     public class RemoveItems : ListViewItem
     {
         private TreeNode _itemNode;
+        private List<string> liNode = new List<string>();
         public TreeNode itemNode
         {
             get
@@ -265,6 +292,16 @@ namespace ClinetPrints.SettingWindows
             {
                 Text = value.Name;
                 _itemNode = value;
+                SharMethod.ForTopEachNode(value, (n) =>
+                {
+                    liNode.Add(n.Name);
+                });
+                string str = "";
+                for(int i=liNode.Count-1;i>0 && i < liNode.Count; i--)
+                {
+                    str += liNode[i] + "/";
+                }
+                ToolTipText = str;
             }
         }
         /// <summary>
@@ -280,6 +317,7 @@ namespace ClinetPrints.SettingWindows
     public class RemoveColumns : ColumnHeader
     {
         private TreeNode _Coltnode;
+        private int count = 0;
         public TreeNode Coltnode
         {
             get
@@ -288,12 +326,20 @@ namespace ClinetPrints.SettingWindows
             }
             set
             {
+                foreach(var nod in value.Nodes)
+                {
+                    if(nod is GroupTreeNode)
+                    {
+                        count++;
+                    }
+                }
                 Name = value.Text;
-                Text = value.Text +" /"+value.Nodes.Count;
+                Text = value.Text +" / "+count;
                 Width = 297;
                 _Coltnode = value;
             }
         }
+        public TreeNode ColPnode;
         /// <summary>
         /// 创建保存节点的纵队Column
         /// </summary>
@@ -302,9 +348,30 @@ namespace ClinetPrints.SettingWindows
         {
             Coltnode = tnode;
         }
-        public void setText(string nowText)
+
+        /// <summary>
+        /// 创建查询对象并保存当前进入的节点信息
+        /// </summary>
+        /// <param name="Pnode">当前点击查询进入的节点信息</param>
+        /// <param name="PtNode">根节点</param>
+        /// <param name="name">模糊查询的名称</param>
+        public RemoveColumns(TreeNode Pnode,TreeNode PtNode,string name)
         {
-            Text = nowText;
+            SharMethod.ForEachNode(PtNode, (node) =>
+            {
+                if (node is GroupTreeNode)
+                {
+                    var nod = node as GroupTreeNode;
+                    if (nod.Name.Contains(name))
+                    {
+                        count++;
+                    }
+                }
+            });
+            Name ="模糊查询的组";
+            Text = "模糊查询的组 / " + count;
+            Width = 297;
+            ColPnode = Pnode;
         }
     }
 }

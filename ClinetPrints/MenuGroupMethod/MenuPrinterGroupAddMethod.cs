@@ -68,7 +68,7 @@ namespace ClinetPrints.MenuGroupMethod
                 var threadShow = new Thread((d) =>
                   {
                       RemoveToOther removeTo = new RemoveToOther(tnode,clientForm);
-                      removeTo.tnode = nodeParSingle;
+                      removeTo.PtNode = nodeParSingle;
                       removeTo.Enabled = true;
                       removeTo.StartPosition = FormStartPosition.CenterParent;
                       removeTo.ShowDialog();

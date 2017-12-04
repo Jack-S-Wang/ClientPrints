@@ -20,10 +20,6 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 
         public static List<PrinterObjects> liAllPrinter = new List<PrinterObjects>();
 
-        /// <summary>
-        /// 记录打印机没有标识信息的数量
-        /// </summary>
-        public static int emptyCount = 0;
 
         /// <summary>
         /// 导入的图片的绝对路径
@@ -54,6 +50,20 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             foreach (TreeNode n in node.Nodes)
             {
                 ForEachNode(n, action);
+            }
+        }
+
+        /// <summary>
+        /// 从当前节点递归找到绝对的路径上的节点
+        /// </summary>
+        /// <param name="node">树节点</param>
+        /// <param name="action">执行的方法</param>
+        public static void ForTopEachNode(TreeNode node,Action<TreeNode> action)
+        {
+            action(node);
+            if (node.Parent != null)
+            {
+                ForTopEachNode(node.Parent, action);
             }
         }
 

@@ -85,10 +85,11 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     state = keyState.majorState;
                     break;
             }
+          
             if (onlyAlias == "")
             {
-                Interlocked.Increment(ref SharMethod.emptyCount);
-                byte[] data = Encoding.UTF8.GetBytes("本地"+SharMethod.emptyCount);
+                Guid gu = new Guid();
+                byte[] data = Encoding.UTF8.GetBytes(gu.ToString("N"));
                 byte[] data1 = new byte[data.Length + 2];
                 Array.Copy(data, 0, data1, 2, data.Length);
                 //设置标识

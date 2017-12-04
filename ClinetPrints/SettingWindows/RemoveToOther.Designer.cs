@@ -106,7 +106,7 @@
             // 
             this.toolStTxb_groupName.Name = "toolStTxb_groupName";
             this.toolStTxb_groupName.Size = new System.Drawing.Size(100, 25);
-            this.toolStTxb_groupName.ToolTipText = "快速查找对应输入的组名";
+            this.toolStTxb_groupName.ToolTipText = "输入关键字或全称进行快速查询";
             // 
             // toolStBtn_backTop
             // 

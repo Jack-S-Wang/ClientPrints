@@ -45,19 +45,26 @@
             this.pan_mianWin1_image = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btn_preview = new System.Windows.Forms.Button();
-            this.btn_SelectImage = new System.Windows.Forms.Button();
-            this.txb_pathImage = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pB_image = new System.Windows.Forms.PictureBox();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStBtn_add = new System.Windows.Forms.ToolStripButton();
+            this.toolStBtn_delete = new System.Windows.Forms.ToolStripButton();
+            this.toolStbtn_moveUp = new System.Windows.Forms.ToolStripButton();
+            this.toolStBtn_moveNext = new System.Windows.Forms.ToolStripButton();
+            this.toolStBtn_monitor = new System.Windows.Forms.ToolStripButton();
+            this.toolStTxb_printer = new System.Windows.Forms.ToolStripTextBox();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
+            this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             this.pan_mianWin1_image.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pB_image)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.pan_mainWin1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -121,7 +128,6 @@
             this.printerViewFlcok.Name = "printerViewFlcok";
             this.printerViewFlcok.Size = new System.Drawing.Size(209, 547);
             this.printerViewFlcok.TabIndex = 2;
-            this.printerViewFlcok.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewFlcok_AfterSelect);
             // 
             // printerViewSingle
             // 
@@ -176,79 +182,131 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.groupBox2);
-            this.groupBox1.Controls.Add(this.pB_image);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1054, 572);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "打印界面";
+            this.groupBox1.Text = "控制界面";
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btn_preview);
-            this.groupBox2.Controls.Add(this.btn_SelectImage);
-            this.groupBox2.Controls.Add(this.txb_pathImage);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(3, 487);
+            this.groupBox2.Controls.Add(this.listView1);
+            this.groupBox2.Controls.Add(this.toolStrip1);
+            this.groupBox2.Location = new System.Drawing.Point(11, 23);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1048, 82);
-            this.groupBox2.TabIndex = 1;
+            this.groupBox2.Size = new System.Drawing.Size(344, 537);
+            this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "控制界面";
+            this.groupBox2.Text = "打印设置";
             // 
-            // btn_preview
+            // listView1
             // 
-            this.btn_preview.AutoSize = true;
-            this.btn_preview.Location = new System.Drawing.Point(712, 38);
-            this.btn_preview.Name = "btn_preview";
-            this.btn_preview.Size = new System.Drawing.Size(75, 23);
-            this.btn_preview.TabIndex = 3;
-            this.btn_preview.Text = "预览";
-            this.btn_preview.UseVisualStyleBackColor = true;
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader5});
+            this.listView1.FullRowSelect = true;
+            this.listView1.GridLines = true;
+            this.listView1.Location = new System.Drawing.Point(6, 45);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(332, 486);
+            this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.listView1.TabIndex = 1;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
-            // btn_SelectImage
+            // columnHeader1
             // 
-            this.btn_SelectImage.AutoSize = true;
-            this.btn_SelectImage.Location = new System.Drawing.Point(569, 38);
-            this.btn_SelectImage.Name = "btn_SelectImage";
-            this.btn_SelectImage.Size = new System.Drawing.Size(75, 23);
-            this.btn_SelectImage.TabIndex = 2;
-            this.btn_SelectImage.Text = "选择";
-            this.btn_SelectImage.UseVisualStyleBackColor = true;
-            this.btn_SelectImage.Click += new System.EventHandler(this.btn_SelectImage_Click);
+            this.columnHeader1.Text = "图片";
             // 
-            // txb_pathImage
+            // columnHeader2
             // 
-            this.txb_pathImage.Location = new System.Drawing.Point(107, 40);
-            this.txb_pathImage.Name = "txb_pathImage";
-            this.txb_pathImage.Size = new System.Drawing.Size(409, 21);
-            this.txb_pathImage.TabIndex = 1;
+            this.columnHeader2.Text = "作业号";
+            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label1
+            // columnHeader5
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.Location = new System.Drawing.Point(36, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "选择图片：";
+            this.columnHeader5.Text = "图片路径";
+            this.columnHeader5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader5.Width = 200;
             // 
-            // pB_image
+            // toolStrip1
             // 
-            this.pB_image.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pB_image.BackColor = System.Drawing.Color.Gray;
-            this.pB_image.Location = new System.Drawing.Point(17, 29);
-            this.pB_image.Name = "pB_image";
-            this.pB_image.Size = new System.Drawing.Size(1025, 452);
-            this.pB_image.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pB_image.TabIndex = 0;
-            this.pB_image.TabStop = false;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStBtn_add,
+            this.toolStBtn_delete,
+            this.toolStbtn_moveUp,
+            this.toolStBtn_moveNext,
+            this.toolStBtn_monitor,
+            this.toolStTxb_printer});
+            this.toolStrip1.Location = new System.Drawing.Point(3, 17);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(338, 25);
+            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStBtn_add
+            // 
+            this.toolStBtn_add.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_add.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_add.Image")));
+            this.toolStBtn_add.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_add.Name = "toolStBtn_add";
+            this.toolStBtn_add.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_add.Text = "添加";
+            this.toolStBtn_add.ToolTipText = "添加作业";
+            this.toolStBtn_add.Click += new System.EventHandler(this.toolStBtn_add_Click);
+            // 
+            // toolStBtn_delete
+            // 
+            this.toolStBtn_delete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_delete.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_delete.Image")));
+            this.toolStBtn_delete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_delete.Name = "toolStBtn_delete";
+            this.toolStBtn_delete.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_delete.Text = "删除";
+            this.toolStBtn_delete.ToolTipText = "删除作业";
+            this.toolStBtn_delete.Click += new System.EventHandler(this.toolStBtn_delete_Click);
+            // 
+            // toolStbtn_moveUp
+            // 
+            this.toolStbtn_moveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStbtn_moveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolStbtn_moveUp.Image")));
+            this.toolStbtn_moveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStbtn_moveUp.Name = "toolStbtn_moveUp";
+            this.toolStbtn_moveUp.Size = new System.Drawing.Size(23, 22);
+            this.toolStbtn_moveUp.Text = "置前";
+            this.toolStbtn_moveUp.ToolTipText = "作业置前";
+            this.toolStbtn_moveUp.Click += new System.EventHandler(this.toolStbtn_moveUp_Click);
+            // 
+            // toolStBtn_moveNext
+            // 
+            this.toolStBtn_moveNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_moveNext.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_moveNext.Image")));
+            this.toolStBtn_moveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_moveNext.Name = "toolStBtn_moveNext";
+            this.toolStBtn_moveNext.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_moveNext.Text = "置后";
+            this.toolStBtn_moveNext.ToolTipText = "作业置后";
+            this.toolStBtn_moveNext.Click += new System.EventHandler(this.toolStBtn_moveNext_Click);
+            // 
+            // toolStBtn_monitor
+            // 
+            this.toolStBtn_monitor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_monitor.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_monitor.Image")));
+            this.toolStBtn_monitor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_monitor.Name = "toolStBtn_monitor";
+            this.toolStBtn_monitor.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_monitor.Text = "监控打印机";
+            this.toolStBtn_monitor.Click += new System.EventHandler(this.toolStBtn_monitor_Click);
+            // 
+            // toolStTxb_printer
+            // 
+            this.toolStTxb_printer.Name = "toolStTxb_printer";
+            this.toolStTxb_printer.Size = new System.Drawing.Size(100, 25);
+            this.toolStTxb_printer.ToolTipText = "选择的打印机名称";
             // 
             // pan_mainWin1
             // 
@@ -259,6 +317,12 @@
             this.pan_mainWin1.Name = "pan_mainWin1";
             this.pan_mainWin1.Size = new System.Drawing.Size(1263, 572);
             this.pan_mainWin1.TabIndex = 3;
+            // 
+            // imageSubItems
+            // 
+            this.imageSubItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // ClientMianWindows
             // 
@@ -285,7 +349,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pB_image)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.pan_mainWin1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -303,18 +368,25 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Panel pan_mianWin1_image;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.PictureBox pB_image;
-        private System.Windows.Forms.Button btn_preview;
-        private System.Windows.Forms.Button btn_SelectImage;
-        private System.Windows.Forms.TextBox txb_pathImage;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pan_mainWin1;
         private System.Windows.Forms.MenuStrip menuStrip2;
         private System.Windows.Forms.ToolStripMenuItem 单台打印ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 群打印ToolStripMenuItem;
         public System.Windows.Forms.TreeView printerViewFlcok;
         public System.Windows.Forms.TreeView printerViewSingle;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStBtn_add;
+        private System.Windows.Forms.ToolStripButton toolStBtn_delete;
+        private System.Windows.Forms.ToolStripButton toolStbtn_moveUp;
+        private System.Windows.Forms.ToolStripButton toolStBtn_moveNext;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ToolStripButton toolStBtn_monitor;
+        private System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
+        private System.Windows.Forms.ImageList imageSubItems;
     }
 }
 

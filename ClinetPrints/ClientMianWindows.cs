@@ -7,6 +7,10 @@ using ClinetPrints.MenuGroupMethod;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
+using System.Threading;
+using static System.Windows.Forms.ListViewItem;
+using ClinetPrints.sharClass;
+using System.Collections.Generic;
 
 namespace ClinetPrints
 {
@@ -14,6 +18,7 @@ namespace ClinetPrints
     {
         //任务栏中所显示的图片
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        
         //树形节点定义
         TreeNode nodeClientPrints = new TreeNode();
         public ClientMianWindows()
@@ -41,6 +46,7 @@ namespace ClinetPrints
                 printerViewFlcok.Visible = false;
                 printerViewSingle.ShowNodeToolTips = true;
                 printerViewFlcok.ShowNodeToolTips = true;
+                listView1.ShowItemToolTips = true;
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
@@ -237,6 +243,7 @@ namespace ClinetPrints
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413428.ico"));//离线
             printerViewSingle.ImageList = imageList1;
             printerViewFlcok.ImageList = imageList1;
+            
         }
 
         #endregion
@@ -374,18 +381,97 @@ namespace ClinetPrints
             printerViewFlcok.Focus();
         }
 
-        private void btn_SelectImage_Click(object sender, EventArgs e)
+       
+
+        #region....//节点选择执行方法
+        private void printerViewSingle_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
-                OpenFileDialog ofd = new OpenFileDialog();
-                if (ofd.ShowDialog() == DialogResult.OK)
+                if (e.Node is PrinterTreeNode)
                 {
-                    this.txb_pathImage.Text = ofd.FileName;
-                    SharMethod.pathImage = ofd.FileName;
-                    Image image = Image.FromFile(this.txb_pathImage.Text);
-                    this.pB_image.Image = image;
+                    var node = e.Node as PrinterTreeNode;
+                    this.toolStTxb_printer.Text=node.Text;
+                    addfile = 0;
+                    //如果已经存在该列则删除该列重新赋值对象
+                    if (this.listView1.Columns.Count>3)
+                    {
+                        this.listView1.Columns.RemoveAt(3);
+                    }
+                    this.listView1.Columns.Add(new listViewColumnTreeNode(node));
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+        }
+          
+        #endregion
+
+        /// <summary>
+        /// 记录当前打印机对象的添加图片数量
+        /// </summary>
+        private volatile int addfile = 0; 
+        private void toolStBtn_add_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.toolStTxb_printer.Text != "")
+                {
+                    if (addfile > 10)
+                    {
+                        MessageBox.Show("最多只能添加十个作业！");
+                        return;
+                    }
+                    OpenFileDialog openfile = new OpenFileDialog();
+                    openfile.ShowDialog();
+                    imageSubItems.Images.Add(new Bitmap(openfile.FileName));
+                    //添加作业的时候加的图片
+                    this.listView1.SmallImageList = imageSubItems;
+                    Interlocked.Increment(ref addfile);
+                    ListViewItem item = new ListViewItem(new ListViewSubItem[] { new ListViewSubItem(),new ListViewSubItem(),new ListViewSubItem()}, addfile-1);
+                    item.SubItems[1].Text = addfile.ToString();
+                    item.SubItems[2].Text = openfile.FileName;
+                    item.Name = (addfile - 1).ToString();
+                    this.listView1.Items.Add(item);
+                    this.listView1.Items[addfile-1].ToolTipText = openfile.FileName;
+                }else
+                {
+                    MessageBox.Show("请先选择打印机！");
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        
+        private void toolStBtn_delete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lv_item.Count>0)
+                {
+                    foreach(var item in lv_item)
+                    {
+                        imageSubItems.Images.RemoveAt(Int32.Parse(item.Name));
+                        item.Remove();
+                        Interlocked.Decrement(ref addfile);
+                    }
+
+                }else
+                {
+                    DialogResult dr = MessageBox.Show("是要全部删除吗？否则请选择要删除的图片！", "提示警告！", MessageBoxButtons.OK);
+                    if (dr == DialogResult.OK)
+                    {
+                        listView1.Items.Clear();
+                        addfile = 0;
+                        imageSubItems.Images.Clear();
+                    }
+                }
+                //处理完毕必须滞空
+                lv_item.Clear();
             }
             catch (Exception ex)
             {
@@ -393,20 +479,55 @@ namespace ClinetPrints
             }
         }
 
-        #region....//单打印节点的控制方法
-        private void printerViewSingle_AfterSelect(object sender, TreeViewEventArgs e)
+        private void toolStbtn_moveUp_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-          
-     
 
-
-        #endregion
-
-        private void printerViewFlcok_AfterSelect(object sender, TreeViewEventArgs e)
+        private void toolStBtn_moveNext_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStBtn_monitor_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private static List<ListViewItem> lv_item = new List<ListViewItem>();
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (e.Item != null)
+                {
+                    lv_item.Add(e.Item);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
