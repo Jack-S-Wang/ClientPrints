@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ClinetPrints.sharClass
+namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
 {
-    public class listViewColumnTreeNode: ColumnHeader
+    public class listViewColumnTNode:ColumnHeader
     {
         private TreeNode _ColTnode;
         public ListViewItem ColItem;
@@ -26,7 +26,7 @@ namespace ClinetPrints.sharClass
         /// 将对应的节点信息保存在列
         /// </summary>
         /// <param name="tnode"></param>
-        public listViewColumnTreeNode(TreeNode tnode)
+        public listViewColumnTNode(TreeNode tnode)
         {
             ColTnode = tnode;
         }

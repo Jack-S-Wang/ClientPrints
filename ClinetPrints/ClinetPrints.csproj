@@ -95,9 +95,6 @@
     <Compile Include="SettingWindows\RemoveToOther.Designer.cs">
       <DependentUpon>RemoveToOther.cs</DependentUpon>
     </Compile>
-    <Compile Include="sharClass\listViewColumnTreeNode.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <EmbeddedResource Include="ClientMianWindows.resx">
       <DependentUpon>ClientMianWindows.cs</DependentUpon>
     </EmbeddedResource>

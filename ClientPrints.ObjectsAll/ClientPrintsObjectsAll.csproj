@@ -48,6 +48,9 @@
     <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objects.Printers.JSON\PrinterJson.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterParams.cs" />
+    <Compile Include="ClientPrints.Objects.SharObjectClass\listViewColumnTNode.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ClientPrints.Objects.treeNodeObject\GroupTreeNode.cs" />
     <Compile Include="ClientPrints.Objects.treeNodeObject\PrinterTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

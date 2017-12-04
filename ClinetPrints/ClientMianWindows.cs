@@ -9,8 +9,8 @@ using System.IO;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 using System.Threading;
 using static System.Windows.Forms.ListViewItem;
-using ClinetPrints.sharClass;
 using System.Collections.Generic;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 
 namespace ClinetPrints
 {
@@ -391,23 +391,28 @@ namespace ClinetPrints
                 if (e.Node is PrinterTreeNode)
                 {
                     var node = e.Node as PrinterTreeNode;
-                    this.toolStTxb_printer.Text=node.Text;
+                    if (node.StateCode.Equals("0"))
+                    {
+                        MessageBox.Show("离线设备无法进行设置！");
+                        return;
+                    }
+                    this.toolStTxb_printer.Text = node.Text;
                     addfile = 0;
                     //如果已经存在该列则删除该列重新赋值对象
-                    if (this.listView1.Columns.Count>3)
+                    if (this.listView1.Columns.Count > 3)
                     {
                         this.listView1.Columns.RemoveAt(3);
                     }
-                    this.listView1.Columns.Add(new listViewColumnTreeNode(node));
+                    this.listView1.Columns.Add(new listViewColumnTNode(node));
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            
+
         }
-          
+
         #endregion
 
         /// <summary>
@@ -431,17 +436,19 @@ namespace ClinetPrints
                     //添加作业的时候加的图片
                     this.listView1.SmallImageList = imageSubItems;
                     Interlocked.Increment(ref addfile);
-                    ListViewItem item = new ListViewItem(new ListViewSubItem[] { new ListViewSubItem(),new ListViewSubItem(),new ListViewSubItem()}, addfile-1);
+                    ListViewItem item = new ListViewItem(new ListViewSubItem[] { new ListViewSubItem(), new ListViewSubItem(), new ListViewSubItem() }, addfile - 1);
                     item.SubItems[1].Text = addfile.ToString();
                     item.SubItems[2].Text = openfile.FileName;
                     item.Name = (addfile - 1).ToString();
                     this.listView1.Items.Add(item);
-                    this.listView1.Items[addfile-1].ToolTipText = openfile.FileName;
-                }else
+                    this.listView1.Items[addfile - 1].ToolTipText = openfile.FileName;
+                }
+                else
                 {
                     MessageBox.Show("请先选择打印机！");
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -451,27 +458,38 @@ namespace ClinetPrints
         {
             try
             {
-                if (lv_item.Count>0)
+                if (this.toolStTxb_printer.Text != "")
                 {
-                    foreach(var item in lv_item)
+                    if (lv_item.Count > 0)
                     {
-                        imageSubItems.Images.RemoveAt(Int32.Parse(item.Name));
-                        item.Remove();
-                        Interlocked.Decrement(ref addfile);
+                        foreach (var item in lv_item)
+                        {
+                            imageSubItems.Images.RemoveAt(Int32.Parse(item.Name));
+                            item.Remove();
+                            Interlocked.Decrement(ref addfile);
+                        }
                     }
-
-                }else
-                {
-                    DialogResult dr = MessageBox.Show("是要全部删除吗？否则请选择要删除的图片！", "提示警告！", MessageBoxButtons.OK);
-                    if (dr == DialogResult.OK)
+                    else
                     {
-                        listView1.Items.Clear();
-                        addfile = 0;
-                        imageSubItems.Images.Clear();
+                        if (this.listView1.Items.Count == 0)
+                        {
+                            return;
+                        }
+                        DialogResult dr = MessageBox.Show("是要全部删除吗？否则请选择要删除的图片！", "提示警告！", MessageBoxButtons.OK);
+                        if (dr == DialogResult.OK)
+                        {
+                            listView1.Items.Clear();
+                            addfile = 0;
+                            imageSubItems.Images.Clear();
+                        }
                     }
+                    //处理完毕必须滞空
+                    lv_item.Clear();
                 }
-                //处理完毕必须滞空
-                lv_item.Clear();
+                else
+                {
+                    MessageBox.Show("请先选择打印机！");
+                }
             }
             catch (Exception ex)
             {
@@ -483,7 +501,39 @@ namespace ClinetPrints
         {
             try
             {
-
+                if (this.toolStTxb_printer.Text != "")
+                {
+                    if (listView1.Items.Count == 0)
+                    {
+                        return;
+                    }
+                    if (lv_item.Count > 0)
+                    {
+                        if (lv_item.Count > 1)
+                        {
+                            MessageBox.Show("不能选择多个进行上移！");
+                            lv_item.Clear();
+                            return;
+                        }
+                        if (lv_item[0].Name.Equals("0"))
+                        {
+                            lv_item.Clear();
+                            return;
+                        }
+                        this.listView1.Items.Find(lv_item[0].Name, false)[0].Remove();
+                        this.listView1.Items.Insert(Int32.Parse(lv_item[0].Name) - 1, lv_item[0]);
+                        lv_item.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("请先选择要上移的作业");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("请先选择打印机！");
+                }
             }
             catch (Exception ex)
             {
@@ -495,7 +545,39 @@ namespace ClinetPrints
         {
             try
             {
-
+                if (this.toolStTxb_printer.Text.Trim() != "")
+                {
+                    if (listView1.Items.Count == 0)
+                    {
+                        return;
+                    }
+                    if (lv_item.Count > 0)
+                    {
+                        if (lv_item.Count > 1)
+                        {
+                            MessageBox.Show("不能选择多个进行下移！");
+                            lv_item.Clear();
+                            return;
+                        }
+                        if (lv_item[0].Name.Equals("0"))
+                        {
+                            lv_item.Clear();
+                            return;
+                        }
+                        this.listView1.Items.Find(lv_item[0].Name, false)[0].Remove();
+                        this.listView1.Items.Insert(Int32.Parse(lv_item[0].Name) + 1, lv_item[0]);
+                        lv_item.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("请先选择要下移的作业");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("请先选择打印机！");
+                }
             }
             catch (Exception ex)
             {
