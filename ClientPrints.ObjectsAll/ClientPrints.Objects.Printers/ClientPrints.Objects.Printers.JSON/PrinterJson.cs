@@ -7,6 +7,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
 {
     public class PrinterJson
     {
+        /// <summary>
+        /// DC1300系统状态
+        /// </summary>
         public class PrinterDC1300State
         {
             /// <summary>
@@ -23,6 +26,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             public string StateMessage { get; set; }
         }
 
+        /// <summary>
+        /// DC1300数据处理
+        /// </summary>
         public class PrinterDC1300DataState
         {
             /// <summary>
@@ -46,6 +52,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             /// </summary>
             public int dataFrames { get; set; }
         }
+        /// <summary>
+        /// DC1300打印输出
+        /// </summary>
         public class PrinterDC1300PrintState
         {
             /// <summary>
@@ -77,6 +86,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             /// </summary>
             public string sensor { get; set; }
         }
+        /// <summary>
+        /// DC1300数据接口
+        /// </summary>
         public class PrinterDC1300DataPortState
         {
             /// <summary>
@@ -88,6 +100,10 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             /// </summary>
             public int residueCache { get; set; }
         }
+
+        /// <summary>
+        /// DC1300数据接口信息
+        /// </summary>
         public class PrinterDC1300DataInfo
         {
             /// <summary>
@@ -103,6 +119,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             /// </summary>
             public byte compressType { get; set; }
         }
+        /// <summary>
+        /// DC1300页面信息
+        /// </summary>
         public class PrinterDC1300PageInfo
         {
             /// <summary>

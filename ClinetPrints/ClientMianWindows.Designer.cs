@@ -58,6 +58,7 @@
             this.toolStTxb_printer = new System.Windows.Forms.ToolStripTextBox();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
+            this.toolStBtn_print = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -194,9 +195,10 @@
             // 
             this.groupBox2.Controls.Add(this.listView1);
             this.groupBox2.Controls.Add(this.toolStrip1);
-            this.groupBox2.Location = new System.Drawing.Point(11, 23);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox2.Location = new System.Drawing.Point(3, 17);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(344, 537);
+            this.groupBox2.Size = new System.Drawing.Size(344, 552);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "打印设置";
@@ -207,16 +209,16 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader5});
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(6, 45);
+            this.listView1.Location = new System.Drawing.Point(3, 42);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(332, 486);
+            this.listView1.Size = new System.Drawing.Size(338, 507);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
             // columnHeader1
             // 
@@ -241,7 +243,8 @@
             this.toolStbtn_moveUp,
             this.toolStBtn_moveNext,
             this.toolStBtn_monitor,
-            this.toolStTxb_printer});
+            this.toolStTxb_printer,
+            this.toolStBtn_print});
             this.toolStrip1.Location = new System.Drawing.Point(3, 17);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(338, 25);
@@ -300,6 +303,7 @@
             this.toolStBtn_monitor.Name = "toolStBtn_monitor";
             this.toolStBtn_monitor.Size = new System.Drawing.Size(23, 22);
             this.toolStBtn_monitor.Text = "监控打印机";
+            this.toolStBtn_monitor.ToolTipText = "实时监控控制打印机";
             this.toolStBtn_monitor.Click += new System.EventHandler(this.toolStBtn_monitor_Click);
             // 
             // toolStTxb_printer
@@ -323,6 +327,16 @@
             this.imageSubItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // toolStBtn_print
+            // 
+            this.toolStBtn_print.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_print.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_print.Image")));
+            this.toolStBtn_print.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_print.Name = "toolStBtn_print";
+            this.toolStBtn_print.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_print.Text = "打印";
+            this.toolStBtn_print.Click += new System.EventHandler(this.toolStBtn_print_Click);
             // 
             // ClientMianWindows
             // 
@@ -387,6 +401,7 @@
         private System.Windows.Forms.ToolStripButton toolStBtn_monitor;
         private System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
         private System.Windows.Forms.ImageList imageSubItems;
+        private System.Windows.Forms.ToolStripButton toolStBtn_print;
     }
 }
 

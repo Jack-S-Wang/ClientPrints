@@ -51,8 +51,12 @@ namespace ClinetPrints.SettingWindows
         {
             if (e.Item != null)
             {
-            var item = e.Item as RemoveItems;
-            sureNode = item.itemNode;
+                if (listView1.SelectedItems[0] == e.Item)
+                {
+                    var item = e.Item as RemoveItems;
+                    sureNode = item.itemNode;
+                }
+           
             }
         }
         /// <summary>

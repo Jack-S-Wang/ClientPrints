@@ -11,6 +11,7 @@ using System.Threading;
 using static System.Windows.Forms.ListViewItem;
 using System.Collections.Generic;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using static System.Windows.Forms.ListView;
 
 namespace ClinetPrints
 {
@@ -390,20 +391,25 @@ namespace ClinetPrints
             {
                 if (e.Node is PrinterTreeNode)
                 {
-                    var node = e.Node as PrinterTreeNode;
-                    if (node.StateCode.Equals("0"))
+                    if(printerViewSingle.SelectedNode.Name==e.Node.Name)
                     {
-                        MessageBox.Show("离线设备无法进行设置！");
-                        return;
+                        var node = e.Node as PrinterTreeNode;
+                        if (node.StateCode.Equals("0"))
+                        {
+                            MessageBox.Show("离线设备无法进行设置！");
+                            return;
+                        }
+                        this.toolStTxb_printer.Text = node.Text;
+                        addfile = 0;
+                        //如果已经存在该列则删除该列重新赋值对象
+                        if (this.listView1.Columns.Count > 3)
+                        {
+                            this.listView1.Columns.RemoveAt(3);
+                        }
+                        this.listView1.Columns.Add(new listViewColumnTNode(node));
+                        imageSubItems.Images.Clear();
+                        listView1.SmallImageList = imageSubItems;
                     }
-                    this.toolStTxb_printer.Text = node.Text;
-                    addfile = 0;
-                    //如果已经存在该列则删除该列重新赋值对象
-                    if (this.listView1.Columns.Count > 3)
-                    {
-                        this.listView1.Columns.RemoveAt(3);
-                    }
-                    this.listView1.Columns.Add(new listViewColumnTNode(node));
                 }
             }
             catch (Exception ex)
@@ -425,9 +431,9 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
-                    if (addfile > 10)
+                    if (addfile > 19)
                     {
-                        MessageBox.Show("最多只能添加十个作业！");
+                        MessageBox.Show("最多只能添加20个作业！");
                         return;
                     }
                     OpenFileDialog openfile = new OpenFileDialog();
@@ -460,31 +466,27 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
-                    if (lv_item.Count > 0)
+                    if (listView1.SelectedItems.Count == 0)
                     {
-                        foreach (var item in lv_item)
-                        {
-                            imageSubItems.Images.RemoveAt(Int32.Parse(item.Name));
-                            item.Remove();
-                            Interlocked.Decrement(ref addfile);
-                        }
-                    }
-                    else
-                    {
-                        if (this.listView1.Items.Count == 0)
-                        {
-                            return;
-                        }
-                        DialogResult dr = MessageBox.Show("是要全部删除吗？否则请选择要删除的图片！", "提示警告！", MessageBoxButtons.OK);
+                        DialogResult dr = MessageBox.Show("是要全部删除吗？否则请选择要删除的图片！", "提示警告！", MessageBoxButtons.OKCancel);
                         if (dr == DialogResult.OK)
                         {
                             listView1.Items.Clear();
                             addfile = 0;
                             imageSubItems.Images.Clear();
+                            listView1.SmallImageList = imageSubItems;
                         }
+                        return;
                     }
-                    //处理完毕必须滞空
-                    lv_item.Clear();
+                    while (listView1.SelectedItems.Count > 0)
+                    {
+                        imageSubItems.Images.RemoveAt(Int32.Parse(listView1.SelectedItems[0].Name));
+                        listView1.SmallImageList = imageSubItems;
+                        listView1.SelectedItems[0].Remove();
+                        Interlocked.Decrement(ref addfile);
+                        setItems();
+                    }
+                   
                 }
                 else
                 {
@@ -496,6 +498,18 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// 修改listView中的item对象
+        /// </summary>
+        private void setItems()
+        {
+            for (int i = 0; i < listView1.Items.Count; i++)
+            {
+                listView1.Items[i].Name = i.ToString();
+                listView1.Items[i].ImageIndex = i;
+                listView1.Items[i].SubItems[1].Text = (i + 1).ToString();
+            }
+        }
 
         private void toolStbtn_moveUp_Click(object sender, EventArgs e)
         {
@@ -503,26 +517,61 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
-                    if (listView1.Items.Count == 0)
+                    if (listView1.SelectedItems.Count == 0) return;
+                    if (listView1.SelectedItems.Count > 0)
                     {
-                        return;
-                    }
-                    if (lv_item.Count > 0)
-                    {
-                        if (lv_item.Count > 1)
+                        if (listView1.SelectedItems.ContainsKey("0"))
                         {
-                            MessageBox.Show("不能选择多个进行上移！");
-                            lv_item.Clear();
+                            MessageBox.Show("选中了是第一个条目是无法上移的，请重新选择！");
                             return;
                         }
-                        if (lv_item[0].Name.Equals("0"))
+                        if (listView1.SelectedItems.ContainsKey("1") && listView1.SelectedItems.Count==1)//说明上面只有一个直接上移
                         {
-                            lv_item.Clear();
-                            return;
+                            var image=imageSubItems.Images[1];
+                            imageSubItems.Images.RemoveAt(1);
+                            insertImage(image, 0);
+                            listView1.SmallImageList = imageSubItems;
+                            var item = listView1.SelectedItems[0];
+                            listView1.SelectedItems[0].Remove();
+                            listView1.Items.Insert(0, item);
+                            setItems();
                         }
-                        this.listView1.Items.Find(lv_item[0].Name, false)[0].Remove();
-                        this.listView1.Items.Insert(Int32.Parse(lv_item[0].Name) - 1, lv_item[0]);
-                        lv_item.Clear();
+                        else
+                        {
+                            RemoveIndex reIndex = new RemoveIndex();
+                            reIndex.Owner = this;
+                            reIndex.StartPosition = FormStartPosition.CenterParent;
+                            reIndex.Text = "上移到对应的作业号的前面";
+                            for (int i = 1; i <= listView1.Items.Count; i++)
+                            {
+                                reIndex.items.Add(i);
+                            }
+                            reIndex.ShowDialog();
+                            if (reIndex.index == -1)
+                            {
+                                MessageBox.Show("用户取消了移位操作！");
+                                return;
+                            }else
+                            {
+                                while (listView1.SelectedItems.Count > 0)
+                                {
+                                    if (reIndex.index-1 >= Int32.Parse(listView1.SelectedItems[0].Name))
+                                    {
+                                        MessageBox.Show("上移的位子不能大于当前所选择的项！");
+                                        return;
+                                    }
+                                    var image = imageSubItems.Images[Int32.Parse(listView1.SelectedItems[0].Name)];
+                                    imageSubItems.Images.RemoveAt(Int32.Parse(listView1.SelectedItems[0].Name));
+                                    insertImage(image, reIndex.index-1);
+                                    listView1.SmallImageList = imageSubItems;
+                                    var item = listView1.SelectedItems[0];
+                                    listView1.SelectedItems[0].Remove();
+                                    item.Selected = false;
+                                    this.listView1.Items.Insert(reIndex.index-1, item);
+                                }
+                                setItems();
+                            }
+                        } 
                     }
                     else
                     {
@@ -540,33 +589,103 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// 将对应的图片插入对应的位子
+        /// </summary>
+        /// <param name="image">图片</param>
+        /// <param name="index">要插入到位子的索引号</param>
+        private void insertImage(Image image,int index)
+        {
+            List<Image> li = new List<Image>();
+           foreach(Image img in imageSubItems.Images)
+            {
+                li.Add(img);
+            }
+            imageSubItems.Images.Clear();
+           for(int i = 0; i < li.Count;)
+            {
+                if (i == index)
+                {
+                    imageSubItems.Images.Add(image);
+                    index = -1;
+                }else
+                {
+                    imageSubItems.Images.Add(li[i]);
+                    i++;
+                }
+            }
+           //如果上面遍历没有获取到该图，则可能是要添加到最后一位的
+            if (index == li.Count)
+            {
+                imageSubItems.Images.Add(image);
+            }
+        }
+
+       
 
         private void toolStBtn_moveNext_Click(object sender, EventArgs e)
         {
             try
             {
-                if (this.toolStTxb_printer.Text.Trim() != "")
+                if (this.toolStTxb_printer.Text != "")
                 {
-                    if (listView1.Items.Count == 0)
+                    if (listView1.SelectedItems.Count == 0) return;
+                    if (listView1.SelectedItems.Count > 0)
                     {
-                        return;
-                    }
-                    if (lv_item.Count > 0)
-                    {
-                        if (lv_item.Count > 1)
+                        if (listView1.SelectedItems.ContainsKey((listView1.Items.Count-1).ToString()))
                         {
-                            MessageBox.Show("不能选择多个进行下移！");
-                            lv_item.Clear();
+                            MessageBox.Show("选中了是最后一个条目是无法下移的，请重新选择！");
                             return;
                         }
-                        if (lv_item[0].Name.Equals("0"))
+                        if (listView1.SelectedItems.ContainsKey((listView1.Items.Count - 2).ToString()) && listView1.SelectedItems.Count == 1)//说明下面只有一个直接下移
                         {
-                            lv_item.Clear();
-                            return;
+                            var image = imageSubItems.Images[Int32.Parse(listView1.SelectedItems[0].Name)];
+                            imageSubItems.Images.RemoveAt(Int32.Parse(listView1.SelectedItems[0].Name));
+                            insertImage(image, imageSubItems.Images.Count);
+                            listView1.SmallImageList = imageSubItems;
+                            var item = listView1.SelectedItems[0];
+                            listView1.SelectedItems[0].Remove();
+                            listView1.Items.Add(item);
+                            setItems();
                         }
-                        this.listView1.Items.Find(lv_item[0].Name, false)[0].Remove();
-                        this.listView1.Items.Insert(Int32.Parse(lv_item[0].Name) + 1, lv_item[0]);
-                        lv_item.Clear();
+                        else
+                        {
+                            RemoveIndex reIndex = new RemoveIndex();
+                            reIndex.Owner = this;
+                            reIndex.StartPosition = FormStartPosition.CenterParent;
+                            for(int i=1;i<= listView1.Items.Count; i++)
+                            {
+                                reIndex.items.Add(i);
+                            }
+                            
+                            reIndex.Text = "下移到对应的作业号的后面";
+                            reIndex.ShowDialog();
+                            if (reIndex.index == -1)
+                            {
+                                MessageBox.Show("用户取消了移位操作！");
+                                return;
+                            }
+                            else
+                            {
+                                while (listView1.SelectedItems.Count > 0)
+                                {
+                                    if (reIndex.index <= Int32.Parse(listView1.SelectedItems[0].Name))
+                                    {
+                                        MessageBox.Show("下移的位子不能小于当前选择项的值");
+                                        return;
+                                    }
+                                    var item = listView1.SelectedItems[0];
+                                    listView1.SelectedItems[0].Remove();
+                                    this.listView1.Items.Insert(reIndex.index-1, item);
+                                    var image = imageSubItems.Images[Int32.Parse(item.Name)];
+                                    imageSubItems.Images.RemoveAt(Int32.Parse(item.Name));
+                                    insertImage(image, reIndex.index-1);
+                                    listView1.SmallImageList = imageSubItems;
+                                    item.Selected = false;
+                                }
+                                setItems();
+                            }
+                        }
                     }
                     else
                     {
@@ -589,24 +708,39 @@ namespace ClinetPrints
         {
             try
             {
+                if (this.toolStTxb_printer.Text != "")
+                {
+                    var col=listView1.Columns[3] as listViewColumnTNode;
+                    ThreadPool.QueueUserWorkItem((o) =>
+                    {
 
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("请先选择打印机！");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private static List<ListViewItem> lv_item = new List<ListViewItem>();
-        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+
+        private void toolStBtn_print_Click(object sender, EventArgs e)
         {
             try
             {
-                if (e.Item != null)
+                if (this.toolStTxb_printer.Text != "")
                 {
-                    lv_item.Add(e.Item);
+
+                }
+                else
+                {
+                    MessageBox.Show("请先选择打印机！");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }

@@ -58,34 +58,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, new byte[] { 0x30 });
             var keyState=JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
             stateType = keyState.stateCode;
-            switch (stateType)
-            {
-                case 1://空闲
-                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                    state = keyState.majorState;
-                    break;
-                case 2://就绪
-                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                    state = keyState.majorState;
-                    break;
-                case 3://工作中
-                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                    state = keyState.majorState;
-                    break;
-                case 4://繁忙
-                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                    state = keyState.majorState;
-                    break;
-                case 5://暂停
-                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                    state = keyState.majorState;
-                    break;
-                case 6://异常
-                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                    state = keyState.majorState;
-                    break;
-            }
-          
+            stateMessage = keyState.majorState + ":" + keyState.StateMessage;
+            state = keyState.majorState;
             if (onlyAlias == "")
             {
                 Guid gu = new Guid();
