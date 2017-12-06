@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,8 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
 {
     public class listViewColumnTNode:ColumnHeader
     {
-        private TreeNode _ColTnode;
-        public ListViewItem ColItem;
-        public TreeNode ColTnode
+        private PrinterTreeNode _ColTnode;
+        public PrinterTreeNode ColTnode
         {
             get
             {
@@ -19,24 +19,16 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
             set
             {
                 Name = value.Name;
-                Width = 0;
+                _ColTnode = value;
             }
         }
         /// <summary>
-        /// 将对应的节点信息保存在列
+        /// 生成一个列标题，记录打印机对象
         /// </summary>
         /// <param name="tnode"></param>
-        public listViewColumnTNode(TreeNode tnode)
+        public listViewColumnTNode(PrinterTreeNode tnode)
         {
             ColTnode = tnode;
-        }
-        /// <summary>
-        /// 保存该项目的所有信息
-        /// </summary>
-        /// <param name="item"></param>
-        public void saveItem(ListViewItem item)
-        {
-            ColItem = item;
         }
     }
 }

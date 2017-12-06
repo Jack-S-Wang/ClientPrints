@@ -81,7 +81,9 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             //设备页面信息
             string pageInfo= reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 3 });
             var Pagejson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PageInfo>(pageInfo);
-
+            //设备系统参数信息
+            string DevParmInfo= reInformation(WDevCmdObjects.DEV_GET_SYSPARAM, pHandle, new byte[] { 0x81 });
+            var devParmInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
             var printerParams = new PrinterParams()
             {
                 devInfo=DevInfo,
@@ -95,7 +97,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 maxWidth=Pagejson.maxWidth,
                 pixelformat=Pagejson.pixelformat,
                 xDPL=Pagejson.xDPL,
-                yDPL=Pagejson.yDPL
+                yDPL=Pagejson.yDPL,
+                DevParm=devParmInfoJson.parmData
             };
 
 
@@ -285,6 +288,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         strCode = strCode + reData[i];
                     }
                     break;
+                case WDevCmdObjects.DEV_GET_SYSPARAM:
+                    if (printerModel.Contains("DC-1300"))
+                    {
+                        IUSBPrinterOnlyMethod onlyMethod = new PrinterDC1300();
+                        strCode = onlyMethod.getDevParmInfo(reData);
+                    }
+                    break;
             }
             return strCode;
         }
@@ -380,7 +390,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     resultTag = 0,
                     cmprType = 0,
                     frmIdx = 0,
-                    userParm= "wDevObj.log"
+                    userParm= "DevLog.log"
                 };
                 tmp = null;
                 bool success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);

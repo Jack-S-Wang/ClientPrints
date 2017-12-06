@@ -62,5 +62,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 是否支持DS设备位图 -- 1：支持
         /// </summary>
         public byte isSupport { get; set; }
+        /// <summary>
+        /// 记录设备的参数数组，每个字节表示一个选项值，具体值根据文档进行显示在界面中，便于保存比较和修改
+        /// </summary>
+        public byte[] DevParm { get; set; }
     }
 }

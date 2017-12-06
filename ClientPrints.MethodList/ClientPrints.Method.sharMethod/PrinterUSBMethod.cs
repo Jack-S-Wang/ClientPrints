@@ -50,7 +50,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         public void getPrinterObjects()
         {
             string[] path = EnumPath();
-            WDevDllMethod.dllFunc_OpenLog(@"./wDevObj.log");
+            WDevDllMethod.dllFunc_OpenLog(@"./DevLog.log");
             foreach (string pathAddress in path)
             {
                 new PrintersGeneralFunction(pathAddress);

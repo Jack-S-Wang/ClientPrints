@@ -13,7 +13,7 @@ namespace ClinetPrints.MenuGroupMethod
         public MenuPrinterGroupAddMethod(TreeNode tnode, ClientMianWindows clientForm)
         {
             TreeNode nodeParSingle = clientForm.printerViewSingle.Nodes[0];
-            TreeNode nodeParFlock = clientForm.printerViewFlcok.Nodes[0];
+            TreeNode nodeParFlock = clientForm.printerViewFlock.Nodes[0];
             //打印机重命名
             MenuItem rename = new MenuItem("重命名");
             //打印机移位

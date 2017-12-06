@@ -19,5 +19,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.Interfaces
         /// <param name="data"></param>
         /// <returns></returns>
         string getDevInfo(byte[] data);
+        /// <summary>
+        /// 获取设备系统参数信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        string getDevParmInfo(byte[] data);
+
     }
 }

@@ -9,7 +9,7 @@ namespace ClinetPrints.MenuGroupMethod
     {
         public MenuFlockGroupMethod(TreeNode tnode,ClientMianWindows clientForm)
         {
-            TreeNode nodeParFlock = clientForm.printerViewFlcok.Nodes[0];
+            TreeNode nodeParFlock = clientForm.printerViewFlock.Nodes[0];
             TreeNode nodeParSingle = clientForm.printerViewSingle.Nodes[0];
             if (tnode.Name == "打印机群")
             {

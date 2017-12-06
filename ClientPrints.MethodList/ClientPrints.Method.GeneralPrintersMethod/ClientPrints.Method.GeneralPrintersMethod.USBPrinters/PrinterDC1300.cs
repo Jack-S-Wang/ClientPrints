@@ -261,5 +261,21 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             return jsonstr;
         }
 
+        public string getDevParmInfo(byte[] data)
+        {
+            string jsonstr="";
+            if (data[1] == 0x81)
+            {
+                byte[] parmData = new byte[data.Length-2];
+                Array.Copy(data, 2, parmData, 0, data.Length - 2);
+                var pData = new PrinterJson.PrinterParmInfo()
+                {
+                    parmData=parmData
+                };
+                jsonstr = JsonConvert.SerializeObject(pData);
+            }
+            return jsonstr;
+        }
+
     }
 }

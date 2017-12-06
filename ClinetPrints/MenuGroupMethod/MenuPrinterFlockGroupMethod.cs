@@ -8,7 +8,7 @@ namespace ClinetPrints.MenuGroupMethod
     {
         public MenuPrinterFlockGroupMethod(TreeNode tnode,ClientMianWindows clientForm)
         {
-            TreeNode nodeParFlock = clientForm.printerViewFlcok.Nodes[0];
+            TreeNode nodeParFlock = clientForm.printerViewFlock.Nodes[0];
             tnode.ContextMenu = null;
             MenuItem clearPrinter = new MenuItem("删除");
             MenuItem remove = new MenuItem("移位");

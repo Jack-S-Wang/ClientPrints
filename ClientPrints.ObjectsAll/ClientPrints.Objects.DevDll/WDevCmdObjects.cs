@@ -107,11 +107,11 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         /// </summary>
         public const string DEV_GET_CFGFMT = "CTRL_CMDGET_CFGFMT";	//
         /// <summary>
-        /// 设置设备系统参数 1B 
+        /// 设置设备系统参数 1C
         /// </summary>
         public const string DEV_SET_SYSPARAM = "CTRL_CMDSET_SYSPARAM";	//
         /// <summary>
-        /// 获取设备系统参数 1C 
+        /// 获取设备系统参数 1B 
         /// </summary>
         public const string DEV_GET_SYSPARAM = "CTRL_CMDGET_SYSPARAM";	// 
         /// <summary>
@@ -215,5 +215,24 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         /// </summary>
         public static int DEVBMP_ID = 0x4250;
         #endregion
+
+
+        //------------定义检测uSB插拔的常量值----------
+        #region
+        public const int WM_DEVICECHANGE = 0x0219;//  device state change 
+        public const int DBT_DEVICEARRIVAL = 0x8000; //  detected a new device 
+        public const int DBT_CONFIGCHANGECANCELED = 0x0019;
+        public const int DBT_CONFIGCHANGED = 0x0018;
+        public const int DBT_CVSTOMEVENT = 0x8006;
+        public const int DBT_DEVICEQUERYREMOVE = 0x8001;//romve
+        public const int DBT_DEVICEQUERYREMOVEFAILED = 0x8002;
+        public const int DBT_DEVICEREMOVEPENDING = 0x8003;
+        public const int DBT_DEVICEREMOVECOMPLETE = 0x8004;     //  removed  
+        public const int DBT_DEVICETYPESPECIFIC = 0x8005;
+        public const int DBT_DEVNODES_CHANGED = 0x007;
+        public const int DBT_QUERYCHANGECONFIG = 0x0017;
+        public const int DBT_USERDEFINED = 0xFFFF;
+        #endregion
+
     }
 }

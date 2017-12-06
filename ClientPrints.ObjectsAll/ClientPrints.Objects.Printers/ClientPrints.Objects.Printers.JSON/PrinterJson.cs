@@ -27,7 +27,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
         }
 
         /// <summary>
-        /// DC1300数据处理
+        /// DC1300数据处理状态
         /// </summary>
         public class PrinterDC1300DataState
         {
@@ -53,7 +53,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             public int dataFrames { get; set; }
         }
         /// <summary>
-        /// DC1300打印输出
+        /// DC1300打印输出状态
         /// </summary>
         public class PrinterDC1300PrintState
         {
@@ -87,16 +87,16 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             public string sensor { get; set; }
         }
         /// <summary>
-        /// DC1300数据接口
+        /// DC1300数据接口状态
         /// </summary>
         public class PrinterDC1300DataPortState
         {
             /// <summary>
-            /// 接受缓存大小
+            /// 接受缓存千分比
             /// </summary>
             public int InCache { get; set; }
             /// <summary>
-            /// 剩余缓存大小
+            /// 接受剩余缓存空间大小
             /// </summary>
             public int residueCache { get; set; }
         }
@@ -156,6 +156,17 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
             /// 是否支持DS设备位图 -- 1：支持
             /// </summary>
             public byte isSupport { get; set; }
+        }
+
+        /// <summary>
+        /// 设备系统参数信息
+        /// </summary>
+        public class PrinterParmInfo
+        {
+            /// <summary>
+            /// 参数数组
+            /// </summary>
+            public byte[] parmData { get; set; }
         }
     }
 }

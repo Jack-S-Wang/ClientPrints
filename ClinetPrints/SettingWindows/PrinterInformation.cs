@@ -17,11 +17,13 @@ namespace ClinetPrints.SettingWindows
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
+            this.Close();
         }
-        public static string printerInformation = "";
+       
         private void PrinterInformation_Load(object sender, EventArgs e)
         {
-            
+            Point p = new Point(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width - this.Width, Screen.PrimaryScreen.WorkingArea.Height - this.Height);
+            this.Location = p;
         }
     }
 }

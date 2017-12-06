@@ -12,6 +12,10 @@ using static System.Windows.Forms.ListViewItem;
 using System.Collections.Generic;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using static System.Windows.Forms.ListView;
+using System.Runtime.InteropServices;
+using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
+using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 
 namespace ClinetPrints
 {
@@ -36,17 +40,46 @@ namespace ClinetPrints
             };
         }
 
+
+        private IntPtr registration;
+        /// <summary>
+        /// 网上找的RegisterDevicNotification注册方法
+        /// </summary>
+        private void registerForHandle()
+        {
+
+            DEV_BROADCAST_DEVICEINTERFACE dbd = new DEV_BROADCAST_DEVICEINTERFACE();
+            //DEV_BROADCAST_HDR deviceHandle = new DEV_BROADCAST_HDR();
+            dbd.type = DBT_DEVTYPE.DBT_DEVTYP_HANDLE;
+            dbd.interfaceGuid = DeviceNotifications.GUID_DEVINTERFACE_USBPRINT;
+            dbd.reserved = 0;
+            dbd.devicePath = string.Empty;
+            IntPtr buffer = dbd.allocHGlobal();
+            registration = DeviceNotifications.RegisterDeviceNotification(this.Handle, buffer, DeviceNotifications.RDN_FLAGS.DEVICE_NOTIFY_WINDOW_HANDLE);
+            if (registration == IntPtr.Zero)
+            {
+                var code = Marshal.GetLastWin32Error();
+                MessageBox.Show("注册失败:" + code);
+            }
+            Marshal.FreeHGlobal(buffer);
+        }
+
+
+
+
         private void ClientMianWindows_Load(object sender, EventArgs e)
         {
             try
             {
                 this.Hide();
+                //注册系统检测USB插拔功能
+                registerForHandle();
                 printerViewSingle.Enabled = true;
                 printerViewSingle.Visible = true;
-                printerViewFlcok.Enabled = false;
-                printerViewFlcok.Visible = false;
+                printerViewFlock.Enabled = false;
+                printerViewFlock.Visible = false;
                 printerViewSingle.ShowNodeToolTips = true;
-                printerViewFlcok.ShowNodeToolTips = true;
+                printerViewFlock.ShowNodeToolTips = true;
                 listView1.ShowItemToolTips = true;
                 //添加图片
                 AddImage();
@@ -68,6 +101,117 @@ namespace ClinetPrints
             }
         }
 
+        /// <summary>
+        /// 当插拔等其它设备增加减少操作时关闭定时器来阻止定时查询状态而导致的并发问题
+        /// </summary>
+        private  bool SetTiming = true;
+        /// <summary>
+        /// 重写WndProc来定义检测USB插拔从而获取打印机实时情况
+        /// </summary>
+        /// <param name="m"></param>
+        protected override void WndProc(ref Message m)
+        {
+            try
+            {
+                if (m.Msg == WDevCmdObjects.WM_DEVICECHANGE)
+                {
+                    if (m.WParam.ToInt64() == WDevCmdObjects.DBT_DEVICEARRIVAL)//插入
+                    {
+                        DEV_BROADCAST_HDR hdr = (DEV_BROADCAST_HDR)Marshal.PtrToStructure(m.LParam, typeof(DEV_BROADCAST_HDR));
+                        if (hdr.type == DBT_DEVTYPE.DBT_DEVTYP_DEVICEINTERFACE)
+                        {
+                            DEV_BROADCAST_DEVICEINTERFACE dbd = new DEV_BROADCAST_DEVICEINTERFACE();
+                            dbd.fromIntPtr(m.LParam);
+                            string path = dbd.devicePath.ToLower();
+                            SetTiming = false;
+                            new PrintersGeneralFunction(path);
+                            string dev;
+                            if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明以前已经添加过的
+                            {
+                                var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
+                                n.PrinterObject = SharMethod.dicPrinterUSB[path];
+                                dev = n.Text;
+                                if (printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明在群里也有该打印机
+                                {
+                                    var nf = printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
+                                    nf.PrinterObject = SharMethod.dicPrinterUSB[path];
+                                    var filef = SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                                    SharMethod.SavePrinter(printerViewFlock.Nodes[0], filef);
+                                }
+                            }
+                            else
+                            {
+                                TreeNode nNode = new PrinterTreeNode(SharMethod.dicPrinterUSB[path]);
+                                dev = nNode.Text;
+                                printerViewSingle.Nodes[0].Nodes["所有打印机"].Nodes.Add(nNode);
+                                SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
+                                new MenuPrinterGroupAddMethod(nNode, this);
+                            }
+                            var file=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                            SharMethod.SavePrinter(printerViewSingle.Nodes[0], file);
+                            
+                            ThreadPool.QueueUserWorkItem((o) =>
+                            {
+                                PrinterInformation pInfo = new PrinterInformation();
+                                pInfo.lb_DevInfo.Text = "设备:" + dev + "已上线！";
+                                pInfo.ShowDialog();
+                            });
+                        }
+                    }
+                    else if (m.WParam.ToInt64() == WDevCmdObjects.DBT_DEVICEREMOVECOMPLETE)//拔出
+                    {
+                        DEV_BROADCAST_HDR hdr = (DEV_BROADCAST_HDR)Marshal.PtrToStructure(m.LParam, typeof(DEV_BROADCAST_HDR));
+                        if (hdr.type == DBT_DEVTYPE.DBT_DEVTYP_DEVICEINTERFACE)
+                        {
+                            DEV_BROADCAST_DEVICEINTERFACE dbd = new DEV_BROADCAST_DEVICEINTERFACE();
+                            dbd.fromIntPtr(m.LParam);
+                            string path = dbd.devicePath.ToLower();
+                            if (SharMethod.dicPrinterUSB.ContainsKey(path))
+                            {
+                                SetTiming = false;
+                                var node=this.printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
+                                if(node is PrinterTreeNode)
+                                {
+                                    var n = node as PrinterTreeNode;
+                                    SharMethod.liAllPrinter.Remove(n.PrinterObject);
+                                    n.SetOffline();
+                                    if(this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)
+                                    {
+                                        node = this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
+                                        if(node is PrinterTreeNode)
+                                        {
+                                            var nf = node as PrinterTreeNode;
+                                            nf.SetOffline();
+                                            var filef=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                                            SharMethod.SavePrinter(this.printerViewFlock.Nodes[0], filef);
+                                        }
+                                    }
+                                    var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                                    SharMethod.SavePrinter(this.printerViewSingle.Nodes[0], file);
+                                    string dev = n.Text;
+                                    SharMethod.dicPrinterUSB.Remove(path);
+                                    ThreadPool.QueueUserWorkItem((o) =>
+                                    {
+                                        PrinterInformation pInfo = new PrinterInformation();
+                                        pInfo.lb_DevInfo.Text = "设备:" + dev + "已下线！";
+                                        pInfo.ShowDialog();
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    SetTiming = true;
+                }
+                base.WndProc(ref m);
+            }
+            catch (Exception ex)
+            {
+                string str = string.Format("发生了异常：{0}，追踪异常信息：{1}", ex.Message, ex.StackTrace);
+                MessageBox.Show(str);
+            }
+        }
+
+
         #region.........//进入页面加载时所使用的方法内容
 
         /// <summary>
@@ -81,7 +225,7 @@ namespace ClinetPrints
             if (file.Length != 0)
             {
                 tnode = bf.Deserialize(file) as GroupTreeNode;
-                this.printerViewFlcok.Nodes.Add(tnode);
+                this.printerViewFlock.Nodes.Add(tnode);
                 SharMethod.FileClose(file);
                 SharMethod.ForEachNode(tnode, (nod) =>
                 {
@@ -95,7 +239,7 @@ namespace ClinetPrints
             else
             {
                 tnode = new GroupTreeNode("打印机群", 0);
-                this.printerViewFlcok.Nodes.Add(tnode);
+                this.printerViewFlock.Nodes.Add(tnode);
                 new MenuFlockGroupMethod(tnode, this);
                 SharMethod.SavePrinter(tnode, file);
             }
@@ -180,7 +324,7 @@ namespace ClinetPrints
         /// </summary>
         private void AddFlockPrinterMap()
         {
-            TreeNode tnode=printerViewFlcok.Nodes[0];
+            TreeNode tnode=printerViewFlock.Nodes[0];
             SharMethod.ForEachNode(tnode, (node) =>
             {
                 if (node is PrinterTreeNode)
@@ -243,7 +387,7 @@ namespace ClinetPrints
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413424.ico"));//在线异常
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413428.ico"));//离线
             printerViewSingle.ImageList = imageList1;
-            printerViewFlcok.ImageList = imageList1;
+            printerViewFlock.ImageList = imageList1;
             
         }
 
@@ -290,7 +434,7 @@ namespace ClinetPrints
                         }
                         else
                         {
-                            TreeNode[] nodes = printerViewFlcok.Nodes[0].Nodes.Find(gn.name, true);
+                            TreeNode[] nodes = printerViewFlock.Nodes[0].Nodes.Find(gn.name, true);
                             if (nodes.Length>0)
                             {
                                for(int i = 0; i < nodes.Length; i++)
@@ -326,7 +470,7 @@ namespace ClinetPrints
             }
             else
             {
-                printerViewFlcok.ExpandAll();
+                printerViewFlock.ExpandAll();
             }
         }
 
@@ -338,7 +482,7 @@ namespace ClinetPrints
             }
             else
             {
-                printerViewFlcok.CollapseAll();
+                printerViewFlock.CollapseAll();
             }
         }
         #region.......//对类一些显示内容进行显示
@@ -368,8 +512,8 @@ namespace ClinetPrints
         {
             printerViewSingle.Enabled = true;
             printerViewSingle.Visible = true;
-            printerViewFlcok.Enabled = false;
-            printerViewFlcok.Visible = false;
+            printerViewFlock.Enabled = false;
+            printerViewFlock.Visible = false;
             printerViewSingle.Focus();
         }
 
@@ -377,9 +521,9 @@ namespace ClinetPrints
         {
             printerViewSingle.Enabled = false;
             printerViewSingle.Visible = false;
-            printerViewFlcok.Enabled = true;
-            printerViewFlcok.Visible = true;
-            printerViewFlcok.Focus();
+            printerViewFlock.Enabled = true;
+            printerViewFlock.Visible = true;
+            printerViewFlock.Focus();
         }
 
        
@@ -409,6 +553,7 @@ namespace ClinetPrints
                         this.listView1.Columns.Add(new listViewColumnTNode(node));
                         imageSubItems.Images.Clear();
                         listView1.SmallImageList = imageSubItems;
+                        setDevParmInfo(node.PrinterObject.pParams.DevParm);
                     }
                 }
             }
@@ -417,6 +562,14 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
 
+        }
+        /// <summary>
+        /// 将系统参数信息复制到界面上
+        /// </summary>
+        /// <param name="data"></param>
+        private void setDevParmInfo(byte[] data)
+        {
+            
         }
 
         #endregion
@@ -713,7 +866,11 @@ namespace ClinetPrints
                     var col=listView1.Columns[3] as listViewColumnTNode;
                     ThreadPool.QueueUserWorkItem((o) =>
                     {
-
+                        monitorForm monitor = new monitorForm();
+                        monitor.StartPosition = FormStartPosition.CenterScreen;
+                        monitor.printerObject = col.ColTnode.PrinterObject;
+                        monitor.Text = col.ColTnode.Text;
+                        monitor.ShowDialog();
                     });
                 }
                 else

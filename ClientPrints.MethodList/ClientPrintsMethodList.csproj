@@ -55,6 +55,7 @@
     <Compile Include="ClientPrints.Method.Interfaces\IUSBPrinterOnlyMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\PrinterUSBMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\SharMethod.cs" />
+    <Compile Include="ClientPrints.Method.WDevDll\RegisterDevicNotifactionClassDll.cs" />
     <Compile Include="ClientPrints.Method.WDevDll\structClassDll.cs" />
     <Compile Include="ClientPrints.Method.WDevDll\WDevDllMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
