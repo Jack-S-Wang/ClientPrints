@@ -72,6 +72,12 @@
     <Compile Include="ClientMianWindows.Designer.cs">
       <DependentUpon>ClientMianWindows.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreatContorl\dataGrieViewControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreatContorl\dataGrieViewControl1.Designer.cs">
+      <DependentUpon>dataGrieViewControl1.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuGroupMethod\MenuFlockGroupMethod.cs" />
     <Compile Include="MenuGroupMethod\MenuGroupAddMethod.cs" />
     <Compile Include="MenuGroupMethod\MenuPrinterFlockGroupMethod.cs" />
@@ -108,8 +114,17 @@
     <Compile Include="SettingWindows\RemoveToOther.Designer.cs">
       <DependentUpon>RemoveToOther.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\parmSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\parmSetting.Designer.cs">
+      <DependentUpon>parmSetting.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ClientMianWindows.resx">
       <DependentUpon>ClientMianWindows.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreatContorl\dataGrieViewControl1.resx">
+      <DependentUpon>dataGrieViewControl1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -134,6 +149,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\RemoveToOther.resx">
       <DependentUpon>RemoveToOther.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\parmSetting.resx">
+      <DependentUpon>parmSetting.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="printerXml\printerFlock.bin" />
     <None Include="printerXml\printerSingle.bin" />
@@ -176,6 +194,8 @@
     <Content Include="IocOrImage\ooopic_1502413453.ico" />
     <Content Include="IocOrImage\ooopic_1502413456.ico" />
     <Content Include="IocOrImage\Print.png" />
+    <Content Include="IocOrImage\s16.png" />
+    <Content Include="IocOrImage\scroll.png" />
     <Content Include="IocOrImage\Search.png" />
     <Content Include="ooopic_1502413321.ico" />
     <Content Include="SansDLL\ds_dev_bmp.dll" />
@@ -201,6 +221,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if not exist "$(TargetDir)IocOrImage" xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"

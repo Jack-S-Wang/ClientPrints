@@ -220,7 +220,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         }
                     }
                     break;
-                case WDevCmdObjects.DEV_GET_PROTVER:
+                case WDevCmdObjects.DEV_GET_PROTVER://仿真规范版本
                     for (int i = 0; i < length; i++)
                     {
                         if (reData[i] >= 0 && reData[i] <= 32)
@@ -250,7 +250,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 case WDevCmdObjects.DEV_GET_WORKMODE://工作模式
                     strCode = "" + Convert.ToInt32(reData[0]);
                     break;
-                case WDevCmdObjects.DEV_GET_USERDAT:
+                case WDevCmdObjects.DEV_GET_USERDAT://用户自定义标识
                     string str = Encoding.GetEncoding("GBK").GetString(reData, 0, length).Replace('\0', ' ').TrimEnd();
                     for (int i = 0; i < str.Length; i++)//因为获取到的标识值时不干净的值，值后面的\0后面还有值
                     {
@@ -264,14 +264,14 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         }
                     }
                     break;
-                case WDevCmdObjects.DEV_GET_STATISINFO:
+                case WDevCmdObjects.DEV_GET_STATISINFO://数据统计
                     for (int i = 0; i < length; i++)
                     {
                         if (i % 4 == 0 && i != 0) strCode = strCode + ";";
                         strCode = strCode + reData[i];
                     }
                     break;
-                case WDevCmdObjects.DEV_GET_VERINFO:
+                case WDevCmdObjects.DEV_GET_VERINFO://固件版本号
                     for (int i = 0; i < length; i++)
                     {
                         if (i < 10)
@@ -282,18 +282,24 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     //大于10以上的都是用字符串来直接获取
                     strCode = strCode + Encoding.GetEncoding("GBK").GetString(reData, 10, length - 10);
                     break;
-                case WDevCmdObjects.DEV_GET_CFGINFOS:
+                case WDevCmdObjects.DEV_GET_CFGINFOS://配置信息
                     for (int i = 0; i < length; i++)
                     {
                         strCode = strCode + reData[i];
                     }
                     break;
-                case WDevCmdObjects.DEV_GET_SYSPARAM:
+                case WDevCmdObjects.DEV_GET_SYSPARAM://设备参数
                     if (printerModel.Contains("DC-1300"))
                     {
                         IUSBPrinterOnlyMethod onlyMethod = new PrinterDC1300();
                         strCode = onlyMethod.getDevParmInfo(reData);
                     }
+                    break;
+                case WDevCmdObjects.DEV_SET_SYSPARAM://设置设备参数
+                    strCode = reData[0]+"";
+                    break;
+                case WDevCmdObjects.DEV_GET_CFGFMT://设备格式，只要有信息说明成功！
+                    strCode = Encoding.UTF8.GetString(reData);
                     break;
             }
             return strCode;

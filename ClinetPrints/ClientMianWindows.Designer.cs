@@ -59,32 +59,8 @@
             this.toolStBtn_print = new System.Windows.Forms.ToolStripButton();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.cmb_wipeType = new System.Windows.Forms.ComboBox();
-            this.cmb_cardType = new System.Windows.Forms.ComboBox();
-            this.cmb_inCardWay = new System.Windows.Forms.ComboBox();
-            this.cmb_outCardWay = new System.Windows.Forms.ComboBox();
-            this.cmb_printTemperature = new System.Windows.Forms.ComboBox();
-            this.cmb_printContrast = new System.Windows.Forms.ComboBox();
-            this.cmb_printSheep = new System.Windows.Forms.ComboBox();
-            this.cmb_grayTemperature = new System.Windows.Forms.ComboBox();
-            this.cmb_wipeSheep = new System.Windows.Forms.ComboBox();
-            this.cmb_wipeTemperatuer = new System.Windows.Forms.ComboBox();
-            this.cmb_printModel = new System.Windows.Forms.ComboBox();
+            this.toolStBtn_printPerview = new System.Windows.Forms.ToolStripButton();
+            this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -93,8 +69,6 @@
             this.groupBox2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pan_mainWin1.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -103,7 +77,7 @@
             this.快速查询ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1263, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(843, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -205,18 +179,16 @@
             this.pan_mianWin1_image.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pan_mianWin1_image.Location = new System.Drawing.Point(209, 0);
             this.pan_mianWin1_image.Name = "pan_mianWin1_image";
-            this.pan_mianWin1_image.Size = new System.Drawing.Size(1054, 572);
+            this.pan_mianWin1_image.Size = new System.Drawing.Size(634, 572);
             this.pan_mianWin1_image.TabIndex = 2;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.groupBox4);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1054, 572);
+            this.groupBox1.Size = new System.Drawing.Size(634, 572);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "控制界面";
@@ -228,7 +200,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox2.Location = new System.Drawing.Point(3, 17);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(344, 552);
+            this.groupBox2.Size = new System.Drawing.Size(614, 552);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "打印设置";
@@ -244,7 +216,7 @@
             this.listView1.GridLines = true;
             this.listView1.Location = new System.Drawing.Point(3, 42);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(338, 507);
+            this.listView1.Size = new System.Drawing.Size(608, 507);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -274,10 +246,12 @@
             this.toolStBtn_moveNext,
             this.toolStBtn_monitor,
             this.toolStTxb_printer,
-            this.toolStBtn_print});
+            this.toolStBtn_print,
+            this.toolStBtn_printPerview,
+            this.toolStBtn_parmSet});
             this.toolStrip1.Location = new System.Drawing.Point(3, 17);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(338, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(608, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -359,7 +333,7 @@
             this.pan_mainWin1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pan_mainWin1.Location = new System.Drawing.Point(0, 25);
             this.pan_mainWin1.Name = "pan_mainWin1";
-            this.pan_mainWin1.Size = new System.Drawing.Size(1263, 572);
+            this.pan_mainWin1.Size = new System.Drawing.Size(843, 572);
             this.pan_mainWin1.TabIndex = 3;
             // 
             // imageSubItems
@@ -368,262 +342,30 @@
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // groupBox4
+            // toolStBtn_printPerview
             // 
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox4.Location = new System.Drawing.Point(733, 17);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(318, 552);
-            this.groupBox4.TabIndex = 2;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "设备配置信息";
+            this.toolStBtn_printPerview.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_printPerview.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_printPerview.Image")));
+            this.toolStBtn_printPerview.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_printPerview.Name = "toolStBtn_printPerview";
+            this.toolStBtn_printPerview.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_printPerview.Text = "打印预览";
             // 
-            // groupBox3
+            // toolStBtn_parmSet
             // 
-            this.groupBox3.Controls.Add(this.groupBox6);
-            this.groupBox3.Controls.Add(this.groupBox5);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(347, 17);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(386, 552);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "设备系统参数";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.cmb_printModel);
-            this.groupBox5.Controls.Add(this.cmb_wipeTemperatuer);
-            this.groupBox5.Controls.Add(this.cmb_wipeSheep);
-            this.groupBox5.Controls.Add(this.cmb_grayTemperature);
-            this.groupBox5.Controls.Add(this.cmb_printSheep);
-            this.groupBox5.Controls.Add(this.cmb_printContrast);
-            this.groupBox5.Controls.Add(this.cmb_printTemperature);
-            this.groupBox5.Controls.Add(this.cmb_outCardWay);
-            this.groupBox5.Controls.Add(this.cmb_inCardWay);
-            this.groupBox5.Controls.Add(this.cmb_cardType);
-            this.groupBox5.Controls.Add(this.cmb_wipeType);
-            this.groupBox5.Controls.Add(this.label11);
-            this.groupBox5.Controls.Add(this.label10);
-            this.groupBox5.Controls.Add(this.label9);
-            this.groupBox5.Controls.Add(this.label8);
-            this.groupBox5.Controls.Add(this.label7);
-            this.groupBox5.Controls.Add(this.label6);
-            this.groupBox5.Controls.Add(this.label5);
-            this.groupBox5.Controls.Add(this.label4);
-            this.groupBox5.Controls.Add(this.label3);
-            this.groupBox5.Controls.Add(this.label2);
-            this.groupBox5.Controls.Add(this.label1);
-            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox5.Location = new System.Drawing.Point(3, 17);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(380, 452);
-            this.groupBox5.TabIndex = 0;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "参数界面";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox6.Location = new System.Drawing.Point(3, 493);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(380, 56);
-            this.groupBox6.TabIndex = 1;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "确认界面";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(31, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "擦除类型：";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 70);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 12);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "卡片类型：";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(31, 105);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 12);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "进卡方式：";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(31, 140);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 12);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "出卡方式：";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(31, 175);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 12);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "打印温度：";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(19, 210);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 12);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "打印对比度：";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(31, 245);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 12);
-            this.label7.TabIndex = 6;
-            this.label7.Text = "打印速度：";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(31, 280);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(65, 12);
-            this.label8.TabIndex = 7;
-            this.label8.Text = "灰度温度：";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(31, 315);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(65, 12);
-            this.label9.TabIndex = 8;
-            this.label9.Text = "擦出速度：";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(31, 350);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(65, 12);
-            this.label10.TabIndex = 9;
-            this.label10.Text = "擦除温度：";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(31, 385);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(65, 12);
-            this.label11.TabIndex = 10;
-            this.label11.Text = "打印模式：";
-            // 
-            // cmb_wipeType
-            // 
-            this.cmb_wipeType.FormattingEnabled = true;
-            this.cmb_wipeType.Location = new System.Drawing.Point(124, 32);
-            this.cmb_wipeType.Name = "cmb_wipeType";
-            this.cmb_wipeType.Size = new System.Drawing.Size(179, 20);
-            this.cmb_wipeType.TabIndex = 11;
-            // 
-            // cmb_cardType
-            // 
-            this.cmb_cardType.FormattingEnabled = true;
-            this.cmb_cardType.Location = new System.Drawing.Point(124, 67);
-            this.cmb_cardType.Name = "cmb_cardType";
-            this.cmb_cardType.Size = new System.Drawing.Size(179, 20);
-            this.cmb_cardType.TabIndex = 12;
-            // 
-            // cmb_inCardWay
-            // 
-            this.cmb_inCardWay.FormattingEnabled = true;
-            this.cmb_inCardWay.Location = new System.Drawing.Point(124, 102);
-            this.cmb_inCardWay.Name = "cmb_inCardWay";
-            this.cmb_inCardWay.Size = new System.Drawing.Size(179, 20);
-            this.cmb_inCardWay.TabIndex = 13;
-            // 
-            // cmb_outCardWay
-            // 
-            this.cmb_outCardWay.FormattingEnabled = true;
-            this.cmb_outCardWay.Location = new System.Drawing.Point(124, 137);
-            this.cmb_outCardWay.Name = "cmb_outCardWay";
-            this.cmb_outCardWay.Size = new System.Drawing.Size(179, 20);
-            this.cmb_outCardWay.TabIndex = 14;
-            // 
-            // cmb_printTemperature
-            // 
-            this.cmb_printTemperature.FormattingEnabled = true;
-            this.cmb_printTemperature.Location = new System.Drawing.Point(124, 172);
-            this.cmb_printTemperature.Name = "cmb_printTemperature";
-            this.cmb_printTemperature.Size = new System.Drawing.Size(179, 20);
-            this.cmb_printTemperature.TabIndex = 15;
-            // 
-            // cmb_printContrast
-            // 
-            this.cmb_printContrast.FormattingEnabled = true;
-            this.cmb_printContrast.Location = new System.Drawing.Point(124, 207);
-            this.cmb_printContrast.Name = "cmb_printContrast";
-            this.cmb_printContrast.Size = new System.Drawing.Size(179, 20);
-            this.cmb_printContrast.TabIndex = 16;
-            // 
-            // cmb_printSheep
-            // 
-            this.cmb_printSheep.FormattingEnabled = true;
-            this.cmb_printSheep.Location = new System.Drawing.Point(124, 242);
-            this.cmb_printSheep.Name = "cmb_printSheep";
-            this.cmb_printSheep.Size = new System.Drawing.Size(179, 20);
-            this.cmb_printSheep.TabIndex = 17;
-            // 
-            // cmb_grayTemperature
-            // 
-            this.cmb_grayTemperature.FormattingEnabled = true;
-            this.cmb_grayTemperature.Location = new System.Drawing.Point(124, 277);
-            this.cmb_grayTemperature.Name = "cmb_grayTemperature";
-            this.cmb_grayTemperature.Size = new System.Drawing.Size(179, 20);
-            this.cmb_grayTemperature.TabIndex = 18;
-            // 
-            // cmb_wipeSheep
-            // 
-            this.cmb_wipeSheep.FormattingEnabled = true;
-            this.cmb_wipeSheep.Location = new System.Drawing.Point(124, 312);
-            this.cmb_wipeSheep.Name = "cmb_wipeSheep";
-            this.cmb_wipeSheep.Size = new System.Drawing.Size(179, 20);
-            this.cmb_wipeSheep.TabIndex = 19;
-            // 
-            // cmb_wipeTemperatuer
-            // 
-            this.cmb_wipeTemperatuer.FormattingEnabled = true;
-            this.cmb_wipeTemperatuer.Location = new System.Drawing.Point(124, 347);
-            this.cmb_wipeTemperatuer.Name = "cmb_wipeTemperatuer";
-            this.cmb_wipeTemperatuer.Size = new System.Drawing.Size(179, 20);
-            this.cmb_wipeTemperatuer.TabIndex = 20;
-            // 
-            // cmb_printModel
-            // 
-            this.cmb_printModel.FormattingEnabled = true;
-            this.cmb_printModel.Location = new System.Drawing.Point(124, 382);
-            this.cmb_printModel.Name = "cmb_printModel";
-            this.cmb_printModel.Size = new System.Drawing.Size(179, 20);
-            this.cmb_printModel.TabIndex = 21;
+            this.toolStBtn_parmSet.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStBtn_parmSet.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_parmSet.Image")));
+            this.toolStBtn_parmSet.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStBtn_parmSet.Name = "toolStBtn_parmSet";
+            this.toolStBtn_parmSet.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_parmSet.Text = "参数设置";
+            this.toolStBtn_parmSet.Click += new System.EventHandler(this.toolStBtn_parmSet_Click);
             // 
             // ClientMianWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1263, 597);
+            this.ClientSize = new System.Drawing.Size(843, 597);
             this.Controls.Add(this.pan_mainWin1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -647,9 +389,6 @@
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.pan_mainWin1.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -686,32 +425,8 @@
         private System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
         private System.Windows.Forms.ImageList imageSubItems;
         private System.Windows.Forms.ToolStripButton toolStBtn_print;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmb_printModel;
-        private System.Windows.Forms.ComboBox cmb_wipeTemperatuer;
-        private System.Windows.Forms.ComboBox cmb_wipeSheep;
-        private System.Windows.Forms.ComboBox cmb_grayTemperature;
-        private System.Windows.Forms.ComboBox cmb_printSheep;
-        private System.Windows.Forms.ComboBox cmb_printContrast;
-        private System.Windows.Forms.ComboBox cmb_printTemperature;
-        private System.Windows.Forms.ComboBox cmb_outCardWay;
-        private System.Windows.Forms.ComboBox cmb_inCardWay;
-        private System.Windows.Forms.ComboBox cmb_cardType;
-        private System.Windows.Forms.ComboBox cmb_wipeType;
+        private System.Windows.Forms.ToolStripButton toolStBtn_printPerview;
+        private System.Windows.Forms.ToolStripButton toolStBtn_parmSet;
     }
 }
 

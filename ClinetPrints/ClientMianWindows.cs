@@ -16,6 +16,7 @@ using System.Runtime.InteropServices;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
+using ClinetPrints.SettingWindows.SettingOtherWindows;
 
 namespace ClinetPrints
 {
@@ -124,8 +125,14 @@ namespace ClinetPrints
                             dbd.fromIntPtr(m.LParam);
                             string path = dbd.devicePath.ToLower();
                             SetTiming = false;
+                            Thread.Sleep(1000);
                             new PrintersGeneralFunction(path);
                             string dev;
+                            if (!SharMethod.dicPrinterUSB.ContainsKey(path))
+                            {
+                                MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
+                                return;
+                            }
                             if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明以前已经添加过的
                             {
                                 var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
@@ -149,7 +156,7 @@ namespace ClinetPrints
                             }
                             var file=SharMethod.FileCreateMethod(SharMethod.FLOCK);
                             SharMethod.SavePrinter(printerViewSingle.Nodes[0], file);
-                            
+                            Thread.Sleep(100);
                             ThreadPool.QueueUserWorkItem((o) =>
                             {
                                 PrinterInformation pInfo = new PrinterInformation();
@@ -190,6 +197,7 @@ namespace ClinetPrints
                                     SharMethod.SavePrinter(this.printerViewSingle.Nodes[0], file);
                                     string dev = n.Text;
                                     SharMethod.dicPrinterUSB.Remove(path);
+                                    Thread.Sleep(100);
                                     ThreadPool.QueueUserWorkItem((o) =>
                                     {
                                         PrinterInformation pInfo = new PrinterInformation();
@@ -553,7 +561,7 @@ namespace ClinetPrints
                         this.listView1.Columns.Add(new listViewColumnTNode(node));
                         imageSubItems.Images.Clear();
                         listView1.SmallImageList = imageSubItems;
-                        setDevParmInfo(node.PrinterObject.pParams.DevParm);
+                        
                     }
                 }
             }
@@ -563,15 +571,7 @@ namespace ClinetPrints
             }
 
         }
-        /// <summary>
-        /// 将系统参数信息复制到界面上
-        /// </summary>
-        /// <param name="data"></param>
-        private void setDevParmInfo(byte[] data)
-        {
-            
-        }
-
+        
         #endregion
 
         /// <summary>
@@ -891,6 +891,33 @@ namespace ClinetPrints
                 if (this.toolStTxb_printer.Text != "")
                 {
 
+                }
+                else
+                {
+                    MessageBox.Show("请先选择打印机！");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStBtn_parmSet_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.toolStTxb_printer.Text != "")
+                {
+                    var col = listView1.Columns[3] as listViewColumnTNode;
+                    ThreadPool.QueueUserWorkItem((o) =>
+                    {
+                        parmSetting parm = new parmSetting();
+                        parm.StartPosition = FormStartPosition.CenterScreen;
+                        parm.printerObject = col.ColTnode.PrinterObject;
+                        parm.Text = col.ColTnode.Text+"参数设置界面";
+                        parm.ShowDialog();
+                    });
                 }
                 else
                 {

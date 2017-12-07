@@ -165,8 +165,8 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         public static int DFU_FWTAG_LEN = 32;
 
         //--配置数据 tag--
-        public static int DEVCFG_FMT_INFO = 0x00;
-        public static int DEVCFG_VAL_INFO = 0x01;
+        public static ushort DEVCFG_FMT_INFO = 0x00;
+        public static ushort DEVCFG_VAL_INFO = 0x01;
         //-portMode---------------
         public static int PORTINFO_PMODE_DATA = 0x01;
         public static int PORTINFO_PMODE_CTRL = 0x02;

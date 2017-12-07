@@ -70,7 +70,6 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <param name="lpOut">输出的指针信息</param>
         /// <returns></returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        //public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [Out] structClassDll.UNCMPR_INFO lpOut);
         public static extern bool dllFunc_WriteEx(IntPtr pHandle, IntPtr inDats, uint inLen, uint modeTag, [In,Out]ref structClassDll.UNCMPR_INFO lpOut);
         /// <summary>
         /// 读数据到设备的数据端口
@@ -205,9 +204,10 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <remarks>当tag等于DEVCFG_FMT_INFO时，lpParam为指向(WORD*)的配置项索引号，tag等于DEVCFG_VAL_INFO时
         /// lpParam为指向字符串(LPCTSTR)的配置项名。
         /// 返回FALSE时，如果cnts也为0表示超出配置项的范围获取失败，cnts不为0表示需要缓冲的长度。</remarks>
-        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_GetDevCfgInfo(IntPtr pHandle,object lpParam,out string buf,[In,Out] ref ushort cnts, ushort tag,ushort noLoad);
-
+        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode,EntryPoint = "dllFunc_GetDevCfgInfo")]
+        public static extern bool dllFunc_GetName(IntPtr pHandle,ref int lpParam,[In,Out] char[] buf,[In,Out] ref ushort cnts, ushort tag,ushort noLoad);
+        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode, EntryPoint = "dllFunc_GetDevCfgInfo")]
+        public static extern bool dllFunc_GetVal(IntPtr pHandle, string lpParam, [In, Out] char[] buf, [In, Out] ref ushort cnts, ushort tag, ushort noLoad);
         /// <summary>
         /// 设置设备配置数据
         /// </summary>
