@@ -58,10 +58,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGV_Cfgdata = new System.Windows.Forms.DataGridView();
             this.btn_sureCfg = new System.Windows.Forms.Button();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGrieViewControl11 = new ClinetPrints.CreatContorl.dataGrieViewControl1();
             this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -69,7 +67,6 @@
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGV_Cfgdata)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -512,7 +509,7 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.dataGV_Cfgdata);
+            this.groupBox6.Controls.Add(this.dataGrieViewControl11);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox6.Location = new System.Drawing.Point(3, 17);
             this.groupBox6.Name = "groupBox6";
@@ -530,19 +527,6 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             // 
-            // dataGV_Cfgdata
-            // 
-            this.dataGV_Cfgdata.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGV_Cfgdata.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.name,
-            this.Value});
-            this.dataGV_Cfgdata.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGV_Cfgdata.Location = new System.Drawing.Point(3, 17);
-            this.dataGV_Cfgdata.Name = "dataGV_Cfgdata";
-            this.dataGV_Cfgdata.RowTemplate.Height = 23;
-            this.dataGV_Cfgdata.Size = new System.Drawing.Size(306, 450);
-            this.dataGV_Cfgdata.TabIndex = 1;
-            // 
             // btn_sureCfg
             // 
             this.btn_sureCfg.Location = new System.Drawing.Point(81, 20);
@@ -553,16 +537,15 @@
             this.btn_sureCfg.UseVisualStyleBackColor = true;
             this.btn_sureCfg.Click += new System.EventHandler(this.btn_sureCfg_Click);
             // 
-            // name
+            // dataGrieViewControl11
             // 
-            this.name.HeaderText = "名称";
-            this.name.Name = "name";
-            // 
-            // Value
-            // 
-            this.Value.HeaderText = "值";
-            this.Value.Name = "Value";
-            this.Value.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGrieViewControl11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrieViewControl11.handers = null;
+            this.dataGrieViewControl11.items = null;
+            this.dataGrieViewControl11.Location = new System.Drawing.Point(3, 17);
+            this.dataGrieViewControl11.Name = "dataGrieViewControl11";
+            this.dataGrieViewControl11.Size = new System.Drawing.Size(306, 450);
+            this.dataGrieViewControl11.TabIndex = 0;
             // 
             // parmSetting
             // 
@@ -581,7 +564,6 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGV_Cfgdata)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -618,9 +600,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.DataGridView dataGV_Cfgdata;
         private System.Windows.Forms.Button btn_sureCfg;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
+        private CreatContorl.dataGrieViewControl1 dataGrieViewControl11;
     }
 }

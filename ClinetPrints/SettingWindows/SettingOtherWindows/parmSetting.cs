@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static ClinetPrints.CreatContorl.dataGrieViewControl1;
 
 namespace ClinetPrints.SettingWindows.SettingOtherWindows
 {
@@ -137,6 +138,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 bool cfg=WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
                 if (cfg)
                 {
+                    UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
+                    this.dataGrieViewControl11.handers = headerColls;
                     List<CfgDataObjects> liob = new List<CfgDataObjects>(); 
                     char[] buf = new char[512];
                     ushort cnt = 512;
@@ -154,7 +157,30 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                             liob.Add(dataCfg);
                         }
                     }
-                    dataGV_Cfgdata.DataSource = liob;
+                    UserItems items = new UserItems(this.dataGrieViewControl11);
+                    foreach(var keyco in liob)
+                    {
+                        if (keyco.type == 3)
+                        {
+                            UserSubControl usersub = new UserSubControl(keyco.Name);
+                            ComboBox box = new ComboBox();
+                            for(int i = 0; i < keyco.typeCount; i++)
+                            {
+                                box.Items.Add(keyco.liValues[i]);
+                            }
+                            box.SelectedIndex = Int32.Parse(keyco.value);
+                            UserSubControl userComb = new UserSubControl(box);
+                            items.Add(new UserSubControl[] { usersub, userComb });
+                        }else
+                        {
+                            UserSubControl usersub = new UserSubControl(keyco.Name);
+                            UserSubControl usersubVal = new UserSubControl(keyco.value);
+                            items.Add(new UserSubControl[] { usersub, usersubVal });
+                        }
+                    }
+                    this.dataGrieViewControl11.items = items;
+                  
+                   
                 }
 
             }

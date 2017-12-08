@@ -19,16 +19,15 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         /// <summary>
         /// 该类型所包含值的数
         /// </summary>
-        private int typeCount = 0;
+        public int typeCount = 0;
         /// <summary>
         /// 类型所有值的集合
         /// </summary>
-        private List<string> li = new List<string>();
+        public List<string> liValues = new List<string>();
         /// <summary>
-        /// 创建的控件对象
+        /// 值
         /// </summary>
-        public object ob { get; set; }
-       
+       public string value { get; set; }
 
         /// <summary>
         /// 创建一个配置信息的对象数据
@@ -38,6 +37,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         public CfgDataObjects(string cfgInfo,string val)
         {
             Name = cfgInfo.Substring(5, cfgInfo.Substring(0, cfgInfo.IndexOf(',')).Length - 5);
+            value = val;
             int count = 0;
             int count1 = 0;
             int count2 = 0;
@@ -82,44 +82,16 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
                     {
                         if (cfgInfo[n] == ';')
                         {
-                            li.Add(valDatas);
+                            liValues.Add(valDatas);
                             valDatas = "";
                         }
                         valDatas = valDatas + cfgInfo[n];//获取状态名称内容
                         if (n == cfgInfo.Length - 1)//最后一个值存进去
                         {
-                            li.Add(valDatas);
+                            liValues.Add(valDatas);
                         }
                     }
                 }
-            }
-
-            switch (type)
-            {
-                case 0:
-                    TextBox txb = new TextBox();
-                    txb.Text = val;
-                    ob = txb;
-                    break;
-                case 1:
-                    TextBox txbInt = new TextBox();
-                    txbInt.Text = val;
-                    ob = txbInt;
-                    break;
-                case 2:
-                    TextBox txbStr = new TextBox();
-                    txbStr.Text = val;
-                    ob = txbStr;
-                    break;
-                case 3:
-                    ComboBox cmb = new ComboBox();
-                    for (int i = 0; i < typeCount; i++)
-                    {
-                        cmb.Items.Add(li[i]);
-                    }
-                    cmb.SelectedIndex = Int32.Parse(val);
-                    ob = cmb;
-                    break;
             }
         }
     }
