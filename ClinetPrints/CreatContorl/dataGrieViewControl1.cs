@@ -45,9 +45,10 @@ namespace ClinetPrints.CreatContorl
                 _items = value;
                 if (_items != null)
                 {
-                   foreach(newSubControl key in _items)
+                   for(int i=0;i<_items.Count;i++)
                     {
-                        this.groupBox1.Controls.Add(key);
+                        this.groupBox1.Controls.Add(_items[i]);
+                        _items[i].Location = new Point(10, 10 + 20 * (i + 1));
                     }
                 }else
                 {
@@ -264,7 +265,7 @@ namespace ClinetPrints.CreatContorl
                 {
                     var c = Controls[i];
                     c.Size = new Size(Owner.handers[i].Width, 20);
-                    c.Location = new Point(10 + (i * c.Width), 10 + (20 * (Row + 1)));
+                    c.Location = new Point(10 + (i * c.Width), 10 + (20 * (Row)));
                 }
             }
         }
