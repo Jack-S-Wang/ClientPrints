@@ -46,7 +46,6 @@ namespace ClinetPrints.SettingWindows
                 }
             });
         }
-        delegate void setText();
         private void readDevState()
         {
             if (printerObject.model.Contains("DC-1300"))

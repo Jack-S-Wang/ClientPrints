@@ -20,6 +20,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
             {
                 Name = value.Name;
                 _ColTnode = value;
+                Text = "";
             }
         }
         /// <summary>

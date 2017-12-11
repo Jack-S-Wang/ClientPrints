@@ -20,8 +20,8 @@ namespace ClinetPrints.MenuGroupMethod
             MenuItem remove = new MenuItem("移位");
             //删除打印机
             MenuItem clearPrinter = new MenuItem("删除");
-            //打印
-            MenuItem printData = new MenuItem("打印");
+            //重新获取打印设置信息
+            MenuItem reGetprintData = new MenuItem("重新获取打印设置信息");
             //打印机添加到群
             MenuItem menu5 = new MenuItem("添加到群");
             rename.Click += (o, e) =>
@@ -116,27 +116,11 @@ namespace ClinetPrints.MenuGroupMethod
                     clientForm.showException("该对象不是打印机！");
                 }
             };
-            printData.Click += (o, e) =>
+            reGetprintData.Click += (o, e) =>
             {
-                if (SharMethod.pathImage != "")
+                if((tnode as PrinterTreeNode).PrinterObject.listviewObject != null)
                 {
-                    var node = tnode as PrinterTreeNode;
-                    if (node.StateCode.ToString().Equals("0"))
-                    {
-                        clientForm.showException("离线设备不能打印！");
-                        return;
-                    }else
-                    {
-                        var method = node.PrinterObject.MethodsObject as PrintersGeneralFunction;
-                        if(method.writeDataToDev(SharMethod.pathImage, node.PrinterObject))
-                        {
-
-                        }
-                    }
-                }
-                else
-                {
-                    clientForm.showException("请先选择图片再打印！");
+                    clientForm.listView1 = (tnode as PrinterTreeNode).PrinterObject.listviewObject;
                 }
             };
             
@@ -186,7 +170,7 @@ namespace ClinetPrints.MenuGroupMethod
                     menu5.MenuItems.Add(groupMenu);
                 }
             }
-            tnode.ContextMenu = new ContextMenu(new MenuItem[] { rename, remove, clearPrinter, printData, menu5 });
+            tnode.ContextMenu = new ContextMenu(new MenuItem[] { rename, remove, clearPrinter, reGetprintData, menu5 });
         }
 
     }

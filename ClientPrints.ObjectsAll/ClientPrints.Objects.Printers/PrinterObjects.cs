@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
+using System.Windows.Forms;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 {
@@ -25,8 +27,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 句柄值
         /// </summary>
         public IntPtr pHandle { get; set; }
-       
-       
+
         /// <summary>
         /// 储存的地址信息
         /// </summary>
@@ -55,15 +56,20 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// <summary>
         /// 对应获取执行打印方法的对象
         /// </summary>
-        public object MethodsObject { get; set; }
+        public IMethodObjects MethodsObject { get; set; }
         /// <summary>
         /// 唯一标识
         /// </summary>
         public string onlyAlias { get; set; }
         /// <summary>
-        /// 设备的参数信息
+        /// 设备的参数信息;0-擦除位图类型,1-卡片类型,2-进卡方式,3-出卡方式,4-打印温度,
+        /// 5-打印对比度,6-打印速度,7-灰度温度,8-擦除速度,9-设置擦除温度,10-打印模式
         /// </summary>
         public PrinterParams pParams { get; set; }
+        /// <summary>
+        /// ListView控件记录下图片列表对象内容
+        /// </summary>
+        public ListView listviewObject { get; set; }
 
 
         public int CompareTo(object obj)

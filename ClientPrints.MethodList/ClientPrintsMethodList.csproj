@@ -61,16 +61,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClientPrints.ObjectsAll\ClientPrintsObjectsAll.csproj">
-      <Project>{43B0B3A4-E5BC-4010-AF20-B7842FCB2A7F}</Project>
-      <Name>ClientPrintsObjectsAll</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="ClientPrints.Method.DLL\ds_dev_bmp.dll" />
     <Content Include="ClientPrints.Method.DLL\ds_dev_data.dll" />
     <Content Include="ClientPrints.Method.DLL\Newtonsoft.Json.dll" />
     <Content Include="ClientPrints.Method.DLL\WDevObj.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClientPrints.ObjectsAll\ClientPrintsObjectsAll.csproj">
+      <Project>{43b0b3a4-e5bc-4010-af20-b7842fcb2a7f}</Project>
+      <Name>ClientPrintsObjectsAll</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

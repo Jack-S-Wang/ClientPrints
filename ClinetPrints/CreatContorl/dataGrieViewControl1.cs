@@ -17,7 +17,9 @@ namespace ClinetPrints.CreatContorl
         {
             InitializeComponent();
         }
+        
         private UserColumnHanderCollection _handers;
+        [Description("标头信息集合")]
         public UserColumnHanderCollection handers
         {
             get { return _handers; }
@@ -28,15 +30,18 @@ namespace ClinetPrints.CreatContorl
                 {
                     for (int i = 0; i < _handers.Count; i++)
                     {
-                        _handers[i].Location = new Point(this.Location.X + 10 + (i * _handers[i].Width), this.Location.Y + 10);
+                        _handers[i].Location = new Point(10 + (i * _handers[i].Width), 10);
+
                     }
-                }else
+                }
+                else
                 {
                     _handers = new UserColumnHanderCollection(this);
                 }
             }
         }
         private UserItems _items;
+        [Description("字项目集合")]
         public UserItems items
         {
             get { return _items; }
@@ -45,12 +50,8 @@ namespace ClinetPrints.CreatContorl
                 _items = value;
                 if (_items != null)
                 {
-                   for(int i=0;i<_items.Count;i++)
-                    {
-                        this.groupBox1.Controls.Add(_items[i]);
-                        _items[i].Location = new Point(10, 10 + 20 * (i + 1));
-                    }
-                }else
+                }
+                else
                 {
                     _items = new UserItems(this);
                 }
@@ -63,7 +64,7 @@ namespace ClinetPrints.CreatContorl
         }
 
         /// <summary>
-        /// 表头的集合（列）
+        /// 标头的集合（列）
         /// </summary>
         public class UserColumnHanderCollection : ControlCollection
         {
@@ -78,23 +79,38 @@ namespace ClinetPrints.CreatContorl
                     Add(key);
                 }
             }
-
+            /// <summary>
+            /// 添加标头列
+            /// </summary>
+            /// <param name="value"></param>
             public void Add(UserColumnHander value)
             {
-                (Owner as dataGrieViewControl1).groupBox1.Controls.Add(value);
+                (Owner as dataGrieViewControl1).Controls.Add(value);
                 colls.Add(value);
             }
+            /// <summary>
+            /// 清空集合
+            /// </summary>
             public new void Clear()
             {
-                (Owner as dataGrieViewControl1).groupBox1.Controls.Clear();
+                (Owner as dataGrieViewControl1).Controls.Clear();
                 colls.Clear();
             }
+            /// <summary>
+            /// 删除某一个列标头
+            /// </summary>
+            /// <param name="value"></param>
             public void Remove(UserColumnHander value)
             {
-                (Owner as dataGrieViewControl1).groupBox1.Controls.Remove(value);
+                (Owner as dataGrieViewControl1).Controls.Remove(value);
                 colls.Remove(value);
             }
 
+            /// <summary>
+            /// 找到对应的标头
+            /// </summary>
+            /// <param name="index"></param>
+            /// <returns></returns>
             public new UserColumnHander this[int index]
             {
                 get
@@ -102,7 +118,11 @@ namespace ClinetPrints.CreatContorl
                     return colls[index];
                 }
             }
-
+            /// <summary>
+            /// 找到对应的标头
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
             public new UserColumnHander this[string key]
             {
                 get
@@ -148,6 +168,10 @@ namespace ClinetPrints.CreatContorl
             //        }
             //    }
             //}
+            /// <summary>
+            /// 添加一行项目中所有子项集合
+            /// </summary>
+            /// <param name="value"></param>
             public void Add(UserSubControl[] value)
             {
                 var contr = new newSubControl(value, (Owner as dataGrieViewControl1), li.Count);
@@ -156,15 +180,24 @@ namespace ClinetPrints.CreatContorl
                     li.Add(contr);
                 }
             }
+            /// <summary>
+            /// 删除对应一行项目信息
+            /// </summary>
+            /// <param name="subControl"></param>
             public void Remove(newSubControl subControl)
             {
-                (Owner as dataGrieViewControl1).groupBox1.Controls.Remove(subControl);
+                foreach (var key in subControl.Value)
+                {
+                    (Owner as dataGrieViewControl1).Controls.Remove(key.control);
+                }
                 li.Remove(subControl);
             }
-
+            /// <summary>
+            /// 清楚所有行项目
+            /// </summary>
             public new void Clear()
             {
-                (Owner as dataGrieViewControl1).groupBox1.Controls.Clear();
+                (Owner as dataGrieViewControl1).Controls.Clear();
                 li.Clear();
             }
             public override int Count
@@ -174,6 +207,11 @@ namespace ClinetPrints.CreatContorl
                     return li.Count;
                 }
             }
+            /// <summary>
+            /// 返回改行项目
+            /// </summary>
+            /// <param name="index"></param>
+            /// <returns></returns>
             public new newSubControl this[int index]
             {
                 get
@@ -181,16 +219,23 @@ namespace ClinetPrints.CreatContorl
                     return li[index];
                 }
             }
-
+            /// <summary>
+            /// 返回对应的改行的子项项目
+            /// </summary>
+            /// <param name="key"></param>
+            /// <returns></returns>
             public new newSubControl this[string key]
             {
                 get
                 {
-                    foreach(newSubControl control in li)
+                    foreach (newSubControl control in li)
                     {
-                        if (control.Name == key)
+                        foreach (var con in control.Value)
                         {
-                            return control;
+                            if (con.control.Name == key)
+                            {
+                                return control;
+                            }
                         }
                     }
                     return null;
@@ -206,67 +251,85 @@ namespace ClinetPrints.CreatContorl
         /// <summary>
         /// 设计每一行中子项目的控件
         /// </summary>
-        public class UserSubControl : Control
+        public class UserSubControl
         {
-            public UserSubControl(Control value)
+            public Control control { get; set; }
+            /// <summary>
+            /// 添加不同的控件信息
+            /// </summary>
+            /// <param name="value">控件</param>
+            /// <param name="isEndable">设置控件是否可以响应</param>
+            public UserSubControl(Control value,bool isEndable)
             {
-                this.Controls.Add(value);
+                value.Enabled = isEndable;
+                control = value;
             }
-            public UserSubControl(string str)
+            /// <summary>
+            /// 直接生成一个TextBox的文本框信息
+            /// </summary>
+            /// <param name="str">文本内容名称</param>
+            /// <param name="isEndable">设置控件是否可以响应</param>
+            public UserSubControl(string str,bool isEndable)
             {
                 TextBox txb = new TextBox();
                 txb.Name = str;
                 txb.Text = str;
-                this.Controls.Add(txb);
+                txb.Enabled = isEndable;
+                control = txb;
             }
         }
 
         /// <summary>
         /// 生成一行项目的主控件
         /// </summary>
-        public class newSubControl : UserControl
+        public class newSubControl
         {
             public dataGrieViewControl1 Owner { get; set; }
-
-            public int Row { get; set; }
-
+            public int Row;
+            public UserSubControl[] Value { get; }
+            /// <summary>
+            /// 对主控件添加那些子项目中的所有控件
+            /// </summary>
+            /// <param name="value">子项目集合</param>
+            /// <param name="owner">父类控件</param>
+            /// <param name="row">当前的行数</param>
             public newSubControl(UserSubControl[] value, dataGrieViewControl1 owner, int row)
             {
-                Row = row;
                 Owner = owner;
-                Size = owner.groupBox1.Size;
+                Row = row;
+                Value = value;
                 if (owner.handers.Count >= value.Length)
                 {
                     for (int i = 0; i < owner.handers.Count; i++)
                     {
                         if (i < value.Length)
                         {
-                            value[i].Size = new Size(owner.handers[i].Width, 20);
-                            value[i].Location = new Point(10 + (i * value[i].Width), 10 + (20 * Row));
-                            this.Controls.Add(value[i]);
+
+                            if ((value[i].control as Control) is ComboBox)
+                            {
+                                var com = (value[i].control as Control) as ComboBox;
+                                com.Width = owner.handers[i].Width;
+                                com.Height = 20;
+                            }
+                            else
+                            {
+                                value[i].control.Size = new Size(owner.handers[i].Width, 20);
+                            }
+                            value[i].control.Location = new Point(10 + (i * value[i].control.Width), 10 + 20 * (Row + 1));
+                            Owner.Controls.Add(value[i].control);
                         }
                         else
                         {
                             TextBox textbox = new TextBox();
                             textbox.BorderStyle = BorderStyle.FixedSingle;
-                            Size = new Size(owner.handers[i].Width, 20);
-                            textbox.Location = new Point(10 + (i * value[i].Width), 10 + (20 * Row));
-                            this.Controls.Add(textbox);
+                            textbox.Size = new Size(owner.handers[i].Width, 20);
+                            textbox.Location = new Point(10 + (i * value[i].control.Width), 10 + 20 * (Row + 1));
+                            Owner.Controls.Add(textbox);
                         }
                     }
                 }
 
-                owner.SizeChanged += Owner_SizeChanged;
-            }
 
-            private void Owner_SizeChanged(object sender, EventArgs e)
-            {
-                for (int i = 0; i < Controls.Count; ++i)
-                {
-                    var c = Controls[i];
-                    c.Size = new Size(Owner.handers[i].Width, 20);
-                    c.Location = new Point(10 + (i * c.Width), 10 + (20 * (Row)));
-                }
             }
         }
 
@@ -280,9 +343,16 @@ namespace ClinetPrints.CreatContorl
                 Name = text;
                 Text = text;
                 Size = new Size(100, 20);
-                BorderStyle = BorderStyle.FixedSingle;
+                BorderStyle = BorderStyle.Fixed3D;
+                BackColor = Color.BurlyWood;
+
             }
-            public void setSize(int Width,int Height)
+            protected override void OnKeyPress(KeyPressEventArgs e)
+            {
+                base.OnKeyPress(e);
+                e.Handled = true;
+            }
+            public void setSize(int Width, int Height)
             {
                 Size = new Size(Width, Height);
             }

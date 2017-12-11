@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_sureParm = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.cmb_printModel = new System.Windows.Forms.ComboBox();
             this.cmb_wipeTemperatuer = new System.Windows.Forms.ComboBox();
@@ -55,35 +54,26 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.btn_sureCfg = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.dataGrieViewControl11 = new ClinetPrints.CreatContorl.dataGrieViewControl1();
-            this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox6.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.groupBox3);
-            this.panel1.Controls.Add(this.groupBox4);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(724, 544);
-            this.panel1.TabIndex = 0;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.groupBox1);
             this.groupBox3.Controls.Add(this.groupBox5);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(406, 544);
@@ -93,7 +83,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.btn_sureParm);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.groupBox1.Location = new System.Drawing.Point(3, 485);
             this.groupBox1.Name = "groupBox1";
@@ -101,15 +91,15 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             // 
-            // button1
+            // btn_sureParm
             // 
-            this.button1.Location = new System.Drawing.Point(141, 22);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "确认修改";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btn_sureParm.Location = new System.Drawing.Point(141, 22);
+            this.btn_sureParm.Name = "btn_sureParm";
+            this.btn_sureParm.Size = new System.Drawing.Size(75, 23);
+            this.btn_sureParm.TabIndex = 0;
+            this.btn_sureParm.Text = "确认修改";
+            this.btn_sureParm.UseVisualStyleBackColor = true;
+            this.btn_sureParm.Click += new System.EventHandler(this.btn_sureParm_Click);
             // 
             // groupBox5
             // 
@@ -495,56 +485,65 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "擦除类型：";
             // 
-            // groupBox4
+            // panel1
             // 
-            this.groupBox4.Controls.Add(this.groupBox6);
-            this.groupBox4.Controls.Add(this.groupBox2);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox4.Location = new System.Drawing.Point(406, 0);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(318, 544);
-            this.groupBox4.TabIndex = 4;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "设备配置信息";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.dataGrieViewControl11);
-            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox6.Location = new System.Drawing.Point(3, 17);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(312, 470);
-            this.groupBox6.TabIndex = 2;
-            this.groupBox6.TabStop = false;
+            this.panel1.Controls.Add(this.groupBox2);
+            this.panel1.Controls.Add(this.groupBox3);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(724, 544);
+            this.panel1.TabIndex = 0;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.btn_sureCfg);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox2.Location = new System.Drawing.Point(3, 487);
+            this.groupBox2.Controls.Add(this.groupBox6);
+            this.groupBox2.Controls.Add(this.groupBox4);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.groupBox2.Location = new System.Drawing.Point(418, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(312, 54);
-            this.groupBox2.TabIndex = 1;
+            this.groupBox2.Size = new System.Drawing.Size(306, 544);
+            this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "配置信息";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.btn_sureCfg);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox6.Location = new System.Drawing.Point(3, 484);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(300, 57);
+            this.groupBox6.TabIndex = 1;
+            this.groupBox6.TabStop = false;
             // 
             // btn_sureCfg
             // 
-            this.btn_sureCfg.Location = new System.Drawing.Point(81, 20);
+            this.btn_sureCfg.Location = new System.Drawing.Point(97, 23);
             this.btn_sureCfg.Name = "btn_sureCfg";
-            this.btn_sureCfg.Size = new System.Drawing.Size(75, 23);
+            this.btn_sureCfg.Size = new System.Drawing.Size(116, 23);
             this.btn_sureCfg.TabIndex = 0;
-            this.btn_sureCfg.Text = "确认修改配置";
+            this.btn_sureCfg.Text = "确认修改配置信息";
             this.btn_sureCfg.UseVisualStyleBackColor = true;
             this.btn_sureCfg.Click += new System.EventHandler(this.btn_sureCfg_Click);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.dataGrieViewControl11);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox4.Location = new System.Drawing.Point(3, 17);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(300, 449);
+            this.groupBox4.TabIndex = 0;
+            this.groupBox4.TabStop = false;
+            // 
             // dataGrieViewControl11
             // 
+            this.dataGrieViewControl11.AutoScroll = true;
             this.dataGrieViewControl11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGrieViewControl11.handers = null;
-            this.dataGrieViewControl11.items = null;
             this.dataGrieViewControl11.Location = new System.Drawing.Point(3, 17);
             this.dataGrieViewControl11.Name = "dataGrieViewControl11";
-            this.dataGrieViewControl11.Size = new System.Drawing.Size(306, 450);
+            this.dataGrieViewControl11.Size = new System.Drawing.Size(294, 429);
             this.dataGrieViewControl11.TabIndex = 0;
             // 
             // parmSetting
@@ -556,22 +555,23 @@
             this.Name = "parmSetting";
             this.Text = "参数设置界面";
             this.Load += new System.EventHandler(this.parmSetting_Load);
-            this.panel1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox6.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btn_sureParm;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.ComboBox cmb_printModel;
         private System.Windows.Forms.ComboBox cmb_wipeTemperatuer;
@@ -595,12 +595,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button btn_sureCfg;
+        private System.Windows.Forms.GroupBox groupBox4;
         private CreatContorl.dataGrieViewControl1 dataGrieViewControl11;
+        private System.Windows.Forms.Button btn_sureCfg;
     }
 }

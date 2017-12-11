@@ -3,6 +3,7 @@ using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
+using ClinetPrints.CreatContorl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -77,7 +78,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             e.Handled = true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btn_sureParm_Click(object sender, EventArgs e)
         {
             try
             {
@@ -162,33 +163,56 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     {
                         if (keyco.type == 3)
                         {
-                            UserSubControl usersub = new UserSubControl(keyco.Name);
+                            UserSubControl usersub = new UserSubControl(keyco.Name,false);
                             ComboBox box = new ComboBox();
                             for(int i = 0; i < keyco.typeCount; i++)
                             {
                                 box.Items.Add(keyco.liValues[i]);
                             }
                             box.SelectedIndex = Int32.Parse(keyco.value);
-                            UserSubControl userComb = new UserSubControl(box);
+                            box.KeyPress += Box_KeyPress;
+                            UserSubControl userComb = new UserSubControl(box,true);
                             items.Add(new UserSubControl[] { usersub, userComb });
                         }else
                         {
-                            UserSubControl usersub = new UserSubControl(keyco.Name);
-                            UserSubControl usersubVal = new UserSubControl(keyco.value);
+                            UserSubControl usersub = new UserSubControl(keyco.Name,false);
+                            UserSubControl usersubVal = new UserSubControl(keyco.value,true);
                             items.Add(new UserSubControl[] { usersub, usersubVal });
                         }
                     }
                     this.dataGrieViewControl11.items = items;
-                  
-                   
                 }
 
             }
         }
 
+        private void Box_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true;
+        }
+
         private void btn_sureCfg_Click(object sender, EventArgs e)
         {
-
+            string name = "";
+            string val = "";
+           for(int i = 0; i < dataGrieViewControl11.items.Count; i++)
+            {
+                name = dataGrieViewControl11.items[i].Value[0].control.Text;
+                if(dataGrieViewControl11.items[i].Value[1].control is ComboBox)
+                {
+                    var com = dataGrieViewControl11.items[i].Value[1].control as ComboBox;
+                    val = com.SelectedIndex.ToString();
+                }else
+                {
+                    val = dataGrieViewControl11.items[i].Value[1].control.Text;
+                }
+                bool flge=WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 0, 1);
+                if (!flge)
+                {
+                    MessageBox.Show(name + ":修改设置失败！");
+                    return;
+                }
+            }
         }
     }
 }

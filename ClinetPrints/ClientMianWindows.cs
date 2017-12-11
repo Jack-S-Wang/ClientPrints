@@ -17,6 +17,7 @@ using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 using ClinetPrints.SettingWindows.SettingOtherWindows;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 
 namespace ClinetPrints
 {
@@ -24,7 +25,7 @@ namespace ClinetPrints
     {
         //任务栏中所显示的图片
         private System.Windows.Forms.NotifyIcon notifyIcon;
-        
+
         //树形节点定义
         TreeNode nodeClientPrints = new TreeNode();
         public ClientMianWindows()
@@ -105,7 +106,7 @@ namespace ClinetPrints
         /// <summary>
         /// 当插拔等其它设备增加减少操作时关闭定时器来阻止定时查询状态而导致的并发问题
         /// </summary>
-        private  bool SetTiming = true;
+        private bool SetTiming = true;
         /// <summary>
         /// 重写WndProc来定义检测USB插拔从而获取打印机实时情况
         /// </summary>
@@ -154,7 +155,7 @@ namespace ClinetPrints
                                 SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
                                 new MenuPrinterGroupAddMethod(nNode, this);
                             }
-                            var file=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                            var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                             SharMethod.SavePrinter(printerViewSingle.Nodes[0], file);
                             Thread.Sleep(100);
                             ThreadPool.QueueUserWorkItem((o) =>
@@ -176,20 +177,20 @@ namespace ClinetPrints
                             if (SharMethod.dicPrinterUSB.ContainsKey(path))
                             {
                                 SetTiming = false;
-                                var node=this.printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
-                                if(node is PrinterTreeNode)
+                                var node = this.printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
+                                if (node is PrinterTreeNode)
                                 {
                                     var n = node as PrinterTreeNode;
                                     SharMethod.liAllPrinter.Remove(n.PrinterObject);
                                     n.SetOffline();
-                                    if(this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)
+                                    if (this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)
                                     {
                                         node = this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
-                                        if(node is PrinterTreeNode)
+                                        if (node is PrinterTreeNode)
                                         {
                                             var nf = node as PrinterTreeNode;
                                             nf.SetOffline();
-                                            var filef=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                                            var filef = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                             SharMethod.SavePrinter(this.printerViewFlock.Nodes[0], filef);
                                         }
                                     }
@@ -210,11 +211,19 @@ namespace ClinetPrints
                     }
                     SetTiming = true;
                 }
-                base.WndProc(ref m);
+                try
+                {
+                    base.WndProc(ref m);
+                }
+                catch (ThreadAbortException ex)
+                {
+                    Thread.ResetAbort();
+                    MessageBox.Show("ThreadAbortException : " + ex.GetHashCode().ToString());
+                }
             }
             catch (Exception ex)
             {
-                string str = string.Format("发生了异常：{0}，追踪异常信息：{1}", ex.Message, ex.StackTrace);
+                string str = string.Format("发生了异常：{0}，追踪异常信息：{1}, 异常哈希：{2}", ex.Message, ex.StackTrace, ex.GetHashCode());
                 MessageBox.Show(str);
             }
         }
@@ -261,23 +270,23 @@ namespace ClinetPrints
             var bf = new BinaryFormatter();
             TreeNode tnode;
             FileStream file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
-            if (file.Length!=0)
+            if (file.Length != 0)
             {
                 tnode = bf.Deserialize(file) as GroupTreeNode;
                 this.printerViewSingle.Nodes.Add(tnode);
                 SharMethod.FileClose(file);
                 SharMethod.ForEachNode(tnode, (nod) =>
                 {
-                    if(nod is GroupTreeNode)
+                    if (nod is GroupTreeNode)
                     {
                         var n = nod as GroupTreeNode;
                         new MenuGroupAddMethod(n, this);
-                    }  
+                    }
                 });
-            } 
+            }
             else
             {
-                tnode = new GroupTreeNode("打印机序列",0);
+                tnode = new GroupTreeNode("打印机序列", 0);
                 this.printerViewSingle.Nodes.Add(tnode);
                 new MenuGroupAddMethod(tnode, this);
                 TreeNode cnode = new GroupTreeNode("所有打印机", 0);
@@ -292,7 +301,7 @@ namespace ClinetPrints
         /// </summary>
         private void AddPrinterMap()
         {
-            TreeNode tnode=this.printerViewSingle.Nodes[0];
+            TreeNode tnode = this.printerViewSingle.Nodes[0];
             //处理所有打印机
             SharMethod.getPrinter();
             SharMethod.ForEachNode(tnode, (node) =>
@@ -332,14 +341,14 @@ namespace ClinetPrints
         /// </summary>
         private void AddFlockPrinterMap()
         {
-            TreeNode tnode=printerViewFlock.Nodes[0];
+            TreeNode tnode = printerViewFlock.Nodes[0];
             SharMethod.ForEachNode(tnode, (node) =>
             {
                 if (node is PrinterTreeNode)
                 {
                     var ptn = node as PrinterTreeNode;
                     ptn.SetOffline();
-                    new MenuPrinterFlockGroupMethod(ptn,this);
+                    new MenuPrinterFlockGroupMethod(ptn, this);
                 }
             });
             foreach (var keyva in SharMethod.liAllPrinter)
@@ -358,7 +367,7 @@ namespace ClinetPrints
             SharMethod.SavePrinter(tnode, file);
         }
 
-         /// <summary>
+        /// <summary>
         /// 主程序右键所控制的按钮控件
         /// </summary>
         private void AddMunConten()
@@ -396,7 +405,7 @@ namespace ClinetPrints
             this.imageList1.Images.Add(new Bitmap(@"./IocOrImage/ooopic_1502413428.ico"));//离线
             printerViewSingle.ImageList = imageList1;
             printerViewFlock.ImageList = imageList1;
-            
+
         }
 
         #endregion
@@ -428,9 +437,9 @@ namespace ClinetPrints
                         if (printerViewSingle.Enabled)
                         {
                             TreeNode[] nodes = printerViewSingle.Nodes[0].Nodes.Find(gn.name, true);
-                            if (nodes.Length>0)
+                            if (nodes.Length > 0)
                             {
-                                for(int i = 0; i < nodes.Length; i++)
+                                for (int i = 0; i < nodes.Length; i++)
                                 {
                                     nodes[i].EnsureVisible();
                                 }
@@ -443,9 +452,9 @@ namespace ClinetPrints
                         else
                         {
                             TreeNode[] nodes = printerViewFlock.Nodes[0].Nodes.Find(gn.name, true);
-                            if (nodes.Length>0)
+                            if (nodes.Length > 0)
                             {
-                               for(int i = 0; i < nodes.Length; i++)
+                                for (int i = 0; i < nodes.Length; i++)
                                 {
                                     nodes[i].EnsureVisible();
                                 }
@@ -468,7 +477,7 @@ namespace ClinetPrints
             }
         }
 
-      
+
 
         private void 全部展开ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -498,7 +507,7 @@ namespace ClinetPrints
         /// 对类一些无法抛出的异常信息直接显示在form层显示出来
         /// </summary>
         /// <param name="ex"></param>
-        public  void showException(string ex)
+        public void showException(string ex)
         {
             MessageBox.Show(ex);
         }
@@ -509,7 +518,7 @@ namespace ClinetPrints
         /// <param name="ex">信息内容</param>
         /// <param name="title">标题信息</param>
         /// <param name="buttons">按钮</param>
-        public  DialogResult showException(string ex, string title, MessageBoxButtons buttons)
+        public DialogResult showException(string ex, string title, MessageBoxButtons buttons)
         {
             DialogResult dr = MessageBox.Show(ex, title, buttons);
             return dr;
@@ -533,8 +542,10 @@ namespace ClinetPrints
             printerViewFlock.Visible = true;
             printerViewFlock.Focus();
         }
-
-       
+        /// <summary>
+        /// 设置listview中列保存对象的索引，会随着自定义增加其他列时需要改变，其他列是提前添加的！
+        /// </summary>
+        private const int colmunObject = 4;
 
         #region....//节点选择执行方法
         private void printerViewSingle_AfterSelect(object sender, TreeViewEventArgs e)
@@ -543,7 +554,7 @@ namespace ClinetPrints
             {
                 if (e.Node is PrinterTreeNode)
                 {
-                    if(printerViewSingle.SelectedNode.Name==e.Node.Name)
+                    if (printerViewSingle.SelectedNode.Name == e.Node.Name)
                     {
                         var node = e.Node as PrinterTreeNode;
                         if (node.StateCode.Equals("0"))
@@ -554,14 +565,16 @@ namespace ClinetPrints
                         this.toolStTxb_printer.Text = node.Text;
                         addfile = 0;
                         //如果已经存在该列则删除该列重新赋值对象
-                        if (this.listView1.Columns.Count > 3)
+                        if (this.listView1.Columns.Count > 4)
                         {
-                            this.listView1.Columns.RemoveAt(3);
+                            //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
+                            var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
+                            col.ColTnode.PrinterObject.listviewObject = this.listView1;
+                            this.listView1.Columns.RemoveAt(colmunObject);
                         }
                         this.listView1.Columns.Add(new listViewColumnTNode(node));
                         imageSubItems.Images.Clear();
                         listView1.SmallImageList = imageSubItems;
-                        
                     }
                 }
             }
@@ -571,13 +584,13 @@ namespace ClinetPrints
             }
 
         }
-        
+
         #endregion
 
         /// <summary>
         /// 记录当前打印机对象的添加图片数量
         /// </summary>
-        private volatile int addfile = 0; 
+        private volatile int addfile = 0;
         private void toolStBtn_add_Click(object sender, EventArgs e)
         {
             try
@@ -598,6 +611,7 @@ namespace ClinetPrints
                     ListViewItem item = new ListViewItem(new ListViewSubItem[] { new ListViewSubItem(), new ListViewSubItem(), new ListViewSubItem() }, addfile - 1);
                     item.SubItems[1].Text = addfile.ToString();
                     item.SubItems[2].Text = openfile.FileName;
+                    item.SubItems[3].Text = "1";
                     item.Name = (addfile - 1).ToString();
                     this.listView1.Items.Add(item);
                     this.listView1.Items[addfile - 1].ToolTipText = openfile.FileName;
@@ -612,7 +626,7 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
         private void toolStBtn_delete_Click(object sender, EventArgs e)
         {
             try
@@ -639,7 +653,7 @@ namespace ClinetPrints
                         Interlocked.Decrement(ref addfile);
                         setItems();
                     }
-                   
+
                 }
                 else
                 {
@@ -678,9 +692,9 @@ namespace ClinetPrints
                             MessageBox.Show("选中了是第一个条目是无法上移的，请重新选择！");
                             return;
                         }
-                        if (listView1.SelectedItems.ContainsKey("1") && listView1.SelectedItems.Count==1)//说明上面只有一个直接上移
+                        if (listView1.SelectedItems.ContainsKey("1") && listView1.SelectedItems.Count == 1)//说明上面只有一个直接上移
                         {
-                            var image=imageSubItems.Images[1];
+                            var image = imageSubItems.Images[1];
                             imageSubItems.Images.RemoveAt(1);
                             insertImage(image, 0);
                             listView1.SmallImageList = imageSubItems;
@@ -704,27 +718,28 @@ namespace ClinetPrints
                             {
                                 MessageBox.Show("用户取消了移位操作！");
                                 return;
-                            }else
+                            }
+                            else
                             {
                                 while (listView1.SelectedItems.Count > 0)
                                 {
-                                    if (reIndex.index-1 >= Int32.Parse(listView1.SelectedItems[0].Name))
+                                    if (reIndex.index - 1 >= Int32.Parse(listView1.SelectedItems[0].Name))
                                     {
                                         MessageBox.Show("上移的位子不能大于当前所选择的项！");
                                         return;
                                     }
                                     var image = imageSubItems.Images[Int32.Parse(listView1.SelectedItems[0].Name)];
                                     imageSubItems.Images.RemoveAt(Int32.Parse(listView1.SelectedItems[0].Name));
-                                    insertImage(image, reIndex.index-1);
+                                    insertImage(image, reIndex.index - 1);
                                     listView1.SmallImageList = imageSubItems;
                                     var item = listView1.SelectedItems[0];
                                     listView1.SelectedItems[0].Remove();
                                     item.Selected = false;
-                                    this.listView1.Items.Insert(reIndex.index-1, item);
+                                    this.listView1.Items.Insert(reIndex.index - 1, item);
                                 }
                                 setItems();
                             }
-                        } 
+                        }
                     }
                     else
                     {
@@ -747,34 +762,35 @@ namespace ClinetPrints
         /// </summary>
         /// <param name="image">图片</param>
         /// <param name="index">要插入到位子的索引号</param>
-        private void insertImage(Image image,int index)
+        private void insertImage(Image image, int index)
         {
             List<Image> li = new List<Image>();
-           foreach(Image img in imageSubItems.Images)
+            foreach (Image img in imageSubItems.Images)
             {
                 li.Add(img);
             }
             imageSubItems.Images.Clear();
-           for(int i = 0; i < li.Count;)
+            for (int i = 0; i < li.Count;)
             {
                 if (i == index)
                 {
                     imageSubItems.Images.Add(image);
                     index = -1;
-                }else
+                }
+                else
                 {
                     imageSubItems.Images.Add(li[i]);
                     i++;
                 }
             }
-           //如果上面遍历没有获取到该图，则可能是要添加到最后一位的
+            //如果上面遍历没有获取到该图，则可能是要添加到最后一位的
             if (index == li.Count)
             {
                 imageSubItems.Images.Add(image);
             }
         }
 
-       
+
 
         private void toolStBtn_moveNext_Click(object sender, EventArgs e)
         {
@@ -785,7 +801,7 @@ namespace ClinetPrints
                     if (listView1.SelectedItems.Count == 0) return;
                     if (listView1.SelectedItems.Count > 0)
                     {
-                        if (listView1.SelectedItems.ContainsKey((listView1.Items.Count-1).ToString()))
+                        if (listView1.SelectedItems.ContainsKey((listView1.Items.Count - 1).ToString()))
                         {
                             MessageBox.Show("选中了是最后一个条目是无法下移的，请重新选择！");
                             return;
@@ -806,11 +822,11 @@ namespace ClinetPrints
                             RemoveIndex reIndex = new RemoveIndex();
                             reIndex.Owner = this;
                             reIndex.StartPosition = FormStartPosition.CenterParent;
-                            for(int i=1;i<= listView1.Items.Count; i++)
+                            for (int i = 1; i <= listView1.Items.Count; i++)
                             {
                                 reIndex.items.Add(i);
                             }
-                            
+
                             reIndex.Text = "下移到对应的作业号的后面";
                             reIndex.ShowDialog();
                             if (reIndex.index == -1)
@@ -829,10 +845,10 @@ namespace ClinetPrints
                                     }
                                     var item = listView1.SelectedItems[0];
                                     listView1.SelectedItems[0].Remove();
-                                    this.listView1.Items.Insert(reIndex.index-1, item);
+                                    this.listView1.Items.Insert(reIndex.index - 1, item);
                                     var image = imageSubItems.Images[Int32.Parse(item.Name)];
                                     imageSubItems.Images.RemoveAt(Int32.Parse(item.Name));
-                                    insertImage(image, reIndex.index-1);
+                                    insertImage(image, reIndex.index - 1);
                                     listView1.SmallImageList = imageSubItems;
                                     item.Selected = false;
                                 }
@@ -863,7 +879,7 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
-                    var col=listView1.Columns[3] as listViewColumnTNode;
+                    var col = listView1.Columns[colmunObject] as listViewColumnTNode;
                     ThreadPool.QueueUserWorkItem((o) =>
                     {
                         monitorForm monitor = new monitorForm();
@@ -890,7 +906,43 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
-
+                    string jobNum = "";
+                    string fileAddress = "";
+                    string num = "";
+                    List<string>[] LiItems = new List<string>[listView1.Items.Count];
+                    for (int i = 0; i < listView1.Items.Count; i++)
+                    {
+                        List<string> liItem = new List<string>();
+                        jobNum = listView1.Items[i].SubItems[1].Text;
+                        fileAddress = listView1.Items[i].SubItems[2].Text;
+                        num = listView1.Items[i].SubItems[3].Text;
+                        liItem.Add(jobNum);
+                        liItem.Add(fileAddress);
+                        liItem.Add(num);
+                        LiItems[i] = liItem;
+                    }
+                    Thread threadPrint = new Thread((printObject =>
+                    {
+                        var printOb = printObject as object[];
+                        var printer = printOb[0] as PrinterObjects;
+                        var liItems = printOb[1] as List<string>[];
+                        var method = printer.MethodsObject as PrintersGeneralFunction;
+                        List<string> li = new List<string>();
+                        for (int i = 0; i < liItems.Length; i++)
+                        {
+                            List<string> succese=method.writeDataToDev(liItems[i][1], printer, liItems[i][0],Int32.Parse(LiItems[i][3]));
+                            if (succese[0].Equals("error"))
+                            {
+                                li.Add(succese[1]);
+                                break;
+                            }
+                        }
+                        if (li.Count > 0)
+                        {
+                            MessageBox.Show("打印失败！" + li[0]);
+                        }
+                    }));
+                    threadPrint.Start(new object[] { (this.listView1.Columns[colmunObject] as listViewColumnTNode).ColTnode.PrinterObject, LiItems });
                 }
                 else
                 {
@@ -909,13 +961,13 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
-                    var col = listView1.Columns[3] as listViewColumnTNode;
+                    var col = listView1.Columns[colmunObject] as listViewColumnTNode;
                     ThreadPool.QueueUserWorkItem((o) =>
                     {
                         parmSetting parm = new parmSetting();
                         parm.StartPosition = FormStartPosition.CenterScreen;
                         parm.printerObject = col.ColTnode.PrinterObject;
-                        parm.Text = col.ColTnode.Text+"参数设置界面";
+                        parm.Text = col.ColTnode.Text + "参数设置界面";
                         parm.ShowDialog();
                     });
                 }

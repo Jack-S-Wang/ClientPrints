@@ -27,14 +27,14 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         /// <summary>
         /// 值
         /// </summary>
-       public string value { get; set; }
+        public string value { get; set; }
 
         /// <summary>
         /// 创建一个配置信息的对象数据
         /// </summary>
         /// <param name="cfgInfo">遍历获取到的配置信息内容</param>
         /// <param name="val">获取的值</param>
-        public CfgDataObjects(string cfgInfo,string val)
+        public CfgDataObjects(string cfgInfo, string val)
         {
             Name = cfgInfo.Substring(5, cfgInfo.Substring(0, cfgInfo.IndexOf(',')).Length - 5);
             value = val;
@@ -69,7 +69,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
                     }
                     else if (count2 == 1)
                     {
-                        typeCount = Int32.Parse(cfgInfo[n].ToString()) ;//获取状态类型的总数
+                        typeCount = Int32.Parse(cfgInfo[n].ToString());//获取状态类型的总数
                     }
                 }
                 else if (count == 4)
@@ -85,7 +85,10 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
                             liValues.Add(valDatas);
                             valDatas = "";
                         }
-                        valDatas = valDatas + cfgInfo[n];//获取状态名称内容
+                        else
+                        {
+                            valDatas = valDatas + cfgInfo[n];//获取状态名称内容
+                        }
                         if (n == cfgInfo.Length - 1)//最后一个值存进去
                         {
                             liValues.Add(valDatas);

@@ -461,13 +461,13 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 擦除速度 -- 0-20
             /// </summary>
-            public byte graySpeed;   // 
+            public byte wipeSpeed;   // 
             /// <summary>
             /// 设置擦除温度 --0-20
             /// </summary>
             public byte eraseTemp;   // 
             /// <summary>
-            /// 0:Card Print, 1:Card Erase
+            /// 打印模式 0:Card Print, 1:Card Erase
             /// </summary>
             public byte printMode;   // 
             /// <summary>

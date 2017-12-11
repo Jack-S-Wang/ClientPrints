@@ -215,7 +215,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <param name="name">配置项名称</param>
         /// <param name="val">数据值，以字符串形式表示</param>
         /// <param name="cnts">无效</param>
-        /// <param name="saveToDev">将配置数据发送到设备</param>
+        /// <param name="saveToDev">将配置数据发送到设备，非零是设置到设备中</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
         public static extern bool dllFunc_SetDevCfgInfo(IntPtr pHandle, string name, string val, ushort cnts, ushort saveToDev);

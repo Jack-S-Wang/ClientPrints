@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ClientPrints.Objects.DevDll\WDevCmdObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objects.Printers.JSON\PrinterJson.cs" />
+    <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objetcs.Printers.Interface\IMethodObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterParams.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\CfgDataObjects.cs" />

@@ -28,25 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(397, 558);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
             // 
             // dataGrieViewControl1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
             this.Name = "dataGrieViewControl1";
-            this.Size = new System.Drawing.Size(397, 558);
+            this.Size = new System.Drawing.Size(624, 558);
             this.Load += new System.EventHandler(this.dataGrieViewControl1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.dataGrieViewControl1_Paint);
             this.ResumeLayout(false);
@@ -54,7 +43,5 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

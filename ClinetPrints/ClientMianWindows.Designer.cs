@@ -57,10 +57,11 @@
             this.toolStBtn_monitor = new System.Windows.Forms.ToolStripButton();
             this.toolStTxb_printer = new System.Windows.Forms.ToolStripTextBox();
             this.toolStBtn_print = new System.Windows.Forms.ToolStripButton();
-            this.pan_mainWin1 = new System.Windows.Forms.Panel();
-            this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
             this.toolStBtn_printPerview = new System.Windows.Forms.ToolStripButton();
             this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
+            this.pan_mainWin1 = new System.Windows.Forms.Panel();
+            this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -210,7 +211,8 @@
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
-            this.columnHeader5});
+            this.columnHeader5,
+            this.columnHeader3});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
@@ -326,22 +328,6 @@
             this.toolStBtn_print.Text = "打印";
             this.toolStBtn_print.Click += new System.EventHandler(this.toolStBtn_print_Click);
             // 
-            // pan_mainWin1
-            // 
-            this.pan_mainWin1.Controls.Add(this.pan_mianWin1_image);
-            this.pan_mainWin1.Controls.Add(this.pan_mainWin1_tree);
-            this.pan_mainWin1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pan_mainWin1.Location = new System.Drawing.Point(0, 25);
-            this.pan_mainWin1.Name = "pan_mainWin1";
-            this.pan_mainWin1.Size = new System.Drawing.Size(843, 572);
-            this.pan_mainWin1.TabIndex = 3;
-            // 
-            // imageSubItems
-            // 
-            this.imageSubItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
-            // 
             // toolStBtn_printPerview
             // 
             this.toolStBtn_printPerview.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -360,6 +346,26 @@
             this.toolStBtn_parmSet.Size = new System.Drawing.Size(23, 22);
             this.toolStBtn_parmSet.Text = "参数设置";
             this.toolStBtn_parmSet.Click += new System.EventHandler(this.toolStBtn_parmSet_Click);
+            // 
+            // pan_mainWin1
+            // 
+            this.pan_mainWin1.Controls.Add(this.pan_mianWin1_image);
+            this.pan_mainWin1.Controls.Add(this.pan_mainWin1_tree);
+            this.pan_mainWin1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pan_mainWin1.Location = new System.Drawing.Point(0, 25);
+            this.pan_mainWin1.Name = "pan_mainWin1";
+            this.pan_mainWin1.Size = new System.Drawing.Size(843, 572);
+            this.pan_mainWin1.TabIndex = 3;
+            // 
+            // imageSubItems
+            // 
+            this.imageSubItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "打印数量";
             // 
             // ClientMianWindows
             // 
@@ -417,7 +423,6 @@
         private System.Windows.Forms.ToolStripButton toolStBtn_delete;
         private System.Windows.Forms.ToolStripButton toolStbtn_moveUp;
         private System.Windows.Forms.ToolStripButton toolStBtn_moveNext;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader5;
@@ -427,6 +432,8 @@
         private System.Windows.Forms.ToolStripButton toolStBtn_print;
         private System.Windows.Forms.ToolStripButton toolStBtn_printPerview;
         private System.Windows.Forms.ToolStripButton toolStBtn_parmSet;
+        public System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }
 
