@@ -940,6 +940,9 @@ namespace ClinetPrints
                         if (li.Count > 0)
                         {
                             MessageBox.Show("打印失败！" + li[0]);
+                        }else
+                        {
+                            MessageBox.Show(printer.alias + ":已打印结束！");
                         }
                     }));
                     threadPrint.Start(new object[] { (this.listView1.Columns[colmunObject] as listViewColumnTNode).ColTnode.PrinterObject, LiItems });
