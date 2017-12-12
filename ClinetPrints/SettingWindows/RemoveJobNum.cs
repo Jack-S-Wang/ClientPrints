@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace ClinetPrints.SettingWindows
 {
-    public partial class RemoveIndex : Form
+    public partial class RemoveJobNum : Form
     {
-        public RemoveIndex()
+        public RemoveJobNum()
         {
             InitializeComponent();
         }

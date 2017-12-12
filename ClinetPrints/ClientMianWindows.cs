@@ -20,6 +20,7 @@ using ClinetPrints.SettingWindows.SettingOtherWindows;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 
 namespace ClinetPrints
 {
@@ -87,9 +88,6 @@ namespace ClinetPrints
                 printerViewSingle.ShowNodeToolTips = true;
                 printerViewFlock.ShowNodeToolTips = true;
                 listView1.ShowItemToolTips = true;
-                tiState.Interval = 5000;
-                tiState.Enabled = true;
-                tiState.Elapsed += TiState_Elapsed;
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
@@ -102,7 +100,9 @@ namespace ClinetPrints
                 AddPrinterMap();
                 //添加群打印机
                 AddFlockPrinterMap();
-
+                tiState.Interval = 5000;
+                tiState.Enabled = true;
+                tiState.Elapsed += TiState_Elapsed;
             }
             catch (Exception ex)
             {
@@ -112,7 +112,27 @@ namespace ClinetPrints
 
         private void TiState_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (IsHandleCreated)
+            {
+                ThreadPool.QueueUserWorkItem((o) =>
+                {
+                    foreach (var key in SharMethod.liAllPrinter)
+                    {
+                        if (key.MethodsObject != null)
+                        {
+                            var method = key.MethodsObject as IMethodObjects;
+                            string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT,key.pHandle, new byte[] { 0x30 });
+                            var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
+                            if (key.stateCode != keyState.stateCode)
+                            {
+                                key.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
+                                key.state = keyState.majorState;
+                                key.stateCode = keyState.stateCode;
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         /// <summary>
@@ -167,7 +187,7 @@ namespace ClinetPrints
                                 SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
                                 new MenuPrinterGroupAddMethod(nNode, this);
                             }
-                            var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                            var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                             SharMethod.SavePrinter(printerViewSingle.Nodes[0], file);
                             Thread.Sleep(100);
                             ThreadPool.QueueUserWorkItem((o) =>
@@ -721,7 +741,7 @@ namespace ClinetPrints
                         }
                         else
                         {
-                            RemoveIndex reIndex = new RemoveIndex();
+                            RemoveJobNum reIndex = new RemoveJobNum();
                             reIndex.Owner = this;
                             reIndex.StartPosition = FormStartPosition.CenterParent;
                             reIndex.Text = "上移到对应的作业号的前面";
@@ -835,7 +855,7 @@ namespace ClinetPrints
                         }
                         else
                         {
-                            RemoveIndex reIndex = new RemoveIndex();
+                            RemoveJobNum reIndex = new RemoveJobNum();
                             reIndex.Owner = this;
                             reIndex.StartPosition = FormStartPosition.CenterParent;
                             for (int i = 1; i <= listView1.Items.Count; i++)
@@ -923,7 +943,7 @@ namespace ClinetPrints
         {
             try
             {
-                
+
                 if (this.toolStTxb_printer.Text != "")
                 {
                     string jobNum = "";
@@ -954,7 +974,7 @@ namespace ClinetPrints
                         var printOb = printObject as object[];
                         var printer = printOb[0] as PrinterObjects;
                         var liItems = printOb[1] as List<string>[];
-                        var method = printer.MethodsObject as PrintersGeneralFunction;
+                        var method = printer.MethodsObject as IMethodObjects;
                         List<string> li = new List<string>();
                         for (int i = 0; i < liItems.Length; i++)
                         {
@@ -972,7 +992,7 @@ namespace ClinetPrints
                         else
                         {
                             Thread.Sleep(3000);
-                            string jsonState = (printer.MethodsObject as PrintersGeneralFunction).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printer.pHandle, new byte[] { 0x30 });
+                            string jsonState = (printer.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printer.pHandle, new byte[] { 0x30 });
                             var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
                             printer.stateCode = keyState.stateCode;
                             printer.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
@@ -980,7 +1000,8 @@ namespace ClinetPrints
                             if (printer.stateCode == 6)
                             {
                                 MessageBox.Show("打印失败！有异常：" + printer.stateMessage);
-                            }else
+                            }
+                            else
                             {
                                 MessageBox.Show(printer.alias + ":打印成功！");
                             }
@@ -1062,11 +1083,16 @@ namespace ClinetPrints
         private void toolStBtn_printPerview_Click(object sender, EventArgs e)
         {
             var col = listView1.Columns[colmunObject] as listViewColumnTNode;
-            string jsonState = (col.liPrinter[0].MethodsObject as PrintersGeneralFunction).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, col.liPrinter[0].pHandle, new byte[] { 0x30 });
+            string jsonState = (col.liPrinter[0].MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, col.liPrinter[0].pHandle, new byte[] { 0x30 });
             var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
             col.liPrinter[0].stateMessage = keyState.majorState + ":" + keyState.StateMessage;
             col.liPrinter[0].state = keyState.majorState;
             col.liPrinter[0].stateCode = keyState.stateCode;
+        }
+
+        private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

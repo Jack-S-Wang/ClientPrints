@@ -20,7 +20,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 
 
         /// <summary>
-        /// 第一次打开时记录下不同方式获取到的全部打印机创建节点
+        /// 记录下不同方式获取到的全部打印机创建节点
         /// </summary>
         public static List<PrinterObjects> liAllPrinter = new List<PrinterObjects>();
 

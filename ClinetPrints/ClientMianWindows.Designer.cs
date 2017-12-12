@@ -62,6 +62,7 @@
             this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
+            this.设置查询时间ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -75,7 +76,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.快速查询ToolStripMenuItem});
+            this.快速查询ToolStripMenuItem,
+            this.设置查询时间ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(843, 25);
@@ -369,6 +371,13 @@
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // 设置查询时间ToolStripMenuItem
+            // 
+            this.设置查询时间ToolStripMenuItem.Name = "设置查询时间ToolStripMenuItem";
+            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(92, 21);
+            this.设置查询时间ToolStripMenuItem.Text = "设置查询时间";
+            this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
+            // 
             // ClientMianWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -436,6 +445,7 @@
         private System.Windows.Forms.ToolStripButton toolStBtn_parmSet;
         public System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ToolStripMenuItem 设置查询时间ToolStripMenuItem;
     }
 }
 

@@ -11,6 +11,7 @@ using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPri
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using Newtonsoft.Json;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 
 namespace ClinetPrints.SettingWindows
 {
@@ -52,7 +53,7 @@ namespace ClinetPrints.SettingWindows
         {
             if (printerObject.model.Contains("DC-1300"))
             {
-                var method = printerObject.MethodsObject as PrintersGeneralFunction;
+                var method = printerObject.MethodsObject as IMethodObjects;
                 //系统状态
                 var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
                 var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
@@ -128,7 +129,7 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_sure_Click(object sender, EventArgs e)
         {
-            var method = printerObject.MethodsObject as PrintersGeneralFunction;
+            var method = printerObject.MethodsObject as IMethodObjects;
             string str = "";
             if (cmb_command.SelectedIndex < 9)
             {

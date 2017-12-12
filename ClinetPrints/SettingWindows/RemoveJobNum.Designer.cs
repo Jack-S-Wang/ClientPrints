@@ -1,6 +1,6 @@
 ﻿namespace ClinetPrints.SettingWindows
 {
-    partial class RemoveIndex
+    partial class RemoveJobNum
     {
         /// <summary>
         /// Required designer variable.
@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txb_index = new System.Windows.Forms.TextBox();
             this.btn_sure = new System.Windows.Forms.Button();
+            this.txb_index = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,24 +45,6 @@
             this.panel1.Size = new System.Drawing.Size(331, 97);
             this.panel1.TabIndex = 0;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 46);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "作业号";
-            // 
-            // txb_index
-            // 
-            this.txb_index.Location = new System.Drawing.Point(85, 43);
-            this.txb_index.Name = "txb_index";
-            this.txb_index.Size = new System.Drawing.Size(100, 21);
-            this.txb_index.TabIndex = 1;
-            this.txb_index.Text = "1";
-            this.txb_index.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txb_index_KeyPress);
-            // 
             // btn_sure
             // 
             this.btn_sure.Location = new System.Drawing.Point(241, 41);
@@ -73,14 +55,32 @@
             this.btn_sure.UseVisualStyleBackColor = true;
             this.btn_sure.Click += new System.EventHandler(this.btn_sure_Click);
             // 
-            // RemoveIndex
+            // txb_index
+            // 
+            this.txb_index.Location = new System.Drawing.Point(85, 43);
+            this.txb_index.Name = "txb_index";
+            this.txb_index.Size = new System.Drawing.Size(100, 21);
+            this.txb_index.TabIndex = 1;
+            this.txb_index.Text = "1";
+            this.txb_index.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txb_index_KeyPress);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 46);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "作业号";
+            // 
+            // RemoveJobNum
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(355, 118);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
-            this.Name = "RemoveIndex";
+            this.Name = "RemoveJobNum";
             this.Load += new System.EventHandler(this.RemoveIndex_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

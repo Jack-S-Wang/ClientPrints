@@ -102,11 +102,11 @@
     <Compile Include="SettingWindows\PrinterInformation.Designer.cs">
       <DependentUpon>PrinterInformation.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingWindows\RemoveIndex.cs">
+    <Compile Include="SettingWindows\RemoveJobNum.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingWindows\RemoveIndex.Designer.cs">
-      <DependentUpon>RemoveIndex.cs</DependentUpon>
+    <Compile Include="SettingWindows\RemoveJobNum.Designer.cs">
+      <DependentUpon>RemoveJobNum.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingWindows\RemoveToOther.cs">
       <SubType>Form</SubType>
@@ -119,6 +119,12 @@
     </Compile>
     <Compile Include="SettingWindows\SettingOtherWindows\parmSetting.Designer.cs">
       <DependentUpon>parmSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\timeSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\timeSetting.Designer.cs">
+      <DependentUpon>timeSetting.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="ClientMianWindows.resx">
       <DependentUpon>ClientMianWindows.cs</DependentUpon>
@@ -144,14 +150,17 @@
     <EmbeddedResource Include="SettingWindows\PrinterInformation.resx">
       <DependentUpon>PrinterInformation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingWindows\RemoveIndex.resx">
-      <DependentUpon>RemoveIndex.cs</DependentUpon>
+    <EmbeddedResource Include="SettingWindows\RemoveJobNum.resx">
+      <DependentUpon>RemoveJobNum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\RemoveToOther.resx">
       <DependentUpon>RemoveToOther.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\parmSetting.resx">
       <DependentUpon>parmSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\timeSetting.resx">
+      <DependentUpon>timeSetting.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

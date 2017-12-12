@@ -1,5 +1,6 @@
 ﻿using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
@@ -100,7 +101,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 data[14] = (byte)cmb_wipeSheep.SelectedIndex;
                 data[15] = (byte)cmb_wipeTemperatuer.SelectedIndex;
                 data[16] = (byte)cmb_printModel.SelectedIndex;
-                var method = printerObject.MethodsObject as PrintersGeneralFunction;
+                var method = printerObject.MethodsObject as IMethodObjects;
                 string str = method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle, data);
                 if (str != "false")
                 {
