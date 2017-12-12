@@ -101,7 +101,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 data[15] = (byte)cmb_wipeTemperatuer.SelectedIndex;
                 data[16] = (byte)cmb_printModel.SelectedIndex;
                 var method = printerObject.MethodsObject as PrintersGeneralFunction;
-                string str=method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle, data);
+                string str = method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle, data);
                 if (str != "false")
                 {
                     if (Int32.Parse(str) == 1)
@@ -136,18 +136,18 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 cmb_wipeSheep.SelectedIndex = data[8];
                 cmb_wipeTemperatuer.SelectedIndex = data[9];
                 cmb_printModel.SelectedIndex = data[10];
-                bool cfg=WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
+                bool cfg = WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
                 if (cfg)
                 {
                     UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
                     this.dataGrieViewControl11.handers = headerColls;
-                    List<CfgDataObjects> liob = new List<CfgDataObjects>(); 
+                    List<CfgDataObjects> liob = new List<CfgDataObjects>();
                     char[] buf = new char[512];
                     ushort cnt = 512;
-                    for(int i=0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle,ref i, buf,ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++,cnt=512)
+                    for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++, cnt = 512)
                     {
-                        string str = new string(buf).Replace('\0',' ').TrimEnd();
-                        string name = str.Substring(5,str.Substring(0, str.IndexOf(',')).Length-5);
+                        string str = new string(buf).Replace('\0', ' ').TrimEnd();
+                        string name = str.Substring(5, str.Substring(0, str.IndexOf(',')).Length - 5);
                         buf = new char[512];
                         cnt = 512;
                         bool fg = WDevDllMethod.dllFunc_GetVal(printerObject.pHandle, name, buf, ref cnt, WDevCmdObjects.DEVCFG_VAL_INFO, 0);
@@ -159,24 +159,25 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         }
                     }
                     UserItems items = new UserItems(this.dataGrieViewControl11);
-                    foreach(var keyco in liob)
+                    foreach (var keyco in liob)
                     {
                         if (keyco.type == 3)
                         {
-                            UserSubControl usersub = new UserSubControl(keyco.Name,false);
+                            UserSubControl usersub = new UserSubControl(keyco.Name, false);
                             ComboBox box = new ComboBox();
-                            for(int i = 0; i < keyco.typeCount; i++)
+                            for (int i = 0; i < keyco.typeCount; i++)
                             {
                                 box.Items.Add(keyco.liValues[i]);
                             }
                             box.SelectedIndex = Int32.Parse(keyco.value);
                             box.KeyPress += Box_KeyPress;
-                            UserSubControl userComb = new UserSubControl(box,true);
+                            UserSubControl userComb = new UserSubControl(box, true);
                             items.Add(new UserSubControl[] { usersub, userComb });
-                        }else
+                        }
+                        else
                         {
-                            UserSubControl usersub = new UserSubControl(keyco.Name,false);
-                            UserSubControl usersubVal = new UserSubControl(keyco.value,true);
+                            UserSubControl usersub = new UserSubControl(keyco.Name, false);
+                            UserSubControl usersubVal = new UserSubControl(keyco.value, true);
                             items.Add(new UserSubControl[] { usersub, usersubVal });
                         }
                     }
@@ -193,25 +194,35 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_sureCfg_Click(object sender, EventArgs e)
         {
-            string name = "";
-            string val = "";
-           for(int i = 0; i < dataGrieViewControl11.items.Count; i++)
+            try
             {
-                name = dataGrieViewControl11.items[i].Value[0].control.Text;
-                if(dataGrieViewControl11.items[i].Value[1].control is ComboBox)
+                string name = "";
+                string val = "";
+                for (int i = 0; i < dataGrieViewControl11.items.Count; i++)
                 {
-                    var com = dataGrieViewControl11.items[i].Value[1].control as ComboBox;
-                    val = com.SelectedIndex.ToString();
-                }else
-                {
-                    val = dataGrieViewControl11.items[i].Value[1].control.Text;
+                    name = dataGrieViewControl11.items[i].Value[0].control.Text;
+                    if (dataGrieViewControl11.items[i].Value[1].control is ComboBox)
+                    {
+                        var com = dataGrieViewControl11.items[i].Value[1].control as ComboBox;
+                        val = com.SelectedIndex.ToString();
+                    }
+                    else
+                    {
+                        val = dataGrieViewControl11.items[i].Value[1].control.Text;
+                    }
+                    bool flge = WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 0, 1);
+                    if (!flge)
+                    {
+                        MessageBox.Show(name + ":修改设置失败！");
+                        return;
+                    }
                 }
-                bool flge=WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 0, 1);
-                if (!flge)
-                {
-                    MessageBox.Show(name + ":修改设置失败！");
-                    return;
-                }
+                MessageBox.Show("修改成功！");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
             }
         }
     }

@@ -33,6 +33,7 @@ namespace ClinetPrints.SettingWindows
         /// 打印输出状态码
         /// </summary>
         private int printStateType = -1;
+        bool ative = true;
         private void monitorForm_Load(object sender, EventArgs e)
         {
             this.cmb_command.SelectedIndex = 0;
@@ -42,7 +43,8 @@ namespace ClinetPrints.SettingWindows
             {
                 if (IsHandleCreated)
                 {
-                    Invoke(new Action(readDevState));
+                    if (ative)
+                        Invoke(new Action(readDevState));
                 }
             });
         }
@@ -111,8 +113,8 @@ namespace ClinetPrints.SettingWindows
                 {
                     txb_sensor.Text = printOut.sensor;
                 }
-                var printInfo= method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x34 });
-                var printInfoJson= JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
+                var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x34 });
+                var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
                 if (!txb_cache.Text.Contains(printInfoJson.InCache.ToString()))
                 {
                     txb_cache.Text = printInfoJson.InCache.ToString();
@@ -130,7 +132,7 @@ namespace ClinetPrints.SettingWindows
             string str = "";
             if (cmb_command.SelectedIndex < 9)
             {
-                str=method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, new byte[] { (byte)(cmb_command.SelectedIndex + 1) });
+                str = method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, new byte[] { (byte)(cmb_command.SelectedIndex + 1) });
                 if (str != "false")
                 {
                     txb_commandText.AppendText(DateTime.Now.ToString() + "指令" + cmb_command.SelectedText + "已执行！");
@@ -139,10 +141,10 @@ namespace ClinetPrints.SettingWindows
             else
             {
                 MessageBox.Show("重启之后监控界面将自动关闭！");
-                str=method.reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
-                if(str!="false")
+                str = method.reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
+                if (str != "false")
                 {
-                    txb_commandText.AppendText(DateTime.Now.ToString()+":设备已进行重启！");
+                    txb_commandText.AppendText(DateTime.Now.ToString() + ":设备已进行重启！");
                     this.Close();
                 }
             }
@@ -159,6 +161,11 @@ namespace ClinetPrints.SettingWindows
         private void cmb_command_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void monitorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ative = false;
         }
     }
 }

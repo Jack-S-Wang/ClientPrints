@@ -63,6 +63,7 @@ namespace ClinetPrints.MenuGroupMethod
             }
             else
             {
+                tnode.ToolTipText = "离线设备是不会执行操作的！";
                 MenuItem rename = new MenuItem("重命名");
                 MenuItem clearGroup = new MenuItem("删除组");
                 MenuItem printData = new MenuItem("打印");

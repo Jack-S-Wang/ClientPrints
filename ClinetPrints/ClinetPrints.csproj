@@ -153,8 +153,6 @@
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\parmSetting.resx">
       <DependentUpon>parmSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="printerXml\printerFlock.bin" />
-    <None Include="printerXml\printerSingle.bin" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -221,7 +219,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="printerXml\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if not exist "$(TargetDir)IocOrImage" xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"

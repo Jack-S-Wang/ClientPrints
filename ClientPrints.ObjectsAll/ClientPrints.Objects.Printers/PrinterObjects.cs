@@ -32,10 +32,29 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 储存的地址信息
         /// </summary>
         public string addressMessage { get; set; }
+
+        private int stateCode_;
+
+        /// <summary>
+        /// 状态属性值更新时发生事件
+        /// </summary>
+        public event Action<PrinterObjects> StateCodeChanged;
+
         /// <summary>
         /// 状态码优先级序号
         /// </summary>
-        public int stateCode { get; set; }
+        public int stateCode
+        {
+            get { return stateCode_; }
+            set {
+                if (stateCode_ != value)
+                {
+                    stateCode_ = value;
+                    //StateCodeChanged对象可为空，不为空直接调用方法
+                    StateCodeChanged?.Invoke(this);
+                }
+            }
+        }
         /// <summary>
         /// 状态信息，read，busy，warn，error,line
         /// </summary>

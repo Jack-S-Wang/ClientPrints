@@ -446,6 +446,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "monitorForm";
             this.Text = "监控控制界面";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.monitorForm_FormClosing);
             this.Load += new System.EventHandler(this.monitorForm_Load);
             this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

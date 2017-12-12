@@ -148,7 +148,7 @@ namespace ClinetPrints.MenuGroupMethod
                     }
 
                 };
-
+                node.ToolTipText = "离线设备可以删除！";
                 node.ContextMenu = new ContextMenu(new MenuItem[] { menuItemGroup1, menuItemGroup2, menuItemGroup3 });
             }
             else

@@ -56,7 +56,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                         SelectedImageIndex = 4;
                         ForeColor = Color.Orange;
                         break;
-                    case 6:
+                    case 6://异常
                         ImageIndex = 5;
                         SelectedImageIndex = 5;
                         ForeColor = Color.Red;
@@ -64,8 +64,48 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                 }
                 ToolTipText = value.stateMessage;
                 StateCode = value.stateCode.ToString();
+                value.StateCodeChanged += Value_StateCodeChanged;
                 _PrinterObject = value;
             }
+        }
+
+        private void Value_StateCodeChanged(PrinterObjects obj)
+        {
+            StateCode = obj.stateCode.ToString();
+            switch (obj.stateCode)
+            {
+                case 1://空闲
+                    ImageIndex = 1;
+                    SelectedImageIndex = 1;
+                    ForeColor = Color.Green;
+                    break;
+                case 2://就绪
+                    ImageIndex = 1;
+                    SelectedImageIndex = 1;
+                    ForeColor = Color.Green;
+                    break;
+                case 3://工作中
+                    ImageIndex = 2;
+                    SelectedImageIndex = 2;
+                    ForeColor = Color.Blue;
+                    break;
+                case 4://繁忙
+                    ImageIndex = 3;
+                    SelectedImageIndex = 3;
+                    ForeColor = Color.Yellow;
+                    break;
+                case 5://暂停
+                    ImageIndex = 4;
+                    SelectedImageIndex = 4;
+                    ForeColor = Color.Orange;
+                    break;
+                case 6://异常
+                    ImageIndex = 5;
+                    SelectedImageIndex = 5;
+                    ForeColor = Color.Red;
+                    break;
+            }
+            ToolTipText = obj.stateMessage;
         }
 
         /// <summary>

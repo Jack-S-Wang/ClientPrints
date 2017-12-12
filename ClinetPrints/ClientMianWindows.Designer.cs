@@ -49,6 +49,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStBtn_add = new System.Windows.Forms.ToolStripButton();
             this.toolStBtn_delete = new System.Windows.Forms.ToolStripButton();
@@ -61,7 +62,6 @@
             this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -132,6 +132,7 @@
             this.printerViewFlock.Name = "printerViewFlock";
             this.printerViewFlock.Size = new System.Drawing.Size(209, 547);
             this.printerViewFlock.TabIndex = 2;
+            this.printerViewFlock.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewFlock_AfterSelect);
             // 
             // printerViewSingle
             // 
@@ -239,6 +240,10 @@
             this.columnHeader5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader5.Width = 200;
             // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "打印数量";
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -336,6 +341,7 @@
             this.toolStBtn_printPerview.Name = "toolStBtn_printPerview";
             this.toolStBtn_printPerview.Size = new System.Drawing.Size(23, 22);
             this.toolStBtn_printPerview.Text = "打印预览";
+            this.toolStBtn_printPerview.Click += new System.EventHandler(this.toolStBtn_printPerview_Click);
             // 
             // toolStBtn_parmSet
             // 
@@ -362,10 +368,6 @@
             this.imageSubItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "打印数量";
             // 
             // ClientMianWindows
             // 
