@@ -94,13 +94,13 @@ namespace ClinetPrints.MenuGroupMethod
                                 dr = clientForm.showException("群打印中也有该设备，也需要删除群中的该设备吗？", "提示警告", MessageBoxButtons.OKCancel);
                                 if (dr == DialogResult.OK)
                                 {
-                                    TreeNode flocknode = nodeParFlock.Nodes.Find(tnode.Name, true)[0];
-                                    flocknode.Remove();
+                                    var flocknode = nodeParFlock.Nodes.Find(tnode.Name, true)[0] as PrinterTreeNode;
+                                    (flocknode.Parent as GroupTreeNode).Remove(flocknode);
                                     var fileflock=SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                     SharMethod.SavePrinter(nodeParFlock, fileflock);
                                 }
                             }
-                            tnode.Remove();
+                            (tnode.Parent as GroupTreeNode).Remove(node);
                             var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                             SharMethod.SavePrinter(nodeParSingle, file);
                         }
@@ -143,7 +143,7 @@ namespace ClinetPrints.MenuGroupMethod
                             {
                                  cnode = new PrinterTreeNode(np.PrinterObject);
                             }
-                            flockNode.Nodes.Add(cnode);
+                            (flockNode as GroupTreeNode).Add(cnode);
                             new MenuPrinterFlockGroupMethod(cnode, clientForm);
                         }else
                         {
@@ -159,8 +159,8 @@ namespace ClinetPrints.MenuGroupMethod
                                 {
                                     cnode = new PrinterTreeNode(np.PrinterObject);
                                 }
-                                nodeParFlock.Nodes.Find(tnode.Name, true)[0].Remove();
-                                flockNode.Nodes.Add(cnode);
+                                (nodeParFlock.Nodes.Find(tnode.Name, true)[0].Parent as GroupTreeNode).Remove((nodeParFlock.Nodes.Find(tnode.Name, true)[0]as PrinterTreeNode));
+                                (flockNode as GroupTreeNode).Add(cnode);
                                 new MenuPrinterFlockGroupMethod(cnode, clientForm); 
                             }
                         }

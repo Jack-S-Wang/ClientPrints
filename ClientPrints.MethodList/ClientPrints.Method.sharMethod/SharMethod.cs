@@ -4,6 +4,7 @@ using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 
 namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 {
@@ -20,17 +21,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 
 
         /// <summary>
-        /// 记录下不同方式获取到的全部打印机创建节点
+        /// 记录下不同方式获取到的全部打印机（在线）
         /// </summary>
         public static List<PrinterObjects> liAllPrinter = new List<PrinterObjects>();
 
-
-        /// <summary>
-        /// 导入的图片的绝对路径
-        /// </summary>
-        public static string pathImage = "";
-
-       
+        public static monitorTime monTime { get; set; }
         /// <summary>
         /// 获取所有打印机的信息
         /// </summary>

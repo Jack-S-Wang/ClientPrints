@@ -78,6 +78,12 @@
     <Compile Include="CreatContorl\dataGrieViewControl1.Designer.cs">
       <DependentUpon>dataGrieViewControl1.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreatContorl\printPiewControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreatContorl\printPiewControl.Designer.cs">
+      <DependentUpon>printPiewControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuGroupMethod\MenuFlockGroupMethod.cs" />
     <Compile Include="MenuGroupMethod\MenuGroupAddMethod.cs" />
     <Compile Include="MenuGroupMethod\MenuPrinterFlockGroupMethod.cs" />
@@ -120,6 +126,12 @@
     <Compile Include="SettingWindows\SettingOtherWindows\parmSetting.Designer.cs">
       <DependentUpon>parmSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\printNumber.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\printNumber.Designer.cs">
+      <DependentUpon>printNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingWindows\SettingOtherWindows\timeSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CreatContorl\dataGrieViewControl1.resx">
       <DependentUpon>dataGrieViewControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreatContorl\printPiewControl.resx">
+      <DependentUpon>printPiewControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -158,6 +173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\parmSetting.resx">
       <DependentUpon>parmSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\printNumber.resx">
+      <DependentUpon>printNumber.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\timeSetting.resx">
       <DependentUpon>timeSetting.cs</DependentUpon>

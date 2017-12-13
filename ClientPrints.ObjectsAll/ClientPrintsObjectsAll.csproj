@@ -53,6 +53,7 @@
     <Compile Include="ClientPrints.Objects.SharObjectClass\listViewColumnTNode.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ClientPrints.Objects.SharObjectClass\monitorTime.cs" />
     <Compile Include="ClientPrints.Objects.treeNodeObject\GroupTreeNode.cs" />
     <Compile Include="ClientPrints.Objects.treeNodeObject\PrinterTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

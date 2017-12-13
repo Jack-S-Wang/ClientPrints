@@ -112,6 +112,9 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     byte[] setData = new byte[11];
                     Array.Copy(data, 6, setData, 0, 11);
                     printerObject.pParams.DevParm = setData;
+                }else
+                {
+                    MessageBox.Show("设备可能已经离线！");
                 }
 
             }

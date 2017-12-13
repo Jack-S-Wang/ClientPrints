@@ -69,17 +69,15 @@ namespace ClinetPrints.MenuGroupMethod
                 {
                     if (node.Nodes.Count > 0)
                     {
-                        DialogResult dr = clientForm.showException("该组有其他数据，确认将所有的设备放置到所有列表中", "提示信息", MessageBoxButtons.OK);
+                        DialogResult dr = clientForm.showException("该组有其他分组或有设备，确认将所有的设备放置到所有列表中", "提示信息", MessageBoxButtons.OK);
                         if (dr == DialogResult.OK)
                         {
-                            
-                            SharMethod.ForEachNode(nodePar, (no) => {
+                            SharMethod.ForEachNode(node, (no) => {
                                 if(no is PrinterTreeNode)
                                 {
                                     var newno = no as PrinterTreeNode;
                                     no.Remove();
                                     nodePar.Nodes["所有打印机"].Nodes.Add(newno);
-                                   
                                 }
                             });
                             node.Remove();

@@ -21,6 +21,7 @@ using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
+using System.Xml.Serialization;
 
 namespace ClinetPrints
 {
@@ -100,6 +101,8 @@ namespace ClinetPrints
                 AddPrinterMap();
                 //添加群打印机
                 AddFlockPrinterMap();
+                //获取在某段时间所执行的定时查询
+                getMonTime();
                 tiState.Interval = 5000;
                 tiState.Enabled = true;
                 tiState.Elapsed += TiState_Elapsed;
@@ -109,29 +112,66 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// 获取在某段时间所执行的定时查询
+        /// </summary>
+        private void getMonTime()
+        {
+            var file = new FileStream(@"./printerXml/printMonitor.xml", FileMode.OpenOrCreate);
+            if (file.Length > 0)
+            {
+                var xml = new XmlSerializer(new monitorTime().GetType());
+                var result = xml.Deserialize(file) as monitorTime;
+                SharMethod.monTime = result;
+            }
+            file.Flush();
+            file.Dispose();
+            file.Close();
+        }
 
         private void TiState_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (IsHandleCreated)
+            if (IsHandleCreated && SetTiming)
             {
-                ThreadPool.QueueUserWorkItem((o) =>
+                var startTime = DateTime.Parse(SharMethod.monTime.Sdate);
+                var endTime = DateTime.Parse(SharMethod.monTime.Edate);
+                if (startTime >= endTime)//说明这个结束时间是第二天的时间
                 {
+                    endTime.AddDays(1);
+                }
+                if (DateTime.Now >= startTime && DateTime.Now <= endTime)
+                {
+                    if (tiState.Interval != Int32.Parse(SharMethod.monTime.time) * 1000)//不相等就赋值
+                        tiState.Interval = Int32.Parse(SharMethod.monTime.time) * 1000;
+                }
+                else
+                {
+                    if (tiState.Interval != 5000)//不相等就赋值,设置回原来的默认值
+                        tiState.Interval = 5000;
+                }
+                this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
+                {
+                    printerViewSingle.BeginUpdate();
                     foreach (var key in SharMethod.liAllPrinter)
                     {
                         if (key.MethodsObject != null)
                         {
                             var method = key.MethodsObject as IMethodObjects;
-                            string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT,key.pHandle, new byte[] { 0x30 });
-                            var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
-                            if (key.stateCode != keyState.stateCode)
+                            string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, key.pHandle, new byte[] { 0x30 });
+                            if (str != "false")
                             {
-                                key.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                                key.state = keyState.majorState;
-                                key.stateCode = keyState.stateCode;
+                                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
+                                if (key.stateCode != keyState.stateCode)
+                                {
+                                    key.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
+                                    key.state = keyState.majorState;
+                                    key.stateCode = keyState.stateCode;
+                                }
                             }
                         }
                     }
-                });
+                    printerViewSingle.EndUpdate();
+                }));
             }
         }
 
@@ -160,13 +200,14 @@ namespace ClinetPrints
                             SetTiming = false;
                             Thread.Sleep(1000);
                             new PrintersGeneralFunction(path);
+                            SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
                             string dev;
                             if (!SharMethod.dicPrinterUSB.ContainsKey(path))
                             {
                                 MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
                                 return;
                             }
-                            if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明以前已经添加过的
+                            if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明该设备正处于离线状态
                             {
                                 var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
                                 n.PrinterObject = SharMethod.dicPrinterUSB[path];
@@ -181,10 +222,9 @@ namespace ClinetPrints
                             }
                             else
                             {
-                                TreeNode nNode = new PrinterTreeNode(SharMethod.dicPrinterUSB[path]);
+                                var nNode = new PrinterTreeNode(SharMethod.dicPrinterUSB[path]);
                                 dev = nNode.Text;
-                                printerViewSingle.Nodes[0].Nodes["所有打印机"].Nodes.Add(nNode);
-                                SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
+                                (printerViewSingle.Nodes[0].Nodes["所有打印机"] as GroupTreeNode).Add(nNode);
                                 new MenuPrinterGroupAddMethod(nNode, this);
                             }
                             var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
@@ -358,9 +398,9 @@ namespace ClinetPrints
                 }
                 else
                 {
-                    var all = tnode.Nodes.Find("所有打印机", false)[0];
+                    GroupTreeNode all = tnode.Nodes.Find("所有打印机", false)[0] as GroupTreeNode;
                     var cnode = new PrinterTreeNode(keyva);
-                    all.Nodes.Add(cnode);
+                    all.Add(cnode);
                     new MenuPrinterGroupAddMethod(cnode, this);
                 }
             }
@@ -640,7 +680,20 @@ namespace ClinetPrints
                     }
                     OpenFileDialog openfile = new OpenFileDialog();
                     openfile.ShowDialog();
-                    imageSubItems.Images.Add(new Bitmap(openfile.FileName));
+                    if (openfile.FileName == "")
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        imageSubItems.Images.Add(new Bitmap(openfile.FileName));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("添加的图片有误！");
+                        return;
+                    }
+
                     //添加作业的时候加的图片
                     this.listView1.SmallImageList = imageSubItems;
                     Interlocked.Increment(ref addfile);
@@ -1092,7 +1145,33 @@ namespace ClinetPrints
 
         private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ThreadPool.QueueUserWorkItem((o) =>
+            {
+                timeSetting set = new timeSetting();
+                set.ShowDialog();
+            });
+        }
 
+        private void listView1_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                printNumber pn = new printNumber();
+                pn.Owner = this;
+                pn.StartPosition = FormStartPosition.CenterParent;
+                pn.ShowDialog();
+                if (pn.checkVal)
+                {
+                    foreach (ListViewItem item in listView1.Items)
+                    {
+                        item.SubItems[3].Text = pn.num;
+                    }
+                }
+                else
+                {
+                    listView1.SelectedItems[0].SubItems[3].Text = pn.num;
+                }
+            }
         }
     }
 }

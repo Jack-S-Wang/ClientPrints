@@ -14,7 +14,7 @@ namespace ClinetPrints.MenuGroupMethod
             MenuItem remove = new MenuItem("移位");
             clearPrinter.Click += (o, e) =>
             {
-                tnode.Remove();
+                (tnode.Parent as GroupTreeNode).Remove((tnode as PrinterTreeNode));
                 var file=SharMethod.FileCreateMethod(SharMethod.FLOCK);
                 SharMethod.SavePrinter(nodeParFlock, file);
             };
@@ -26,8 +26,8 @@ namespace ClinetPrints.MenuGroupMethod
                 group.Click += (o, e) =>
                 {
                     var node = tnode as PrinterTreeNode;
-                    tnode.Remove();
-                    cnode.Nodes.Add(node);
+                    (tnode.Parent as GroupTreeNode).Remove(node);
+                    (cnode as GroupTreeNode).Add(node);
                     var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                     SharMethod.SavePrinter(nodeParFlock, file);
                 };

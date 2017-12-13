@@ -35,6 +35,7 @@
             this.分组名称查询ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全部展开ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全部折叠ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.设置查询时间ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pan_mainWin1_tree = new System.Windows.Forms.Panel();
             this.printerViewFlock = new System.Windows.Forms.TreeView();
             this.printerViewSingle = new System.Windows.Forms.TreeView();
@@ -62,7 +63,6 @@
             this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
-            this.设置查询时间ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -114,6 +114,13 @@
             this.全部折叠ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.全部折叠ToolStripMenuItem.Text = "全部折叠";
             this.全部折叠ToolStripMenuItem.Click += new System.EventHandler(this.全部折叠ToolStripMenuItem_Click);
+            // 
+            // 设置查询时间ToolStripMenuItem
+            // 
+            this.设置查询时间ToolStripMenuItem.Name = "设置查询时间ToolStripMenuItem";
+            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(92, 21);
+            this.设置查询时间ToolStripMenuItem.Text = "设置查询时间";
+            this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
             // 
             // pan_mainWin1_tree
             // 
@@ -226,6 +233,7 @@
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClick);
             // 
             // columnHeader1
             // 
@@ -370,13 +378,6 @@
             this.imageSubItems.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // 设置查询时间ToolStripMenuItem
-            // 
-            this.设置查询时间ToolStripMenuItem.Name = "设置查询时间ToolStripMenuItem";
-            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(92, 21);
-            this.设置查询时间ToolStripMenuItem.Text = "设置查询时间";
-            this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
             // 
             // ClientMianWindows
             // 

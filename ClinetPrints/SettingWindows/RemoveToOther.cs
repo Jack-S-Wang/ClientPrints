@@ -246,14 +246,14 @@ namespace ClinetPrints.SettingWindows
                             if (cnode.PrinterObject != null)
                             {
                                 nowNode = new PrinterTreeNode(cnode.PrinterObject);
-                                sureNode.Nodes.Add(nowNode);
-                                cnode.Remove();
+                                (sureNode as GroupTreeNode).Add(nowNode);
+                                (cnode.Parent as GroupTreeNode).Remove(cnode);
                             }
                             else
                             {
                                 nowNode = new PrinterTreeNode(cnode.Name, cnode.Text);
-                                sureNode.Nodes.Add(nowNode);
-                                cnode.Remove();
+                                (sureNode as GroupTreeNode).Add(nowNode);
+                                (cnode.Parent as GroupTreeNode).Remove(cnode);
                             }
                             new MenuPrinterGroupAddMethod(nowNode, clientForm);
                             var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);

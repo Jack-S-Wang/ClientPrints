@@ -5,12 +5,13 @@ using System.Runtime.Serialization;
 using System.Drawing;
 using System.Text;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using System.Windows.Forms;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
 {
 
     [Serializable]
-    public class PrinterTreeNode:System.Windows.Forms.TreeNode, ISerializable
+    public class PrinterTreeNode : System.Windows.Forms.TreeNode, ISerializable, IComparable, IComparable<PrinterTreeNode>
     {
         protected PrinterTreeNode(SerializationInfo info, StreamingContext context)
             : base(info, context)
@@ -21,13 +22,15 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         /// <summary>
         /// 打印机的对象属性
         /// </summary>
-        public PrinterObjects PrinterObject {
+        public PrinterObjects PrinterObject
+        {
             get { return _PrinterObject; }
-            set {
+            set
+            {
                 Name = value.onlyAlias;
                 if (Text == "")
                 {
-                Text = value.alias + "(" + value.model + ")";
+                    Text = value.alias + "(" + value.model + ")";
                 }
                 switch (value.stateCode)
                 {
@@ -109,11 +112,21 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         }
 
         /// <summary>
+        /// Tag值属性发生改变时发生的事件
+        /// </summary>
+        public event Action TagChanged;
+        /// <summary>
         /// 借用Tag值来设置状态码的先后顺序
         /// </summary>
-        public string StateCode {
+        public string StateCode
+        {
             get { return Tag as string; }
-            set { Tag = value; }
+            set
+            {
+                Tag = value;
+                TagChanged?.Invoke();
+                
+            }
         }
 
         /// <summary>
@@ -130,7 +143,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         /// </summary>
         /// <param name="name"></param>
         /// <param name="text"></param>
-        public PrinterTreeNode(string name,string text)
+        public PrinterTreeNode(string name, string text)
         {
             Name = name;
             Text = text;
@@ -151,6 +164,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             ForeColor = Color.Gray;
             ToolTipText = "离线";
             StateCode = "0";
+            
         }
 
         /// <summary>
@@ -201,7 +215,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         {
             string oldtext = Text;
             int index = 0;
-            for(int i=0;i<oldtext.Length;i++)
+            for (int i = 0; i < oldtext.Length; i++)
             {
                 if (oldtext[i] == '(')
                 {
@@ -211,6 +225,40 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             }
             Text = name + oldtext.Substring(index);
             return Text;
+        }
+
+        public int CompareTo(object o)
+        {
+            if (o == null)
+            {
+                throw new ArgumentNullException("o");
+            }
+
+            PrinterTreeNode p = o as PrinterTreeNode;
+            if (p == null)
+            {
+                throw new ArgumentException("o");
+            }
+
+            return CompareTo(p);
+        }
+
+        public int CompareTo(PrinterTreeNode o)
+        {
+            if (o == null)
+            {
+                throw new ArgumentNullException("o");
+            }
+
+            int result = 0;
+
+            if (Int32.Parse(this.StateCode) > Int32.Parse(o.StateCode))
+                result = 1;
+            else if (Int32.Parse(this.StateCode) == Int32.Parse(o.StateCode))
+                return Name.CompareTo(o.Name);
+            else
+                result = -1;
+            return result;
         }
     }
 }

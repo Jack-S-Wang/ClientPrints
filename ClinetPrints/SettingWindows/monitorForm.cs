@@ -37,17 +37,28 @@ namespace ClinetPrints.SettingWindows
         bool ative = true;
         private void monitorForm_Load(object sender, EventArgs e)
         {
-            this.cmb_command.SelectedIndex = 0;
-            System.Timers.Timer demandTime = new System.Timers.Timer(5000);
-            demandTime.Enabled = true;
-            demandTime.Elapsed += ((b, o) =>
+            try
             {
-                if (IsHandleCreated)
+                this.cmb_command.SelectedIndex = 0;
+                System.Timers.Timer demandTime = new System.Timers.Timer(5000);
+                demandTime.Enabled = true;
+                demandTime.Elapsed += ((b, o) =>
                 {
-                    if (ative)
-                        Invoke(new Action(readDevState));
+                    if (IsHandleCreated)
+                    {
+                        if (ative)
+                            Invoke(new Action(readDevState));
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                if (printerObject == null)
+                {
+                    this.Close();
                 }
-            });
+            }
+
         }
         private void readDevState()
         {
@@ -56,6 +67,11 @@ namespace ClinetPrints.SettingWindows
                 var method = printerObject.MethodsObject as IMethodObjects;
                 //系统状态
                 var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
+                if (stateStr == "false")
+                {
+                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                    this.Close();
+                }
                 var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
                 if (stateType != keyState.stateCode)
                 {
@@ -68,6 +84,11 @@ namespace ClinetPrints.SettingWindows
                 }
                 //数据处理
                 var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x32 });
+                if (dataPorcessStr == "false")
+                {
+                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                    this.Close();
+                }
                 var dataPor = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataState>(dataPorcessStr);
                 if (dataStateType != dataPor.stateCode)
                 {
@@ -88,6 +109,11 @@ namespace ClinetPrints.SettingWindows
                 }
                 //打印输出
                 var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x33 });
+                if (printOutPut == "false")
+                {
+                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                    this.Close();
+                }
                 var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
                 if (printStateType != printOut.stateCode)
                 {
@@ -115,6 +141,11 @@ namespace ClinetPrints.SettingWindows
                     txb_sensor.Text = printOut.sensor;
                 }
                 var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x34 });
+                if (printInfo == "false")
+                {
+                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                    this.Close();
+                }
                 var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
                 if (!txb_cache.Text.Contains(printInfoJson.InCache.ToString()))
                 {
