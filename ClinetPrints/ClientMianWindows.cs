@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using System.Xml.Serialization;
+using ClinetPrints.CreatContorl;
 
 namespace ClinetPrints
 {
@@ -1132,15 +1133,38 @@ namespace ClinetPrints
                 }
             }
         }
-
+        private printPiewControl pcontrol;
         private void toolStBtn_printPerview_Click(object sender, EventArgs e)
         {
-            var col = listView1.Columns[colmunObject] as listViewColumnTNode;
-            string jsonState = (col.liPrinter[0].MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, col.liPrinter[0].pHandle, new byte[] { 0x30 });
-            var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
-            col.liPrinter[0].stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-            col.liPrinter[0].state = keyState.majorState;
-            col.liPrinter[0].stateCode = keyState.stateCode;
+            if (listView1.Items.Count > 0)
+            {
+                printPiewControl pcon = new printPiewControl("648X1016", listView1.SelectedItems[0].SubItems[2].Text);
+                pcon.Location = new Point(this.Location.X, this.Location.Y + 25);
+                pcon.Size = new Size(this.pan_mainWin1.Width, this.pan_mainWin1.Height + 25);
+                pcon.Dock = DockStyle.Fill;
+                pcontrol = pcon;
+                this.Controls.Add(pcon);
+                pcon.toolBtn_close.Click += ToolBtn_close_Click;
+                for (int i = 0; i < Controls.Count; ++i)
+                {
+                    if (Controls[i] != pcon)
+                    {
+                        Controls[i].SendToBack();
+                    }
+                }
+                this.MainMenuStrip.Hide();
+
+            }
+        }
+
+        private void ToolBtn_close_Click(object sender, EventArgs e)
+        {
+            if (pcontrol != null)
+            {
+                this.Controls.Remove(pcontrol);
+                this.MainMenuStrip.Show();
+            }
+
         }
 
         private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)

@@ -345,7 +345,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                 var devprop = new structClassDll.DEVPROP_PRNOUT()
                 {
-                    bkBmpID = (byte)WDevCmdObjects.BMP_DEVPROP_BKNONE,
+                    bkBmpID = (byte)WDevCmdObjects.BMP_DEVPROP_BKFULL,
                     cardInputMode = po.pParams.DevParm[2],
                     cardOutputMode = po.pParams.DevParm[3],
                     cardType = po.pParams.DevParm[1],
