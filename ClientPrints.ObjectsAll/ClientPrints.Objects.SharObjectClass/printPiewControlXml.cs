@@ -7,7 +7,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
 {
     public class printPiewControlXml
     {
-        public Page[] page { get; set; }
+        public Page[] pages { get; set; }
         public class Page
         {
             public string page { get; set; }

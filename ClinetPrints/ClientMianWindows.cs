@@ -1136,7 +1136,12 @@ namespace ClinetPrints
         private printPiewControl pcontrol;
         private void toolStBtn_printPerview_Click(object sender, EventArgs e)
         {
-            if (listView1.Items.Count > 0)
+            if (this.toolStTxb_printer.Text == "")
+            {
+                MessageBox.Show("请先选择打印机或群打印组！");
+                return;
+            }
+            if (listView1.SelectedItems.Count > 0)
             {
                 printPiewControl pcon = new printPiewControl("648X1016", listView1.SelectedItems[0].SubItems[2].Text);
                 pcon.Location = new Point(this.Location.X, this.Location.Y + 25);
@@ -1147,13 +1152,17 @@ namespace ClinetPrints
                 pcon.toolBtn_close.Click += ToolBtn_close_Click;
                 for (int i = 0; i < Controls.Count; ++i)
                 {
-                    if (Controls[i] != pcon)
+                    if (Controls[i] != pcontrol)
                     {
                         Controls[i].SendToBack();
                     }
                 }
                 this.MainMenuStrip.Hide();
 
+            }
+            else
+            {
+                MessageBox.Show("请先选择要预览的任务！");
             }
         }
 
@@ -1162,7 +1171,7 @@ namespace ClinetPrints
             if (pcontrol != null)
             {
                 this.Controls.Remove(pcontrol);
-                this.MainMenuStrip.Show();
+                this.MainMenuStrip.Visible = true;
             }
 
         }

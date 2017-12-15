@@ -155,6 +155,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="SettingWindows\groupName.resx">
       <DependentUpon>groupName.cs</DependentUpon>
@@ -220,6 +221,7 @@
     <Content Include="IocOrImage\ooopic_1502413456.ico" />
     <Content Include="IocOrImage\Print.png" />
     <Content Include="IocOrImage\s16.png" />
+    <Content Include="IocOrImage\Save.png" />
     <Content Include="IocOrImage\scroll.png" />
     <Content Include="IocOrImage\Search.png" />
     <Content Include="ooopic_1502413321.ico" />
@@ -247,13 +249,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="printerNewImage\" />
     <Folder Include="printerXml\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if not exist "$(TargetDir)IocOrImage" xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"
 if not exist "$(TargetDir)printerXml" xcopy /S /I /Y "$(ProjectDir)printerXml" "$(ProjectDir)$(OutDir)printerXml"
-xcopy /S /I /Y "$(ProjectDir)SansDLL" "$(ProjectDir)$(OutDir)"</PreBuildEvent>
+xcopy /S /I /Y "$(ProjectDir)SansDLL" "$(ProjectDir)$(OutDir)"
+if not exist "$(TargetDir)printerNewImage" xcopy /E /I /Y  "$(ProjectDir)printerNewImage" "$(TargetDir)printerNewImage"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
