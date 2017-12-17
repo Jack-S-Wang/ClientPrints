@@ -81,8 +81,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// </summary>
         public string onlyAlias { get; set; }
         /// <summary>
-        /// 设备的参数信息;0-擦除位图类型,1-卡片类型,2-进卡方式,3-出卡方式,4-打印温度,
-        /// 5-打印对比度,6-打印速度,7-灰度温度,8-擦除速度,9-设置擦除温度,10-打印模式
+        /// 设备的参数信息;
         /// </summary>
         public PrinterParams pParams { get; set; }
         /// <summary>

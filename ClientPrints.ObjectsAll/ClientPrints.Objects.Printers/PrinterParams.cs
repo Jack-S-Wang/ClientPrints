@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,5 +69,17 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 5-打印对比度,6-打印速度,7-灰度温度,8-擦除速度,9-设置擦除温度,10-打印模式
         /// </summary>
         public byte[] DevParm { get; set; }
+        /// <summary>
+        /// 背景位图擦除模式
+        /// </summary>
+        public byte bkBmpID = (byte)WDevCmdObjects.BMP_DEVPROP_BKFULL;
+        /// <summary>
+        /// 位图左上角的X坐标
+        /// </summary>
+        public ushort posX = 0;
+        /// <summary>
+        /// 位图左上角的Y坐标
+        /// </summary>
+        public ushort posY = 0;
     }
 }

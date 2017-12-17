@@ -689,7 +689,7 @@ namespace ClinetPrints
                     {
                         imageSubItems.Images.Add(new Bitmap(openfile.FileName));
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         MessageBox.Show("添加的图片有误！");
                         return;
@@ -1133,7 +1133,7 @@ namespace ClinetPrints
                 }
             }
         }
-        private printPiewControl pcontrol;
+       
         private void toolStBtn_printPerview_Click(object sender, EventArgs e)
         {
             if (this.toolStTxb_printer.Text == "")
@@ -1143,22 +1143,12 @@ namespace ClinetPrints
             }
             if (listView1.SelectedItems.Count > 0)
             {
-                printPiewControl pcon = new printPiewControl("648X1016", listView1.SelectedItems[0].SubItems[2].Text);
-                pcon.Location = new Point(this.Location.X, this.Location.Y + 25);
-                pcon.Size = new Size(this.pan_mainWin1.Width, this.pan_mainWin1.Height + 25);
-                pcon.Dock = DockStyle.Fill;
-                pcontrol = pcon;
-                this.Controls.Add(pcon);
-                pcon.toolBtn_close.Click += ToolBtn_close_Click;
-                for (int i = 0; i < Controls.Count; ++i)
-                {
-                    if (Controls[i] != pcontrol)
-                    {
-                        Controls[i].SendToBack();
-                    }
-                }
-                this.MainMenuStrip.Hide();
-
+                printPiewForm pf = new printPiewForm();
+                pf.page = (listView1.Columns[4] as listViewColumnTNode).liPrinter[0].pParams.maxWidth+"*"+(listView1.Columns[4] as listViewColumnTNode).liPrinter[0].pParams.maxHeight;
+                pf.fileAddress = listView1.SelectedItems[0].SubItems[2].Text;
+                pf.jobNum = listView1.SelectedItems[0].SubItems[1].Text;
+                pf.num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
+                pf.Show();
             }
             else
             {
@@ -1168,11 +1158,7 @@ namespace ClinetPrints
 
         private void ToolBtn_close_Click(object sender, EventArgs e)
         {
-            if (pcontrol != null)
-            {
-                this.Controls.Remove(pcontrol);
-                this.MainMenuStrip.Visible = true;
-            }
+            
 
         }
 

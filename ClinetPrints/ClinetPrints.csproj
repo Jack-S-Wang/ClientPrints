@@ -132,6 +132,12 @@
     <Compile Include="SettingWindows\SettingOtherWindows\printNumber.Designer.cs">
       <DependentUpon>printNumber.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\printPiewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\printPiewForm.Designer.cs">
+      <DependentUpon>printPiewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingWindows\SettingOtherWindows\timeSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,6 +183,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\printNumber.resx">
       <DependentUpon>printNumber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\printPiewForm.resx">
+      <DependentUpon>printPiewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\timeSetting.resx">
       <DependentUpon>timeSetting.cs</DependentUpon>

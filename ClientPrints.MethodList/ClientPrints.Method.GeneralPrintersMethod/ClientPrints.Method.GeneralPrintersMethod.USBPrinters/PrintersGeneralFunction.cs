@@ -345,7 +345,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                 var devprop = new structClassDll.DEVPROP_PRNOUT()
                 {
-                    bkBmpID = (byte)WDevCmdObjects.BMP_DEVPROP_BKFULL,
+                    bkBmpID = po.pParams.bkBmpID,
                     cardInputMode = po.pParams.DevParm[2],
                     cardOutputMode = po.pParams.DevParm[3],
                     cardType = po.pParams.DevParm[1],
@@ -371,14 +371,14 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 var devbm = new structClassDll.DEV_BMP()
                 {
                     bkPixelH = 0,
-                    txPixelH = 1016,
+                    txPixelH = (ushort)po.pParams.maxHeight,
                     bmpType = po.pParams.pixelformat,
                     bpps = (byte)po.pParams.colorDepth,
                     dpi = (ushort)po.pParams.DIP,
                     ID = (ushort)WDevCmdObjects.DEVBMP_ID,
                     pixelW = (ushort)po.pParams.maxWidth,
-                    posX = 0,
-                    posY = 0,
+                    posX = po.pParams.posX,
+                    posY = po.pParams.posY,
                     ret = new byte[4],
                     devInfo = devinfo
                 };

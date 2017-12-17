@@ -53,10 +53,8 @@ namespace ClinetPrints.SettingWindows
             }
             catch (Exception ex)
             {
-                if (printerObject == null)
-                {
-                    this.Close();
-                }
+                MessageBox.Show(ex.Message);
+                return;
             }
 
         }

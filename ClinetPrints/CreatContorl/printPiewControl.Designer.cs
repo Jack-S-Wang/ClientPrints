@@ -44,6 +44,7 @@
             this.cmb_page = new System.Windows.Forms.ComboBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolBtn_print = new System.Windows.Forms.ToolStripButton();
+            this.toolBtn_save = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_Add = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_clear = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_proportion = new System.Windows.Forms.ToolStripSplitButton();
@@ -58,9 +59,8 @@
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolCob_Intgaiting = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
-            this.toolBtn_save = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_reMap = new System.Windows.Forms.ToolStripButton();
+            this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -249,6 +249,18 @@
             this.toolBtn_print.Name = "toolBtn_print";
             this.toolBtn_print.Size = new System.Drawing.Size(23, 47);
             this.toolBtn_print.Text = "打印";
+            this.toolBtn_print.Click += new System.EventHandler(this.toolBtn_print_Click);
+            // 
+            // toolBtn_save
+            // 
+            this.toolBtn_save.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtn_save.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_save.Image")));
+            this.toolBtn_save.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtn_save.Name = "toolBtn_save";
+            this.toolBtn_save.Size = new System.Drawing.Size(23, 47);
+            this.toolBtn_save.Text = "保存";
+            this.toolBtn_save.ToolTipText = "保存零时图片，如果执行打印则会自动删除";
+            this.toolBtn_save.Click += new System.EventHandler(this.toolBtn_save_Click);
             // 
             // toolBtn_Add
             // 
@@ -285,13 +297,13 @@
             // 比例设置ToolStripMenuItem
             // 
             this.比例设置ToolStripMenuItem.Name = "比例设置ToolStripMenuItem";
-            this.比例设置ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.比例设置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.比例设置ToolStripMenuItem.Text = "比例设置";
             // 
             // 尺寸设置ToolStripMenuItem
             // 
             this.尺寸设置ToolStripMenuItem.Name = "尺寸设置ToolStripMenuItem";
-            this.尺寸设置ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.尺寸设置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.尺寸设置ToolStripMenuItem.Text = "尺寸设置";
             // 
             // toolStripSeparator1
@@ -353,27 +365,6 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 50);
             // 
-            // toolBtn_close
-            // 
-            this.toolBtn_close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_close.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_close.Image")));
-            this.toolBtn_close.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtn_close.Name = "toolBtn_close";
-            this.toolBtn_close.Size = new System.Drawing.Size(23, 47);
-            this.toolBtn_close.Text = "退出";
-            this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
-            // 
-            // toolBtn_save
-            // 
-            this.toolBtn_save.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_save.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_save.Image")));
-            this.toolBtn_save.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtn_save.Name = "toolBtn_save";
-            this.toolBtn_save.Size = new System.Drawing.Size(23, 47);
-            this.toolBtn_save.Text = "保存";
-            this.toolBtn_save.ToolTipText = "保存零时图片，如果执行打印则会自动删除";
-            this.toolBtn_save.Click += new System.EventHandler(this.toolBtn_save_Click);
-            // 
             // toolBtn_reMap
             // 
             this.toolBtn_reMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -383,6 +374,16 @@
             this.toolBtn_reMap.Size = new System.Drawing.Size(23, 47);
             this.toolBtn_reMap.Text = "复位";
             this.toolBtn_reMap.Click += new System.EventHandler(this.toolBtn_reMap_Click);
+            // 
+            // toolBtn_close
+            // 
+            this.toolBtn_close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtn_close.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_close.Image")));
+            this.toolBtn_close.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtn_close.Name = "toolBtn_close";
+            this.toolBtn_close.Size = new System.Drawing.Size(23, 47);
+            this.toolBtn_close.Text = "退出";
+            this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
             // 
             // printPiewControl
             // 
@@ -410,17 +411,14 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolBtn_print;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cmb_page;
-        private System.Windows.Forms.ToolStripButton toolBtn_Add;
         private System.Windows.Forms.Button btn_custom;
         private System.Windows.Forms.TextBox txb_customPage;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ToolStripButton toolBtn_clear;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripTextBox toolTxb_widthProportion;
@@ -428,8 +426,6 @@
         private System.Windows.Forms.ToolStripTextBox toolTxb_heightProportion;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSplitButton toolBtn_proportion;
-        private System.Windows.Forms.ToolStripMenuItem 比例设置ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 尺寸设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripComboBox toolCob_Intgaiting;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -437,7 +433,12 @@
         private System.Windows.Forms.ComboBox cmb_printWipe;
         private System.Windows.Forms.Label label3;
         public System.Windows.Forms.ToolStripButton toolBtn_close;
-        private System.Windows.Forms.ToolStripButton toolBtn_save;
-        private System.Windows.Forms.ToolStripButton toolBtn_reMap;
+        public System.Windows.Forms.ToolStripButton toolBtn_print;
+        public System.Windows.Forms.ToolStripButton toolBtn_Add;
+        public System.Windows.Forms.ToolStripButton toolBtn_clear;
+        public System.Windows.Forms.ToolStripMenuItem 比例设置ToolStripMenuItem;
+        public System.Windows.Forms.ToolStripMenuItem 尺寸设置ToolStripMenuItem;
+        public System.Windows.Forms.ToolStripButton toolBtn_save;
+        public System.Windows.Forms.ToolStripButton toolBtn_reMap;
     }
 }

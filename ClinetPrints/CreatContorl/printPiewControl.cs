@@ -13,6 +13,8 @@ using static ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.printPi
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 
 namespace ClinetPrints.CreatContorl
 {
@@ -22,19 +24,9 @@ namespace ClinetPrints.CreatContorl
         {
             InitializeComponent();
         }
-        /// <summary>
-        /// 添加打印预览控件
-        /// </summary>
-        /// <param name="page">纸张大小；500X600格式</param>
-        /// <param name="fileAddress">图片路径</param>
-        public printPiewControl(string page, string fileAddress)
-        {
-            InitializeComponent();
-            this.page = page;
-            this.fileAddress = fileAddress;
-        }
+       
         [Description("打印机对象,使用时可传入")]
-        public object PrinterObject { get; set; }
+        public PrinterObjects PrinterObject { get; set; }
         [Description("图片路径地址")]
         public string fileAddress { get; set; }
         [Description("纸张大小，列：500x600,或500*600；宽乘高")]
@@ -63,14 +55,19 @@ namespace ClinetPrints.CreatContorl
                         width = Int32.Parse(p.Substring(0, p.IndexOf('*')));
                         height = Int32.Parse(p.Substring(p.IndexOf('*') + 1));
                     }
-                    this.ptb_page.Size = new Size((int)(width * 0.7), (int)(height * 0.7));
+                    this.ptb_page.Size = new Size((int)(width * 0.8), (int)(height * 0.8));
                 }
             }
         }
+        [Description("打印的作业号,默认是1")]
+        public string jobNum = "1";
+        [Description("打印的数量，默认是1")]
+        public int num = 1;
         [Browsable(false)]
         private string _page;
         [Browsable(false)]
-        private FileStream file = new FileStream(@"./pages.xml", FileMode.OpenOrCreate);
+        //private FileStream file = new FileStream(@"./pages.xml", FileMode.OpenOrCreate);
+        public FileStream file = null;
         [Browsable(false)]
         private XmlSerializer xml = new XmlSerializer(new printPiewControlXml().GetType());
         [Browsable(false)]
@@ -81,6 +78,10 @@ namespace ClinetPrints.CreatContorl
             ToolTip tool = new ToolTip();
             tool.SetToolTip(this.txb_customPage, "格式是500x600或500*600，其他格式将会出问题！");
             this.toolCob_Intgaiting.SelectedIndex = 0;
+            if (file == null)
+            {
+                return;
+            }
             if (file.Length > 0)
             {
                 var result = xml.Deserialize(file) as printPiewControlXml;
@@ -98,8 +99,13 @@ namespace ClinetPrints.CreatContorl
                 }
             }
             this.cmb_printWipe.SelectedIndex = 0;
+            if (fileAddress == "")
+            {
+                MessageBox.Show("图片地址无效！");
+                return;
+            }
             Bitmap map = new Bitmap(fileAddress);
-            oldmap = new Bitmap(map, new Size((int)(map.Width * 0.7), (int)(map.Height * 0.7)));
+            oldmap = new Bitmap(map, new Size((int)(map.Width * 0.8), (int)(map.Height * 0.8)));
             this.ptb_page.Image = oldmap;
         }
 
@@ -186,9 +192,6 @@ namespace ClinetPrints.CreatContorl
             file.Flush();
             file.Dispose();
             file.Close();
-            this.Parent.Controls.Remove(this);
-            this.DestroyHandle();
-            this.Dispose();
         }
 
         private void toolCob_Intgaiting_SelectedIndexChanged(object sender, EventArgs e)
@@ -278,11 +281,35 @@ namespace ClinetPrints.CreatContorl
         private void toolBtn_save_Click(object sender, EventArgs e)
         {
             FileStream fileImage = new FileStream(@"./printerNewImage/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".png", FileMode.Create);
-            this.ptb_page.Image.Save(@"./printerNewImage/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".png");
+            Bitmap bmap = new Bitmap((int)(ptb_page.Width*1.25),(int)( ptb_page.Height*1.25));
+            Graphics g = Graphics.FromImage(bmap);
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.DrawImage(ptb_page.Image,
+                new Rectangle(
+                    0,
+                    0,
+                    (int)(ptb_page.Width),
+                    (int)(ptb_page.Height)),
+                new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
+                GraphicsUnit.Pixel);
+            g.Dispose();
+            bmap.Save(@"./printerNewImage/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".png");
             fileImage.Flush();
             fileImage.Dispose();
             file.Close();
             MessageBox.Show("保存成功！");
+        }
+
+        private void toolBtn_print_Click(object sender, EventArgs e)
+        {
+            if (PrinterObject != null)
+            {
+                var method = PrinterObject.MethodsObject as IMethodObjects;
+                PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
+                method.writeDataToDev(fileAddress, PrinterObject, jobNum, num);
+                
+            }
         }
     }
 }
