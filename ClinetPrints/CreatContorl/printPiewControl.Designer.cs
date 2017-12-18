@@ -31,8 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(printPiewControl));
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.ptb_page = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cmb_printWipe = new System.Windows.Forms.ComboBox();
@@ -47,27 +45,22 @@
             this.toolBtn_save = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_Add = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_clear = new System.Windows.Forms.ToolStripButton();
-            this.toolBtn_proportion = new System.Windows.Forms.ToolStripSplitButton();
-            this.比例设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.尺寸设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolTxb_widthProportion = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.toolTxb_heightProportion = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolCob_Intgaiting = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolBtn_reMap = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
+            this.label4 = new System.Windows.Forms.Label();
+            this.panControlWheel1 = new ClinetPrints.CreatContorl.PanControlWheel();
+            this.ptb_page = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.panControlWheel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -81,7 +74,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panel3);
+            this.groupBox1.Controls.Add(this.panControlWheel1);
             this.groupBox1.Controls.Add(this.panel2);
             this.groupBox1.Controls.Add(this.toolStrip1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -91,30 +84,6 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "打印预览设置界面";
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.ptb_page);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(277, 67);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(875, 587);
-            this.panel3.TabIndex = 2;
-            // 
-            // ptb_page
-            // 
-            this.ptb_page.BackColor = System.Drawing.Color.White;
-            this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptb_page.Location = new System.Drawing.Point(6, 7);
-            this.ptb_page.Name = "ptb_page";
-            this.ptb_page.Size = new System.Drawing.Size(858, 577);
-            this.ptb_page.TabIndex = 0;
-            this.ptb_page.TabStop = false;
-            this.ptb_page.WaitOnLoad = true;
-            this.ptb_page.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseDown);
-            this.ptb_page.MouseEnter += new System.EventHandler(this.ptb_page_MouseEnter);
-            this.ptb_page.MouseLeave += new System.EventHandler(this.ptb_page_MouseLeave);
-            this.ptb_page.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseUp);
             // 
             // panel2
             // 
@@ -127,6 +96,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.cmb_printWipe);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.btn_custom);
@@ -170,7 +140,7 @@
             // 
             // btn_custom
             // 
-            this.btn_custom.Location = new System.Drawing.Point(168, 193);
+            this.btn_custom.Location = new System.Drawing.Point(178, 193);
             this.btn_custom.Name = "btn_custom";
             this.btn_custom.Size = new System.Drawing.Size(75, 23);
             this.btn_custom.TabIndex = 4;
@@ -211,6 +181,7 @@
             this.cmb_page.Name = "cmb_page";
             this.cmb_page.Size = new System.Drawing.Size(121, 20);
             this.cmb_page.TabIndex = 0;
+            this.cmb_page.SelectedIndexChanged += new System.EventHandler(this.cmb_page_SelectedIndexChanged);
             this.cmb_page.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmb_page_KeyPress);
             // 
             // toolStrip1
@@ -222,12 +193,6 @@
             this.toolBtn_save,
             this.toolBtn_Add,
             this.toolBtn_clear,
-            this.toolBtn_proportion,
-            this.toolStripSeparator1,
-            this.toolStripLabel1,
-            this.toolTxb_widthProportion,
-            this.toolStripLabel2,
-            this.toolTxb_heightProportion,
             this.toolStripSeparator2,
             this.toolStripLabel3,
             this.toolCob_Intgaiting,
@@ -259,7 +224,7 @@
             this.toolBtn_save.Name = "toolBtn_save";
             this.toolBtn_save.Size = new System.Drawing.Size(23, 47);
             this.toolBtn_save.Text = "保存";
-            this.toolBtn_save.ToolTipText = "保存零时图片，如果执行打印则会自动删除";
+            this.toolBtn_save.ToolTipText = "另存为";
             this.toolBtn_save.Click += new System.EventHandler(this.toolBtn_save_Click);
             // 
             // toolBtn_Add
@@ -281,60 +246,6 @@
             this.toolBtn_clear.Size = new System.Drawing.Size(23, 47);
             this.toolBtn_clear.Text = "删除所选尺寸";
             this.toolBtn_clear.Click += new System.EventHandler(this.toolBtn_clear_Click);
-            // 
-            // toolBtn_proportion
-            // 
-            this.toolBtn_proportion.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_proportion.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.比例设置ToolStripMenuItem,
-            this.尺寸设置ToolStripMenuItem});
-            this.toolBtn_proportion.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_proportion.Image")));
-            this.toolBtn_proportion.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtn_proportion.Name = "toolBtn_proportion";
-            this.toolBtn_proportion.Size = new System.Drawing.Size(32, 47);
-            this.toolBtn_proportion.Text = "自定义设置图片比例";
-            // 
-            // 比例设置ToolStripMenuItem
-            // 
-            this.比例设置ToolStripMenuItem.Name = "比例设置ToolStripMenuItem";
-            this.比例设置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.比例设置ToolStripMenuItem.Text = "比例设置";
-            // 
-            // 尺寸设置ToolStripMenuItem
-            // 
-            this.尺寸设置ToolStripMenuItem.Name = "尺寸设置ToolStripMenuItem";
-            this.尺寸设置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.尺寸设置ToolStripMenuItem.Text = "尺寸设置";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 50);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(32, 47);
-            this.toolStripLabel1.Text = "宽度";
-            this.toolStripLabel1.ToolTipText = "图片宽度的比例值";
-            // 
-            // toolTxb_widthProportion
-            // 
-            this.toolTxb_widthProportion.Name = "toolTxb_widthProportion";
-            this.toolTxb_widthProportion.Size = new System.Drawing.Size(100, 50);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(32, 47);
-            this.toolStripLabel2.Text = "高度";
-            this.toolStripLabel2.ToolTipText = "图片高度比例设置";
-            // 
-            // toolTxb_heightProportion
-            // 
-            this.toolTxb_heightProportion.Name = "toolTxb_heightProportion";
-            this.toolTxb_heightProportion.Size = new System.Drawing.Size(100, 50);
-            this.toolTxb_heightProportion.ToolTipText = "图片高度的比例";
             // 
             // toolStripSeparator2
             // 
@@ -385,6 +296,38 @@
             this.toolBtn_close.Text = "退出";
             this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(143, 199);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 12);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "毫米";
+            // 
+            // panControlWheel1
+            // 
+            this.panControlWheel1.AutoScroll = true;
+            this.panControlWheel1.Controls.Add(this.ptb_page);
+            this.panControlWheel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panControlWheel1.Location = new System.Drawing.Point(277, 67);
+            this.panControlWheel1.Name = "panControlWheel1";
+            this.panControlWheel1.Size = new System.Drawing.Size(875, 587);
+            this.panControlWheel1.TabIndex = 2;
+            // 
+            // ptb_page
+            // 
+            this.ptb_page.BackColor = System.Drawing.Color.White;
+            this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptb_page.Location = new System.Drawing.Point(4, 2);
+            this.ptb_page.Name = "ptb_page";
+            this.ptb_page.Size = new System.Drawing.Size(858, 577);
+            this.ptb_page.TabIndex = 1;
+            this.ptb_page.TabStop = false;
+            this.ptb_page.WaitOnLoad = true;
+            this.ptb_page.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseDown);
+            this.ptb_page.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseUp);
+            // 
             // printPiewControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -395,13 +338,13 @@
             this.Load += new System.EventHandler(this.printPiewControl_Load);
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).EndInit();
             this.panel2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.panControlWheel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -411,7 +354,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label1;
@@ -419,26 +361,20 @@
         private System.Windows.Forms.Button btn_custom;
         private System.Windows.Forms.TextBox txb_customPage;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripTextBox toolTxb_widthProportion;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripTextBox toolTxb_heightProportion;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripSplitButton toolBtn_proportion;
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripComboBox toolCob_Intgaiting;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.PictureBox ptb_page;
         private System.Windows.Forms.ComboBox cmb_printWipe;
         private System.Windows.Forms.Label label3;
-        public System.Windows.Forms.ToolStripButton toolBtn_close;
-        public System.Windows.Forms.ToolStripButton toolBtn_print;
-        public System.Windows.Forms.ToolStripButton toolBtn_Add;
-        public System.Windows.Forms.ToolStripButton toolBtn_clear;
-        public System.Windows.Forms.ToolStripMenuItem 比例设置ToolStripMenuItem;
-        public System.Windows.Forms.ToolStripMenuItem 尺寸设置ToolStripMenuItem;
-        public System.Windows.Forms.ToolStripButton toolBtn_save;
-        public System.Windows.Forms.ToolStripButton toolBtn_reMap;
+        private System.Windows.Forms.ToolStripButton toolBtn_Add;
+        private System.Windows.Forms.ToolStripButton toolBtn_clear;
+        private System.Windows.Forms.ToolStripButton toolBtn_save;
+        private System.Windows.Forms.ToolStripButton toolBtn_reMap;
+        private System.Windows.Forms.ToolStripButton toolBtn_close;
+        private System.Windows.Forms.ToolStripButton toolBtn_print;
+        private System.Windows.Forms.Label label4;
+        private PanControlWheel panControlWheel1;
+        private System.Windows.Forms.PictureBox ptb_page;
     }
 }

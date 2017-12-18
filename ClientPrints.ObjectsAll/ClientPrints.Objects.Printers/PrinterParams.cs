@@ -81,5 +81,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 位图左上角的Y坐标
         /// </summary>
         public ushort posY = 0;
+        /// <summary>
+        /// 实际设备的纸张大小
+        /// </summary>
+        public string page { get; set; }
     }
 }

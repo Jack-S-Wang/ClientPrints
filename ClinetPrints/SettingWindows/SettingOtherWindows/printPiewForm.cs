@@ -1,4 +1,5 @@
-﻿using ClinetPrints.CreatContorl;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using ClinetPrints.CreatContorl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,32 +18,28 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         {
             InitializeComponent();
         }
-        public string page = "";
         public string fileAddress = "";
         public string jobNum = "1";
         public int num = 1;
+        public PrinterObjects po;
         private void printPiewForm_Load(object sender, EventArgs e)
         {
-            printPiewControl1 = new printPiewControl();
-            printPiewControl1.file = new FileStream(@"./pages.xml", FileMode.OpenOrCreate);
-            printPiewControl1.page = this.page;
             printPiewControl1.fileAddress = fileAddress;
             printPiewControl1.jobNum = jobNum;
             printPiewControl1.num = num;
-            printPiewControl1.toolBtn_close.Click += ToolBtn_close_Click;
-            printPiewControl1.toolBtn_print.Click += ToolBtn_print_Click;
+            printPiewControl1.PrinterObject = po;
+            printPiewControl1.OnBtnClose += PrintPiewControl1_OnBtnClose;
+            printPiewControl1.onBtnPrint += PrintPiewControl1_onBtnPrint;
         }
 
-        private void ToolBtn_print_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-        
-
-        private void ToolBtn_close_Click(object sender, EventArgs e)
+        private void PrintPiewControl1_onBtnPrint(EventArgs obj)
         {
             this.Close();
         }
 
+        private void PrintPiewControl1_OnBtnClose(EventArgs obj)
+        {
+            this.Close();
+        }
     }
 }

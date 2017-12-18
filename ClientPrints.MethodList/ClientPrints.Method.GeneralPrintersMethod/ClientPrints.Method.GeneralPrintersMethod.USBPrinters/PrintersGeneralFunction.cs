@@ -100,8 +100,6 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 yDPL = Pagejson.yDPL,
                 DevParm = devParmInfoJson.parmData
             };
-
-
             var printers = new PrinterObjects()
             {
                 sn = sn,
@@ -118,6 +116,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 stateCode = stateType,
                 pParams = printerParams
             };
+            if (model.Contains("DC-1300"))
+            {
+                printers.pParams.page = (((double)Pagejson.maxWidth / 300) * 25.4).ToString("0.00") + "*" + (((double)Pagejson.maxHeight / 300) * 25.4).ToString("0.00");
+            }
             SharMethod.dicPrinterUSB.Add(pathAddress, printers);
         }
 
@@ -409,7 +411,16 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 string error = "";
                 for (int i = 0; i < num; i++)
                 {
+                    try
+                    {
+
                     success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
+                    }
+                    catch
+                    {
+                        li.Add("error");
+                        li.Add("打印不成功！");
+                    }
                     Marshal.FreeHGlobal(memblock);
                     WDevDllMethod.dllFunc_CloseLog(po.pHandle);
                     if (!success)

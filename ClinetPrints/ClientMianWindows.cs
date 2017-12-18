@@ -1025,20 +1025,20 @@ namespace ClinetPrints
                     {
                         Thread threadPrint = new Thread((printObject =>
                     {
-                        var printOb = printObject as object[];
-                        var printer = printOb[0] as PrinterObjects;
-                        var liItems = printOb[1] as List<string>[];
-                        var method = printer.MethodsObject as IMethodObjects;
-                        List<string> li = new List<string>();
-                        for (int i = 0; i < liItems.Length; i++)
+                    var printOb = printObject as object[];
+                    var printer = printOb[0] as PrinterObjects;
+                    var liItems = printOb[1] as List<string>[];
+                    var method = printer.MethodsObject as IMethodObjects;
+                    List<string> li = new List<string>();
+                    for (int i = 0; i < liItems.Length; i++)
+                    {
+                        List<string> succese = method.writeDataToDev(liItems[i][1], printer, liItems[i][0], Int32.Parse(LiItems[i][2]));
+                        if (succese[0].Equals("error"))
                         {
-                            List<string> succese = method.writeDataToDev(liItems[i][1], printer, liItems[i][0], Int32.Parse(LiItems[i][2]));
-                            if (succese[0].Equals("error"))
-                            {
-                                li.Add(succese[1]);
-                                break;
-                            }
+                            li.Add(succese[1]);
+                            break;
                         }
+                    }
                         if (li.Count > 0)
                         {
                             MessageBox.Show("打印失败！" + li[0]);
@@ -1046,19 +1046,24 @@ namespace ClinetPrints
                         else
                         {
                             Thread.Sleep(3000);
-                            string jsonState = (printer.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printer.pHandle, new byte[] { 0x30 });
-                            var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
-                            printer.stateCode = keyState.stateCode;
-                            printer.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                            printer.state = keyState.majorState;
-                            if (printer.stateCode == 6)
+                            this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
                             {
-                                MessageBox.Show("打印失败！有异常：" + printer.stateMessage);
-                            }
-                            else
-                            {
-                                MessageBox.Show(printer.alias + ":打印成功！");
-                            }
+                                string jsonState = (printer.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printer.pHandle, new byte[] { 0x30 });
+                                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
+                                printer.stateCode = keyState.stateCode;
+                                printer.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
+                                printer.state = keyState.majorState;
+                                if (printer.stateCode == 6)
+                                {
+                                    MessageBox.Show("打印失败！有异常：" + printer.stateMessage);
+                                }
+                                else
+                                {
+                                    MessageBox.Show(printer.alias + ":打印成功！");
+                                }
+
+
+                            }));
                         }
                     }));
 
@@ -1144,10 +1149,11 @@ namespace ClinetPrints
             if (listView1.SelectedItems.Count > 0)
             {
                 printPiewForm pf = new printPiewForm();
-                pf.page = (listView1.Columns[4] as listViewColumnTNode).liPrinter[0].pParams.maxWidth+"*"+(listView1.Columns[4] as listViewColumnTNode).liPrinter[0].pParams.maxHeight;
+                var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter[0];
                 pf.fileAddress = listView1.SelectedItems[0].SubItems[2].Text;
                 pf.jobNum = listView1.SelectedItems[0].SubItems[1].Text;
                 pf.num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
+                pf.po = po;
                 pf.Show();
             }
             else

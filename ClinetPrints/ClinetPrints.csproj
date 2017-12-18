@@ -78,6 +78,9 @@
     <Compile Include="CreatContorl\dataGrieViewControl1.Designer.cs">
       <DependentUpon>dataGrieViewControl1.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreatContorl\PanControlWheel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CreatContorl\printPiewControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -258,7 +261,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="printerNewImage\" />
     <Folder Include="printerXml\" />
     <Folder Include="Resources\" />
   </ItemGroup>
@@ -267,7 +269,7 @@
     <PreBuildEvent>if not exist "$(TargetDir)IocOrImage" xcopy /S /I /Y "$(ProjectDir)IocOrImage" "$(ProjectDir)$(OutDir)IocOrImage"
 if not exist "$(TargetDir)printerXml" xcopy /S /I /Y "$(ProjectDir)printerXml" "$(ProjectDir)$(OutDir)printerXml"
 xcopy /S /I /Y "$(ProjectDir)SansDLL" "$(ProjectDir)$(OutDir)"
-if not exist "$(TargetDir)printerNewImage" xcopy /E /I /Y  "$(ProjectDir)printerNewImage" "$(TargetDir)printerNewImage"</PreBuildEvent>
+</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

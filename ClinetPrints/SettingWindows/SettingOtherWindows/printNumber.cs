@@ -24,7 +24,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             if (ckb_allOrSing.Checked)
             {
                 checkVal = true;
-            }else
+            }
+            else
             {
                 checkVal = false;
             }
@@ -38,6 +39,12 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             num = UpDown_num.Value.ToString();
             MessageBox.Show("设置完成！");
             this.Close();
+        }
+
+        private void printNumber_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (num == "")
+                num = "1";
         }
     }
 }
