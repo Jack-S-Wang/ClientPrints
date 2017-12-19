@@ -54,7 +54,7 @@ namespace ClinetPrints.CreatContorl
                         }
                     }
                     this.cmb_page.SelectedIndex = 0;
-                    this.cmb_printWipe.SelectedIndex = 0;
+                    this.cmb_printWipe.SelectedIndex = 1;
                     file.Flush();
                     file.Dispose();
                     file.Close();
@@ -75,7 +75,7 @@ namespace ClinetPrints.CreatContorl
                     Bitmap map = new Bitmap(value);
                     oldmap = new Bitmap(map, new Size((int)(map.Width * 0.8), (int)(map.Height * 0.8)));
                     this.ptb_page.Image = oldmap;
-
+                    imageScale = 0.8;
                 }
                 _fileAddress = value;
             }
@@ -135,14 +135,21 @@ namespace ClinetPrints.CreatContorl
         {
             ToolTip tool = new ToolTip();
             tool.SetToolTip(this.txb_customPage, "格式是500x600或500*600，其他格式将会出问题！");
-            this.toolCob_Intgaiting.SelectedIndex = 0;
+            this.toolCob_Intgaiting.SelectedIndex = 5;
             ptb_page.MouseWheel += Ptb_page_MouseWheel;
         }
-
+        /// <summary>
+        /// 鼠标滚动是否响应响应，有些契合度选择之后不响应
+        /// </summary>
+        [Browsable(false)]
+        private bool wheelEnabled = true;
         private void Ptb_page_MouseWheel(object sender, MouseEventArgs e)
         {
-            imageScale *= e.Delta > 0 ? 1.25 : 0.8;
-            ReDraw(imageX, imageY, imageScale);
+            if (wheelEnabled)
+            {
+                imageScale *= e.Delta > 0 ? 1.25 : 0.8;
+                ReDraw(imageX, imageY, imageScale);
+            }
         }
 
         private void cmb_page_KeyPress(object sender, KeyPressEventArgs e)
@@ -210,7 +217,6 @@ namespace ClinetPrints.CreatContorl
                 }
                 else
                 {
-
                     this.cmb_page.SelectedText = "";
                 }
                 var filePath = Path.Combine(
@@ -246,7 +252,127 @@ namespace ClinetPrints.CreatContorl
 
         private void toolCob_Intgaiting_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int min = 0;
+            int max = 0;
+            Bitmap bmap = new Bitmap(ptb_page.Width, ptb_page.Height);
+            switch (toolCob_Intgaiting.SelectedIndex)
+            {
+                case 0:
 
+                    if (oldmap.Width > oldmap.Height)
+                    {
+                        min = oldmap.Height;
+                    }
+                    else
+                    {
+                        min = oldmap.Width;
+                    }
+                    if (ptb_page.Width > ptb_page.Height)
+                    {
+                        imageScale = ((double)ptb_page.Width / (double)min);
+                        imageX = 0; imageY = 0;
+                        ReDraw(imageX, imageY, imageScale);
+
+                    }
+                    else
+                    {
+                        imageX = 0; imageY = 0;
+                        imageScale = ((double)ptb_page.Height / (double)min);
+                        ReDraw(imageX, imageY, imageScale);
+                    }
+                    wheelEnabled = true;
+                    break;
+                case 1:
+                    if (oldmap.Width > oldmap.Height)
+                    {
+                        max = oldmap.Width;
+                    }
+                    else
+                    {
+                        max = oldmap.Height;
+                    }
+                    if (ptb_page.Width > ptb_page.Height)
+                    {
+                        imageScale = ((double)ptb_page.Height / (double)max);
+                        imageX = 0; imageY = 0;
+                        ReDraw(imageX, imageY, imageScale);
+
+                    }
+                    else
+                    {
+                        imageX = 0; imageY = 0;
+                        imageScale = ((double)ptb_page.Width / (double)max);
+                        ReDraw(imageX, imageY, imageScale);
+                    }
+                    wheelEnabled = true;
+                    break;
+                case 2:
+                    Graphics g = Graphics.FromImage(bmap);
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.DrawImage(oldmap,
+                        new Rectangle(
+                            0,
+                            0,
+                            (int)(ptb_page.Width),
+                            (int)(ptb_page.Height)),
+                        new Rectangle(0, 0, oldmap.Width, oldmap.Height),
+                        GraphicsUnit.Pixel);
+                    g.Dispose();
+                    ptb_page.Image = bmap;
+                    wheelEnabled = false;
+                    break;
+                case 3:
+                    int wscale = (ptb_page.Width % oldmap.Width) == 0 ? (ptb_page.Width / oldmap.Width) : (ptb_page.Width / oldmap.Width) + 1;
+                    int hscale = (ptb_page.Height % oldmap.Height) == 0 ? (ptb_page.Height / oldmap.Height) : (ptb_page.Height / oldmap.Height) + 1;
+                    for (int i = 0; i <wscale; ++i)
+                    {
+                        for(int j = 0; j < hscale; ++j)
+                        {
+                            Graphics g1 = Graphics.FromImage(bmap);
+                            g1.SmoothingMode = SmoothingMode.HighQuality;
+                            g1.CompositingQuality = CompositingQuality.HighQuality;
+                            g1.DrawImage(oldmap,
+                                new Rectangle(
+                                    i*oldmap.Width,
+                                    j*oldmap.Height,
+                                    (int)(oldmap.Width),
+                                    (int)(oldmap.Height)),
+                                new Rectangle(0, 0, oldmap.Width, oldmap.Height),
+                                GraphicsUnit.Pixel);
+                            g1.Dispose();
+                        }
+                    }
+                    ptb_page.Image = bmap;
+                    wheelEnabled = false;
+                    break;
+                case 4:
+                    imageX = ptb_page.Width/2-oldmap.Width/2;
+                    imageY = ptb_page.Height/2-oldmap.Height/2;
+                    imageScale = 0.8;
+                    Graphics g2 = Graphics.FromImage(bmap);
+                    g2.SmoothingMode = SmoothingMode.HighQuality;
+                    g2.CompositingQuality = CompositingQuality.HighQuality;
+                    g2.DrawImage(oldmap,
+                        new Rectangle(
+                            imageX,
+                            imageY,
+                            (int)(oldmap.Width),
+                            (int)(oldmap.Height)),
+                        new Rectangle(0, 0, oldmap.Width, oldmap.Height),
+                        GraphicsUnit.Pixel);
+                    g2.Dispose();
+                    ptb_page.Image = bmap;
+                    wheelEnabled = true;
+                    break;
+                case 5:
+                    ptb_page.Image = oldmap;
+                    imageX = 0;
+                    imageY = 0;
+                    imageScale = 0.8;
+                    wheelEnabled = true;
+                    break;
+            }
         }
         [Browsable(false)]
         private Point clickPiont;
@@ -317,7 +443,7 @@ namespace ClinetPrints.CreatContorl
         {
             FolderBrowserDialog folderB = new FolderBrowserDialog();
             folderB.ShowDialog();
-            var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".png";
+            var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp";
             Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
             Graphics g = Graphics.FromImage(bmap);
             g.SmoothingMode = SmoothingMode.HighQuality;
@@ -356,7 +482,7 @@ namespace ClinetPrints.CreatContorl
                 height = ((height / 10) / 2.54) * 300;
                 int nwidth = nNum(width);
                 int nheight = nNum(height);
-                if(nwidth>_prinerObject.pParams.maxWidth || nheight > _prinerObject.pParams.maxHeight)
+                if (nwidth > _prinerObject.pParams.maxWidth || nheight > _prinerObject.pParams.maxHeight)
                 {
                     MessageBox.Show("现在所设计的尺寸大小与实际设备的尺寸要大，不能打印！");
                     return;
@@ -370,16 +496,22 @@ namespace ClinetPrints.CreatContorl
         {
             if (PrinterObject != null)
             {
+                if(PrinterObject.stateCode==4 || PrinterObject.stateCode==5 || PrinterObject.stateCode == 6)
+                {
+                    MessageBox.Show("打印机："+PrinterObject.alias+"状态不正常，不能打印！");
+                    return;
+                }
                 var filePath = Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
               "ClinetPrints",
-              DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".png");
+              DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
                 var method = PrinterObject.MethodsObject as IMethodObjects;
                 PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
                 Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
                 Graphics g = Graphics.FromImage(bmap);
                 g.SmoothingMode = SmoothingMode.HighQuality;
                 g.CompositingQuality = CompositingQuality.HighQuality;
+                g.FillRectangle(Brushes.White, new Rectangle(0, 0, bmap.Width, bmap.Height));
                 g.DrawImage(ptb_page.Image,
                     new Rectangle(
                         0,
@@ -390,17 +522,20 @@ namespace ClinetPrints.CreatContorl
                     GraphicsUnit.Pixel);
                 g.Dispose();
                 bmap.Save(filePath);
-                List<string> succese=method.writeDataToDev(filePath, PrinterObject, jobNum, num);
+                List<string> succese = method.writeDataToDev(filePath, PrinterObject, jobNum, num);
                 if (succese[0] == "error")
                 {
-                    MessageBox.Show("打印失败！"+succese[1]);
+                    MessageBox.Show("打印失败！" + succese[1]);
                     return;
-                }else
+                }
+                else
                 {
-                    //if (File.Exists(filePath))
-                    //{
-                    //    File.Delete(filePath);
-                    //}
+                    MessageBox.Show("打印成功，将删除原来的作业任务!");
+                }
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
                 }
 
             }
@@ -424,7 +559,7 @@ namespace ClinetPrints.CreatContorl
                     height = double.Parse(p.Substring(p.IndexOf('*') + 1));
                 }
                 width = ((width / 10) / 2.54) * 300;
-                height =((height / 10) / 2.54) * 300;
+                height = ((height / 10) / 2.54) * 300;
                 int nwidth = nNum(width);
                 int nheight = nNum(height);
                 page = nwidth + "*" + nheight;
@@ -440,7 +575,8 @@ namespace ClinetPrints.CreatContorl
             if (num - (int)num >= 0.5)
             {
                 return (int)num + 1;
-            }else
+            }
+            else
             {
                 return (int)num;
             }

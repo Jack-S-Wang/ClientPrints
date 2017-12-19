@@ -65,9 +65,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txb_getFile = new System.Windows.Forms.TextBox();
+            this.btn_getFile = new System.Windows.Forms.Button();
+            this.btn_up = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -82,6 +89,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Controls.Add(this.txb_commandText);
             this.groupBox2.Controls.Add(this.btn_sure);
             this.groupBox2.Controls.Add(this.cmb_command);
@@ -96,10 +104,10 @@
             // 
             // txb_commandText
             // 
-            this.txb_commandText.Location = new System.Drawing.Point(15, 222);
+            this.txb_commandText.Location = new System.Drawing.Point(18, 502);
             this.txb_commandText.Multiline = true;
             this.txb_commandText.Name = "txb_commandText";
-            this.txb_commandText.Size = new System.Drawing.Size(236, 388);
+            this.txb_commandText.Size = new System.Drawing.Size(236, 116);
             this.txb_commandText.TabIndex = 3;
             this.txb_commandText.TextChanged += new System.EventHandler(this.txb_commandText_TextChanged);
             // 
@@ -438,6 +446,58 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "运行状态：";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.progressBar1);
+            this.groupBox3.Controls.Add(this.btn_up);
+            this.groupBox3.Controls.Add(this.btn_getFile);
+            this.groupBox3.Controls.Add(this.txb_getFile);
+            this.groupBox3.Location = new System.Drawing.Point(18, 217);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(233, 268);
+            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "固件升级";
+            // 
+            // txb_getFile
+            // 
+            this.txb_getFile.Location = new System.Drawing.Point(22, 53);
+            this.txb_getFile.Name = "txb_getFile";
+            this.txb_getFile.Size = new System.Drawing.Size(194, 21);
+            this.txb_getFile.TabIndex = 1;
+            // 
+            // btn_getFile
+            // 
+            this.btn_getFile.Location = new System.Drawing.Point(141, 91);
+            this.btn_getFile.Name = "btn_getFile";
+            this.btn_getFile.Size = new System.Drawing.Size(75, 23);
+            this.btn_getFile.TabIndex = 2;
+            this.btn_getFile.Text = "选择文件";
+            this.btn_getFile.UseVisualStyleBackColor = true;
+            this.btn_getFile.Click += new System.EventHandler(this.btn_getFile_Click);
+            // 
+            // btn_up
+            // 
+            this.btn_up.Location = new System.Drawing.Point(141, 131);
+            this.btn_up.Name = "btn_up";
+            this.btn_up.Size = new System.Drawing.Size(75, 23);
+            this.btn_up.TabIndex = 3;
+            this.btn_up.Text = "升级";
+            this.btn_up.UseVisualStyleBackColor = true;
+            this.btn_up.Click += new System.EventHandler(this.btn_up_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(6, 176);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(221, 23);
+            this.progressBar1.Step = 1;
+            this.progressBar1.TabIndex = 4;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // monitorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -453,6 +513,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -496,5 +558,11 @@
         private System.Windows.Forms.Button btn_sure;
         private System.Windows.Forms.ComboBox cmb_command;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button btn_up;
+        private System.Windows.Forms.Button btn_getFile;
+        private System.Windows.Forms.TextBox txb_getFile;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

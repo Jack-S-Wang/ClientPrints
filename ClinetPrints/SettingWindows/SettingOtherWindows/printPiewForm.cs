@@ -18,22 +18,24 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         {
             InitializeComponent();
         }
+        public bool printTo=false;
         public string fileAddress = "";
         public string jobNum = "1";
         public int num = 1;
-        public PrinterObjects po;
+        public PrinterObjects lipo;
         private void printPiewForm_Load(object sender, EventArgs e)
         {
             printPiewControl1.fileAddress = fileAddress;
             printPiewControl1.jobNum = jobNum;
             printPiewControl1.num = num;
-            printPiewControl1.PrinterObject = po;
+            printPiewControl1.PrinterObject = lipo;
             printPiewControl1.OnBtnClose += PrintPiewControl1_OnBtnClose;
             printPiewControl1.onBtnPrint += PrintPiewControl1_onBtnPrint;
         }
 
         private void PrintPiewControl1_onBtnPrint(EventArgs obj)
         {
+            printTo = true;
             this.Close();
         }
 

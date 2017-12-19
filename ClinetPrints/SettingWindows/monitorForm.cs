@@ -12,9 +12,14 @@ using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
+using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using static ClientPrsintsMethodList.ClientPrints.Method.WDevDll.structClassDll;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace ClinetPrints.SettingWindows
 {
+    
     public partial class monitorForm : Form
     {
         public monitorForm()
@@ -58,17 +63,22 @@ namespace ClinetPrints.SettingWindows
             }
 
         }
+        private bool readS = true;
         private void readDevState()
         {
+            if (!readS)
+            {
+                return;
+            }
             if (printerObject.model.Contains("DC-1300"))
             {
                 var method = printerObject.MethodsObject as IMethodObjects;
                 //系统状态
                 var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
-                if (stateStr == "false")
+                if (stateStr == "false" || stateStr=="")
                 {
                     MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    this.Close();
+                    return;
                 }
                 var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
                 if (stateType != keyState.stateCode)
@@ -85,7 +95,7 @@ namespace ClinetPrints.SettingWindows
                 if (dataPorcessStr == "false")
                 {
                     MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    this.Close();
+                    return;
                 }
                 var dataPor = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataState>(dataPorcessStr);
                 if (dataStateType != dataPor.stateCode)
@@ -110,7 +120,7 @@ namespace ClinetPrints.SettingWindows
                 if (printOutPut == "false")
                 {
                     MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    this.Close();
+                    return;
                 }
                 var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
                 if (printStateType != printOut.stateCode)
@@ -142,7 +152,7 @@ namespace ClinetPrints.SettingWindows
                 if (printInfo == "false")
                 {
                     MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    this.Close();
+                    return;
                 }
                 var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
                 if (!txb_cache.Text.Contains(printInfoJson.InCache.ToString()))
@@ -196,6 +206,62 @@ namespace ClinetPrints.SettingWindows
         private void monitorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             ative = false;
+        }
+        
+        private void btn_getFile_Click(object sender, EventArgs e)
+        {
+            this.openFileDialog1.ShowDialog();
+            this.txb_getFile.Text = this.openFileDialog1.FileName;
+        }
+      
+        private void btn_up_Click(object sender, EventArgs e)
+        {
+            if (this.txb_getFile.Text != "")
+            {
+                readS = false;
+                if (WDevDllMethod.dllFunc_OpenDfu(printerObject.pHandle, txb_getFile.Text, this.Handle))
+                {
+                    txb_commandText.AppendText("已加载固件文件！监控已关闭！");
+                    uint tages = 0x01;
+                    WDevDllMethod.dllFunc_DFUStart(printerObject.pHandle, tages);
+                    txb_commandText.AppendText("正在更新固件！");
+                }
+            }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            try
+            {
+                if (m.Msg == WDevCmdObjects.MSG_WDFU_ERRCODE)
+                {
+                    // 动态库固件更新进度通知。
+
+                    // TODO : 触发进度更新事件。
+                    int w = m.WParam.ToInt32();
+                    if (w >= WDevCmdObjects.MSG_WDFU_PROGRESS_BEGIN)
+                    {
+                        int progressPercent = w - WDevCmdObjects.MSG_WDFU_PROGRESS_BEGIN;
+                        progressBar1.Value = progressPercent;
+                        if (m.WParam.ToInt32() == WDevCmdObjects.MSG_WDFU_PROGRESS_END)
+                        {
+                            // TODO : 触发固件完成事件。
+                            WDevDllMethod.dllFunc_CloseDfu(printerObject.pHandle);
+                            MessageBox.Show("固件升级成功，将主动关闭界面！");
+                            this.Close();
+                        }
+                    }
+
+                }
+                else
+                {
+                    base.WndProc(ref m);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

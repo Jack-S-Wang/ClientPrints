@@ -414,27 +414,28 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     try
                     {
 
-                    success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
+                        success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
                     }
                     catch
                     {
                         li.Add("error");
                         li.Add("打印不成功！");
                     }
-                    Marshal.FreeHGlobal(memblock);
-                    WDevDllMethod.dllFunc_CloseLog(po.pHandle);
                     if (!success)
                     {
                         error = "已打印了" + i + "张：打印已经出现问题，无法继续打印！";
                         break;
                     }
                 }
+                Marshal.FreeHGlobal(memblock);
+                WDevDllMethod.dllFunc_CloseLog(po.pHandle);
                 if (!success)
                 {
                     li.Add("error");
                     li.Add(error);
                     return li;
-                }else
+                }
+                else
                 {
                     li.Add("Ok");
                     li.Add("工作号：" + jobnum);
@@ -449,6 +450,6 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             }
         }
 
-        
+
     }
 }

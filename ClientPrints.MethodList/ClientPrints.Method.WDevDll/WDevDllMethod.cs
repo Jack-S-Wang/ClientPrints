@@ -145,7 +145,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// </summary>
         /// <param name="phandle">由dllFunc_OpenDev返回的设备端口句柄</param>
         /// <param name="filePath">固件的文件路径</param>
-        /// <param name="hWnd">接收固件更新消息的窗口句柄</param>
+        /// <param name="hWnd">接收固件更新消息的窗口句柄(当前窗体的句柄值)</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>必须打开设备的控制端口</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
@@ -174,12 +174,10 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// </summary>
         /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
         /// <param name="tags">标识</param>
-        /// <param name="fwInfo">固件信息</param>
-        /// <param name="getMode">TRUE表示从固件中获取，FALSE表示设置</param>
         /// <returns>成功则TRUE,否则FALSE</returns>
         /// <remarks>tags可按或(or)设置，包括 DFU_TAG_RESTART 表示更新后需启动设备</remarks>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
-        public static extern bool dllFunc_DFUStart(IntPtr pHandle, uint tags, [In, Out] ref structClassDll.DFU_FWINFO fwInfo, bool getMode);
+        public static extern bool dllFunc_DFUStart(IntPtr pHandle, uint tags);
 
         /// <summary>
         /// 加载设备配置的格式信息

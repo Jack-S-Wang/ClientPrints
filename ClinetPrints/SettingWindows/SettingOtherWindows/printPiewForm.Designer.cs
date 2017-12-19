@@ -40,7 +40,7 @@
             this.printPiewControl1.Name = "printPiewControl1";
             this.printPiewControl1.page = "";
             this.printPiewControl1.PrinterObject = null;
-            this.printPiewControl1.Size = new System.Drawing.Size(1165, 603);
+            this.printPiewControl1.Size = new System.Drawing.Size(1173, 603);
             this.printPiewControl1.TabIndex = 0;
             // 
             // printPiewForm
@@ -48,11 +48,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1165, 603);
+            this.ClientSize = new System.Drawing.Size(1173, 603);
             this.Controls.Add(this.printPiewControl1);
             this.Name = "printPiewForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "打印预览";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.printPiewForm_Load);
             this.ResumeLayout(false);
 

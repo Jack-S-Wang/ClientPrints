@@ -33,6 +33,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.cmb_printWipe = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_custom = new System.Windows.Forms.Button();
@@ -51,7 +52,6 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolBtn_reMap = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
-            this.label4 = new System.Windows.Forms.Label();
             this.panControlWheel1 = new ClinetPrints.CreatContorl.PanControlWheel();
             this.ptb_page = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
@@ -111,6 +111,15 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "选择纸张大小";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(143, 199);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 12);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "毫米";
             // 
             // cmb_printWipe
             // 
@@ -214,6 +223,7 @@
             this.toolBtn_print.Name = "toolBtn_print";
             this.toolBtn_print.Size = new System.Drawing.Size(23, 47);
             this.toolBtn_print.Text = "打印";
+            this.toolBtn_print.ToolTipText = "按修改后的样子进行直接打印";
             this.toolBtn_print.Click += new System.EventHandler(this.toolBtn_print_Click);
             // 
             // toolBtn_save
@@ -265,7 +275,8 @@
             "适应",
             "拉伸",
             "平铺",
-            "居中"});
+            "居中",
+            "正常"});
             this.toolCob_Intgaiting.Name = "toolCob_Intgaiting";
             this.toolCob_Intgaiting.Size = new System.Drawing.Size(121, 50);
             this.toolCob_Intgaiting.SelectedIndexChanged += new System.EventHandler(this.toolCob_Intgaiting_SelectedIndexChanged);
@@ -296,15 +307,6 @@
             this.toolBtn_close.Text = "退出";
             this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(143, 199);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 12);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "毫米";
-            // 
             // panControlWheel1
             // 
             this.panControlWheel1.AutoScroll = true;
@@ -317,7 +319,7 @@
             // 
             // ptb_page
             // 
-            this.ptb_page.BackColor = System.Drawing.Color.White;
+            this.ptb_page.BackColor = System.Drawing.SystemColors.Window;
             this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ptb_page.Location = new System.Drawing.Point(4, 2);
             this.ptb_page.Name = "ptb_page";

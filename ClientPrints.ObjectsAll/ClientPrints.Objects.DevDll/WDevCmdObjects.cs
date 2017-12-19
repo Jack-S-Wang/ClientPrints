@@ -256,5 +256,12 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         public const int DBT_USERDEFINED = 0xFFFF;
         #endregion
 
+
+        #region......//更新固件
+        public const int WM_USER = 0X0400;
+        public const int MSG_WDFU_ERRCODE = (WM_USER + 0x100);
+        public const int MSG_WDFU_PROGRESS_BEGIN = 0x20000;
+        public const int MSG_WDFU_PROGRESS_END = 0x20064;
+        #endregion
     }
 }
