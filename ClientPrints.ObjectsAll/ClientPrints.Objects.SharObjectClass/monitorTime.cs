@@ -10,5 +10,6 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         public string time { get; set; }
         public string Sdate { get; set; }
         public string Edate { get; set; }
+        public bool checkedStart { get; set; }
     }
 }

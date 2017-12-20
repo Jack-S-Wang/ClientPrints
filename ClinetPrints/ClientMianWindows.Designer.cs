@@ -118,8 +118,8 @@
             // 设置查询时间ToolStripMenuItem
             // 
             this.设置查询时间ToolStripMenuItem.Name = "设置查询时间ToolStripMenuItem";
-            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(92, 21);
-            this.设置查询时间ToolStripMenuItem.Text = "设置查询时间";
+            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.设置查询时间ToolStripMenuItem.Text = "设置";
             this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
             // 
             // pan_mainWin1_tree
@@ -275,7 +275,7 @@
             // toolStBtn_add
             // 
             this.toolStBtn_add.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_add.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_add.Image")));
+            this.toolStBtn_add.Image = global::ClinetPrints.Properties.Resources.Add;
             this.toolStBtn_add.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_add.Name = "toolStBtn_add";
             this.toolStBtn_add.Size = new System.Drawing.Size(23, 22);
@@ -286,7 +286,7 @@
             // toolStBtn_delete
             // 
             this.toolStBtn_delete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_delete.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_delete.Image")));
+            this.toolStBtn_delete.Image = global::ClinetPrints.Properties.Resources.Delete;
             this.toolStBtn_delete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_delete.Name = "toolStBtn_delete";
             this.toolStBtn_delete.Size = new System.Drawing.Size(23, 22);
@@ -297,7 +297,7 @@
             // toolStbtn_moveUp
             // 
             this.toolStbtn_moveUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStbtn_moveUp.Image = ((System.Drawing.Image)(resources.GetObject("toolStbtn_moveUp.Image")));
+            this.toolStbtn_moveUp.Image = global::ClinetPrints.Properties.Resources.ooopic_1502413412;
             this.toolStbtn_moveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStbtn_moveUp.Name = "toolStbtn_moveUp";
             this.toolStbtn_moveUp.Size = new System.Drawing.Size(23, 22);
@@ -308,7 +308,7 @@
             // toolStBtn_moveNext
             // 
             this.toolStBtn_moveNext.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_moveNext.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_moveNext.Image")));
+            this.toolStBtn_moveNext.Image = global::ClinetPrints.Properties.Resources.down;
             this.toolStBtn_moveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_moveNext.Name = "toolStBtn_moveNext";
             this.toolStBtn_moveNext.Size = new System.Drawing.Size(23, 22);
@@ -319,7 +319,7 @@
             // toolStBtn_monitor
             // 
             this.toolStBtn_monitor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_monitor.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_monitor.Image")));
+            this.toolStBtn_monitor.Image = global::ClinetPrints.Properties.Resources.Modify;
             this.toolStBtn_monitor.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_monitor.Name = "toolStBtn_monitor";
             this.toolStBtn_monitor.Size = new System.Drawing.Size(23, 22);
@@ -336,7 +336,7 @@
             // toolStBtn_print
             // 
             this.toolStBtn_print.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_print.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_print.Image")));
+            this.toolStBtn_print.Image = global::ClinetPrints.Properties.Resources.Print;
             this.toolStBtn_print.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_print.Name = "toolStBtn_print";
             this.toolStBtn_print.Size = new System.Drawing.Size(23, 22);
@@ -346,7 +346,7 @@
             // toolStBtn_printPerview
             // 
             this.toolStBtn_printPerview.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_printPerview.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_printPerview.Image")));
+            this.toolStBtn_printPerview.Image = global::ClinetPrints.Properties.Resources.s16;
             this.toolStBtn_printPerview.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_printPerview.Name = "toolStBtn_printPerview";
             this.toolStBtn_printPerview.Size = new System.Drawing.Size(23, 22);
@@ -356,7 +356,7 @@
             // toolStBtn_parmSet
             // 
             this.toolStBtn_parmSet.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_parmSet.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_parmSet.Image")));
+            this.toolStBtn_parmSet.Image = global::ClinetPrints.Properties.Resources.scroll;
             this.toolStBtn_parmSet.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_parmSet.Name = "toolStBtn_parmSet";
             this.toolStBtn_parmSet.Size = new System.Drawing.Size(23, 22);
@@ -439,14 +439,14 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ToolStripButton toolStBtn_monitor;
-        private System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
-        private System.Windows.Forms.ImageList imageSubItems;
         private System.Windows.Forms.ToolStripButton toolStBtn_print;
         private System.Windows.Forms.ToolStripButton toolStBtn_printPerview;
         private System.Windows.Forms.ToolStripButton toolStBtn_parmSet;
         public System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ToolStripMenuItem 设置查询时间ToolStripMenuItem;
+        public System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
+        public System.Windows.Forms.ImageList imageSubItems;
     }
 }
 

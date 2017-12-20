@@ -256,7 +256,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// </summary>
             public uint datLen;			//数据长度
             /// <summary>
-            /// 
+            /// 返回的数据长度
             /// </summary>
             public uint datIdx;
             /// <summary>

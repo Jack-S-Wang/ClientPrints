@@ -54,7 +54,7 @@ namespace ClinetPrints.CreatContorl
                         }
                     }
                     this.cmb_page.SelectedIndex = 0;
-                    this.cmb_printWipe.SelectedIndex = 1;
+                    //this.cmb_printWipe.SelectedIndex = 1;
                     file.Flush();
                     file.Dispose();
                     file.Close();
@@ -506,7 +506,7 @@ namespace ClinetPrints.CreatContorl
               "ClinetPrints",
               DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
                 var method = PrinterObject.MethodsObject as IMethodObjects;
-                PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
+                //PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
                 Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
                 Graphics g = Graphics.FromImage(bmap);
                 g.SmoothingMode = SmoothingMode.HighQuality;

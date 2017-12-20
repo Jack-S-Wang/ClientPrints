@@ -2,6 +2,7 @@
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClinetPrints.CreatContorl;
@@ -112,7 +113,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     byte[] setData = new byte[11];
                     Array.Copy(data, 6, setData, 0, 11);
                     printerObject.pParams.DevParm = setData;
-                }else
+                }
+                else
                 {
                     MessageBox.Show("设备可能已经离线！");
                 }
@@ -120,75 +122,85 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
             catch (Exception ex)
             {
+                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
                 MessageBox.Show(ex.Message);
             }
         }
 
         private void parmSetting_Load(object sender, EventArgs e)
         {
-            if (printerObject != null)
+            try
             {
-                byte[] data = printerObject.pParams.DevParm;
-                cmb_wipeType.SelectedIndex = data[0];
-                cmb_cardType.SelectedIndex = data[1];
-                cmb_inCardWay.SelectedIndex = data[2];
-                cmb_outCardWay.SelectedIndex = data[3];
-                cmb_printTemperature.SelectedIndex = data[4];
-                cmb_printContrast.SelectedIndex = data[5];
-                cmb_printSheep.SelectedIndex = data[6];
-                cmb_grayTemperature.SelectedIndex = data[7];
-                cmb_wipeSheep.SelectedIndex = data[8];
-                cmb_wipeTemperatuer.SelectedIndex = data[9];
-                cmb_printModel.SelectedIndex = data[10];
-                bool cfg = WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
-                if (cfg)
+                if (printerObject != null)
                 {
-                    UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
-                    this.dataGrieViewControl11.handers = headerColls;
-                    List<CfgDataObjects> liob = new List<CfgDataObjects>();
-                    char[] buf = new char[512];
-                    ushort cnt = 512;
-                    for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++, cnt = 512)
+                    byte[] data = printerObject.pParams.DevParm;
+                    cmb_wipeType.SelectedIndex = data[0];
+                    cmb_cardType.SelectedIndex = data[1];
+                    cmb_inCardWay.SelectedIndex = data[2];
+                    cmb_outCardWay.SelectedIndex = data[3];
+                    cmb_printTemperature.SelectedIndex = data[4];
+                    cmb_printContrast.SelectedIndex = data[5];
+                    cmb_printSheep.SelectedIndex = data[6];
+                    cmb_grayTemperature.SelectedIndex = data[7];
+                    cmb_wipeSheep.SelectedIndex = data[8];
+                    cmb_wipeTemperatuer.SelectedIndex = data[9];
+                    cmb_printModel.SelectedIndex = data[10];
+                    bool cfg = WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
+                    if (cfg)
                     {
-                        string str = new string(buf).Replace('\0', ' ').TrimEnd();
-                        string name = str.Substring(5, str.Substring(0, str.IndexOf(',')).Length - 5);
-                        buf = new char[512];
-                        cnt = 512;
-                        bool fg = WDevDllMethod.dllFunc_GetVal(printerObject.pHandle, name, buf, ref cnt, WDevCmdObjects.DEVCFG_VAL_INFO, 0);
-                        if (fg)
+                        UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
+                        this.dataGrieViewControl11.handers = headerColls;
+                        List<CfgDataObjects> liob = new List<CfgDataObjects>();
+                        char[] buf = new char[512];
+                        ushort cnt = 512;
+                        for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++, cnt = 512)
                         {
-                            string val = new string(buf).Replace('\0', ' ').TrimEnd();
-                            var dataCfg = new CfgDataObjects(str, val);
-                            liob.Add(dataCfg);
-                        }
-                    }
-                    UserItems items = new UserItems(this.dataGrieViewControl11);
-                    foreach (var keyco in liob)
-                    {
-                        if (keyco.type == 3)
-                        {
-                            UserSubControl usersub = new UserSubControl(keyco.Name, false);
-                            ComboBox box = new ComboBox();
-                            for (int i = 0; i < keyco.typeCount; i++)
+                            string str = new string(buf).Replace('\0', ' ').TrimEnd();
+                            string name = str.Substring(5, str.Substring(0, str.IndexOf(',')).Length - 5);
+                            buf = new char[512];
+                            cnt = 512;
+                            bool fg = WDevDllMethod.dllFunc_GetVal(printerObject.pHandle, name, buf, ref cnt, WDevCmdObjects.DEVCFG_VAL_INFO, 0);
+                            if (fg)
                             {
-                                box.Items.Add(keyco.liValues[i]);
+                                string val = new string(buf).Replace('\0', ' ').TrimEnd();
+                                var dataCfg = new CfgDataObjects(str, val);
+                                liob.Add(dataCfg);
                             }
-                            box.SelectedIndex = Int32.Parse(keyco.value);
-                            box.KeyPress += Box_KeyPress;
-                            UserSubControl userComb = new UserSubControl(box, true);
-                            items.Add(new UserSubControl[] { usersub, userComb });
                         }
-                        else
+                        UserItems items = new UserItems(this.dataGrieViewControl11);
+                        foreach (var keyco in liob)
                         {
-                            UserSubControl usersub = new UserSubControl(keyco.Name, false);
-                            UserSubControl usersubVal = new UserSubControl(keyco.value, true);
-                            items.Add(new UserSubControl[] { usersub, usersubVal });
+                            if (keyco.type == 3)
+                            {
+                                UserSubControl usersub = new UserSubControl(keyco.Name, false);
+                                ComboBox box = new ComboBox();
+                                for (int i = 0; i < keyco.typeCount; i++)
+                                {
+                                    box.Items.Add(keyco.liValues[i]);
+                                }
+                                box.SelectedIndex = Int32.Parse(keyco.value);
+                                box.KeyPress += Box_KeyPress;
+                                UserSubControl userComb = new UserSubControl(box, true);
+                                items.Add(new UserSubControl[] { usersub, userComb });
+                            }
+                            else
+                            {
+                                UserSubControl usersub = new UserSubControl(keyco.Name, false);
+                                UserSubControl usersubVal = new UserSubControl(keyco.value, true);
+                                items.Add(new UserSubControl[] { usersub, usersubVal });
+                            }
                         }
+                        this.dataGrieViewControl11.items = items;
                     }
-                    this.dataGrieViewControl11.items = items;
-                }
 
+                }
             }
+            catch (Exception ex)
+            {
+                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
         private void Box_KeyPress(object sender, KeyPressEventArgs e)
@@ -225,6 +237,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
             catch (Exception ex)
             {
+                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
                 MessageBox.Show(ex.Message);
                 return;
             }

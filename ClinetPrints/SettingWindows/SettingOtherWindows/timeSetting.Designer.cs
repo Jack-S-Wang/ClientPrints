@@ -39,11 +39,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txb_time = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.ckb_launch = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ckb_launch);
             this.panel1.Controls.Add(this.btn_sureTime);
             this.panel1.Controls.Add(this.dateTimePicker2);
             this.panel1.Controls.Add(this.dateTimePicker1);
@@ -61,7 +63,7 @@
             // 
             // btn_sureTime
             // 
-            this.btn_sureTime.Location = new System.Drawing.Point(115, 182);
+            this.btn_sureTime.Location = new System.Drawing.Point(33, 181);
             this.btn_sureTime.Name = "btn_sureTime";
             this.btn_sureTime.Size = new System.Drawing.Size(75, 23);
             this.btn_sureTime.TabIndex = 11;
@@ -128,7 +130,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(208, 29);
+            this.label2.Location = new System.Drawing.Point(271, 26);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 2;
@@ -136,7 +138,7 @@
             // 
             // txb_time
             // 
-            this.txb_time.Location = new System.Drawing.Point(90, 23);
+            this.txb_time.Location = new System.Drawing.Point(140, 23);
             this.txb_time.Name = "txb_time";
             this.txb_time.Size = new System.Drawing.Size(100, 21);
             this.txb_time.TabIndex = 1;
@@ -148,9 +150,19 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(19, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.Size = new System.Drawing.Size(113, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "设置时间：";
+            this.label1.Text = "设置定时查询时间：";
+            // 
+            // ckb_launch
+            // 
+            this.ckb_launch.AutoSize = true;
+            this.ckb_launch.Location = new System.Drawing.Point(156, 185);
+            this.ckb_launch.Name = "ckb_launch";
+            this.ckb_launch.Size = new System.Drawing.Size(150, 16);
+            this.ckb_launch.TabIndex = 12;
+            this.ckb_launch.Text = "是否随windows自启程序";
+            this.ckb_launch.UseVisualStyleBackColor = true;
             // 
             // timeSetting
             // 
@@ -161,7 +173,7 @@
             this.MaximizeBox = false;
             this.Name = "timeSetting";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "设置定时查询";
+            this.Text = "设置";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.timeSetting_FormClosing);
             this.Load += new System.EventHandler(this.timeSetting_Load);
             this.panel1.ResumeLayout(false);
@@ -183,5 +195,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Button btn_sureTime;
+        private System.Windows.Forms.CheckBox ckb_launch;
     }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 
 namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 {
@@ -131,6 +132,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         {
             PrinterUSBMethod pum = new PrinterUSBMethod();
             pum.getPrinterObjects();
+        }
+
+        public static void writeLog(string str)
+        {
+            WDevDllMethod.dllFunc_SetLogRecord(str, true, true, true);
         }
       
     }

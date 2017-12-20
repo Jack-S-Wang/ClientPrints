@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using System.Windows.Forms;
+using static System.Windows.Forms.ListView;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 {
@@ -85,10 +86,13 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// </summary>
         public PrinterParams pParams { get; set; }
         /// <summary>
-        /// ListView控件记录下图片列表对象内容
+        /// ListViewItems控件记录下图片列表对象内容
         /// </summary>
-        public ListView listviewObject { get; set; }
-
+        public List<ListViewItem> listviewItemObject = new List<ListViewItem>();
+        /// <summary>
+        ///  ListViewItems控件记录下图片列表对象内容
+        /// </summary>
+        public List<Image> listviewImages = new List<Image>();
 
         public int CompareTo(object obj)
         {

@@ -63,7 +63,7 @@
             // toolStBtn_back
             // 
             this.toolStBtn_back.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_back.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_back.Image")));
+            this.toolStBtn_back.Image = global::ClinetPrints.Properties.Resources.Back;
             this.toolStBtn_back.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_back.Name = "toolStBtn_back";
             this.toolStBtn_back.Size = new System.Drawing.Size(23, 22);
@@ -74,7 +74,7 @@
             // toolStBtn_next
             // 
             this.toolStBtn_next.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_next.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_next.Image")));
+            this.toolStBtn_next.Image = global::ClinetPrints.Properties.Resources.Next;
             this.toolStBtn_next.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_next.Name = "toolStBtn_next";
             this.toolStBtn_next.Size = new System.Drawing.Size(23, 22);
@@ -84,7 +84,7 @@
             // toolStBtn_Exit
             // 
             this.toolStBtn_Exit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_Exit.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_Exit.Image")));
+            this.toolStBtn_Exit.Image = global::ClinetPrints.Properties.Resources.Exit;
             this.toolStBtn_Exit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_Exit.Name = "toolStBtn_Exit";
             this.toolStBtn_Exit.Size = new System.Drawing.Size(23, 22);
@@ -94,7 +94,7 @@
             // toolStBtn_serach
             // 
             this.toolStBtn_serach.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_serach.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_serach.Image")));
+            this.toolStBtn_serach.Image = global::ClinetPrints.Properties.Resources.Search;
             this.toolStBtn_serach.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_serach.Name = "toolStBtn_serach";
             this.toolStBtn_serach.Size = new System.Drawing.Size(23, 22);
@@ -111,7 +111,7 @@
             // toolStBtn_backTop
             // 
             this.toolStBtn_backTop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_backTop.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_backTop.Image")));
+            this.toolStBtn_backTop.Image = global::ClinetPrints.Properties.Resources.ooopic_1502413412;
             this.toolStBtn_backTop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_backTop.Name = "toolStBtn_backTop";
             this.toolStBtn_backTop.Size = new System.Drawing.Size(23, 22);
@@ -122,7 +122,7 @@
             // toolStBtn_sure
             // 
             this.toolStBtn_sure.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStBtn_sure.Image = ((System.Drawing.Image)(resources.GetObject("toolStBtn_sure.Image")));
+            this.toolStBtn_sure.Image = global::ClinetPrints.Properties.Resources.Add;
             this.toolStBtn_sure.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_sure.Name = "toolStBtn_sure";
             this.toolStBtn_sure.Size = new System.Drawing.Size(23, 22);

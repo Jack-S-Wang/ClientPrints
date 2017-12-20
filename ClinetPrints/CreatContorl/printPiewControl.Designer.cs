@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(printPiewControl));
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panControlWheel1 = new ClinetPrints.CreatContorl.PanControlWheel();
+            this.ptb_page = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.cmb_printWipe = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.btn_custom = new System.Windows.Forms.Button();
             this.txb_customPage = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -52,15 +51,13 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolBtn_reMap = new System.Windows.Forms.ToolStripButton();
             this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
-            this.panControlWheel1 = new ClinetPrints.CreatContorl.PanControlWheel();
-            this.ptb_page = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panControlWheel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.panControlWheel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -85,6 +82,29 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "打印预览设置界面";
             // 
+            // panControlWheel1
+            // 
+            this.panControlWheel1.AutoScroll = true;
+            this.panControlWheel1.Controls.Add(this.ptb_page);
+            this.panControlWheel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panControlWheel1.Location = new System.Drawing.Point(277, 67);
+            this.panControlWheel1.Name = "panControlWheel1";
+            this.panControlWheel1.Size = new System.Drawing.Size(875, 587);
+            this.panControlWheel1.TabIndex = 2;
+            // 
+            // ptb_page
+            // 
+            this.ptb_page.BackColor = System.Drawing.SystemColors.Window;
+            this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptb_page.Location = new System.Drawing.Point(4, 2);
+            this.ptb_page.Name = "ptb_page";
+            this.ptb_page.Size = new System.Drawing.Size(858, 577);
+            this.ptb_page.TabIndex = 1;
+            this.ptb_page.TabStop = false;
+            this.ptb_page.WaitOnLoad = true;
+            this.ptb_page.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseDown);
+            this.ptb_page.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseUp);
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.groupBox2);
@@ -97,8 +117,6 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.cmb_printWipe);
-            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.btn_custom);
             this.groupBox2.Controls.Add(this.txb_customPage);
             this.groupBox2.Controls.Add(this.label2);
@@ -120,32 +138,6 @@
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 7;
             this.label4.Text = "毫米";
-            // 
-            // cmb_printWipe
-            // 
-            this.cmb_printWipe.FormattingEnabled = true;
-            this.cmb_printWipe.Items.AddRange(new object[] {
-            "不擦除背景",
-            "卡片全部擦除",
-            "按前景位图大小擦除",
-            "按用户自定的位图擦除",
-            "打印且擦除",
-            "只擦除",
-            "只打印"});
-            this.cmb_printWipe.Location = new System.Drawing.Point(28, 331);
-            this.cmb_printWipe.Name = "cmb_printWipe";
-            this.cmb_printWipe.Size = new System.Drawing.Size(121, 20);
-            this.cmb_printWipe.TabIndex = 6;
-            this.cmb_printWipe.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmb_printWipe_KeyPress);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(26, 293);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 12);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "打印擦除设置：";
             // 
             // btn_custom
             // 
@@ -218,7 +210,7 @@
             // 
             this.toolBtn_print.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolBtn_print.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.toolBtn_print.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_print.Image")));
+            this.toolBtn_print.Image = global::ClinetPrints.Properties.Resources.Print;
             this.toolBtn_print.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtn_print.Name = "toolBtn_print";
             this.toolBtn_print.Size = new System.Drawing.Size(23, 47);
@@ -229,7 +221,7 @@
             // toolBtn_save
             // 
             this.toolBtn_save.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_save.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_save.Image")));
+            this.toolBtn_save.Image = global::ClinetPrints.Properties.Resources.Save;
             this.toolBtn_save.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtn_save.Name = "toolBtn_save";
             this.toolBtn_save.Size = new System.Drawing.Size(23, 47);
@@ -240,7 +232,7 @@
             // toolBtn_Add
             // 
             this.toolBtn_Add.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_Add.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_Add.Image")));
+            this.toolBtn_Add.Image = global::ClinetPrints.Properties.Resources.Add;
             this.toolBtn_Add.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtn_Add.Name = "toolBtn_Add";
             this.toolBtn_Add.Size = new System.Drawing.Size(23, 47);
@@ -250,7 +242,7 @@
             // toolBtn_clear
             // 
             this.toolBtn_clear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_clear.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_clear.Image")));
+            this.toolBtn_clear.Image = global::ClinetPrints.Properties.Resources.Delete;
             this.toolBtn_clear.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtn_clear.Name = "toolBtn_clear";
             this.toolBtn_clear.Size = new System.Drawing.Size(23, 47);
@@ -290,7 +282,7 @@
             // toolBtn_reMap
             // 
             this.toolBtn_reMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_reMap.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_reMap.Image")));
+            this.toolBtn_reMap.Image = global::ClinetPrints.Properties.Resources.ooopic_1502413412;
             this.toolBtn_reMap.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtn_reMap.Name = "toolBtn_reMap";
             this.toolBtn_reMap.Size = new System.Drawing.Size(23, 47);
@@ -300,35 +292,12 @@
             // toolBtn_close
             // 
             this.toolBtn_close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_close.Image = ((System.Drawing.Image)(resources.GetObject("toolBtn_close.Image")));
+            this.toolBtn_close.Image = global::ClinetPrints.Properties.Resources.Exit;
             this.toolBtn_close.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolBtn_close.Name = "toolBtn_close";
             this.toolBtn_close.Size = new System.Drawing.Size(23, 47);
             this.toolBtn_close.Text = "退出";
             this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
-            // 
-            // panControlWheel1
-            // 
-            this.panControlWheel1.AutoScroll = true;
-            this.panControlWheel1.Controls.Add(this.ptb_page);
-            this.panControlWheel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panControlWheel1.Location = new System.Drawing.Point(277, 67);
-            this.panControlWheel1.Name = "panControlWheel1";
-            this.panControlWheel1.Size = new System.Drawing.Size(875, 587);
-            this.panControlWheel1.TabIndex = 2;
-            // 
-            // ptb_page
-            // 
-            this.ptb_page.BackColor = System.Drawing.SystemColors.Window;
-            this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptb_page.Location = new System.Drawing.Point(4, 2);
-            this.ptb_page.Name = "ptb_page";
-            this.ptb_page.Size = new System.Drawing.Size(858, 577);
-            this.ptb_page.TabIndex = 1;
-            this.ptb_page.TabStop = false;
-            this.ptb_page.WaitOnLoad = true;
-            this.ptb_page.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseDown);
-            this.ptb_page.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseUp);
             // 
             // printPiewControl
             // 
@@ -340,13 +309,13 @@
             this.Load += new System.EventHandler(this.printPiewControl_Load);
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.panControlWheel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).EndInit();
             this.panel2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.panControlWheel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -367,8 +336,6 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripComboBox toolCob_Intgaiting;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ComboBox cmb_printWipe;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolStripButton toolBtn_Add;
         private System.Windows.Forms.ToolStripButton toolBtn_clear;
         private System.Windows.Forms.ToolStripButton toolBtn_save;

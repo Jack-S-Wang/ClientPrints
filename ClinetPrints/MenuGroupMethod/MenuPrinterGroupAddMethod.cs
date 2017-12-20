@@ -5,6 +5,8 @@ using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 using System.Threading;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using System.Drawing;
 
 namespace ClinetPrints.MenuGroupMethod
 {
@@ -44,11 +46,12 @@ namespace ClinetPrints.MenuGroupMethod
                             {
                                 result[0].Text = reName;
                             }
-                            var file=SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                            var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                             SharMethod.SavePrinter(nodeParSingle, file);
                             file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                             SharMethod.SavePrinter(nodeParFlock, file);
-                        }else
+                        }
+                        else
                         {
                             clientForm.showException("该对象不是打印机!");
                         }
@@ -67,7 +70,7 @@ namespace ClinetPrints.MenuGroupMethod
             {
                 var threadShow = new Thread((d) =>
                   {
-                      RemoveToOther removeTo = new RemoveToOther(tnode,clientForm);
+                      RemoveToOther removeTo = new RemoveToOther(tnode, clientForm);
                       removeTo.PtNode = nodeParSingle;
                       removeTo.Enabled = true;
                       removeTo.StartPosition = FormStartPosition.CenterParent;
@@ -77,7 +80,7 @@ namespace ClinetPrints.MenuGroupMethod
                   });
                 threadShow.Start();
             };
-            
+
             clearPrinter.Click += (o, e) =>
             {
                 if (tnode is PrinterTreeNode)
@@ -96,7 +99,7 @@ namespace ClinetPrints.MenuGroupMethod
                                 {
                                     var flocknode = nodeParFlock.Nodes.Find(tnode.Name, true)[0] as PrinterTreeNode;
                                     (flocknode.Parent as GroupTreeNode).Remove(flocknode);
-                                    var fileflock=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                                    var fileflock = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                     SharMethod.SavePrinter(nodeParFlock, fileflock);
                                 }
                             }
@@ -111,20 +114,51 @@ namespace ClinetPrints.MenuGroupMethod
                         return;
 
                     }
-                }else
+                }
+                else
                 {
                     clientForm.showException("该对象不是打印机！");
                 }
             };
             reGetprintData.Click += (o, e) =>
             {
-                if((tnode as PrinterTreeNode).PrinterObject.listviewObject != null)
+                if ((tnode as PrinterTreeNode).PrinterObject.listviewItemObject != null)
                 {
-                    clientForm.listView1 = (tnode as PrinterTreeNode).PrinterObject.listviewObject;
+                    if (clientForm.addfile > 0)
+                    {
+                        //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
+                        var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
+                        if (col.ColTnode != null)//说明刚才选中的是单打印机
+                        {
+                            for (int i = 0; i < clientForm.listView1.Items.Count; i++)
+                            {
+                                col.liPrinter[0].listviewItemObject.Add(clientForm.listView1.Items[i]); ;
+
+                            }
+                            foreach (Image key in clientForm.imageSubItems.Images)
+                            {
+                                col.liPrinter[0].listviewImages.Add(key);
+                            }
+                        }
+                    }
+                    clientForm.listView1.Columns.RemoveAt(4);
+                    clientForm.listView1.Columns.Add(new listViewColumnTNode(tnode as PrinterTreeNode));
+                    clientForm.toolStTxb_printer.Text = (tnode as PrinterTreeNode).Text;
+                    var item = (tnode as PrinterTreeNode).PrinterObject.listviewItemObject;
+                    foreach(Image key in (tnode as PrinterTreeNode).PrinterObject.listviewImages)
+                    {
+                        clientForm.imageSubItems.Images.Add(key);
+                    }
+                    clientForm.listView1.SmallImageList = clientForm.imageSubItems;
+                    for (int i = 0; i < item.Count; i++)
+                    {
+                        clientForm.listView1.Items.Add(item[i]);
+                    }
+                    clientForm.addfile = item.Count;
                 }
             };
-            
-            foreach(TreeNode nod in nodeParFlock.Nodes)
+
+            foreach (TreeNode nod in nodeParFlock.Nodes)
             {
                 if (nod.Name != "打印机群")
                 {
@@ -133,19 +167,21 @@ namespace ClinetPrints.MenuGroupMethod
                     groupMenu.Click += (o, e) =>
                     {
                         var np = tnode as PrinterTreeNode;
-                        if (nodeParFlock.Nodes.Find(tnode.Name,true).Length<=0)
+                        if (nodeParFlock.Nodes.Find(tnode.Name, true).Length <= 0)
                         {
                             PrinterTreeNode cnode;
                             if (np.StateCode.ToString().Equals("0"))
                             {
-                                 cnode = new PrinterTreeNode(np.Name, np.Text);
-                            }else
+                                cnode = new PrinterTreeNode(np.Name, np.Text);
+                            }
+                            else
                             {
-                                 cnode = new PrinterTreeNode(np.PrinterObject);
+                                cnode = new PrinterTreeNode(np.PrinterObject);
                             }
                             (flockNode as GroupTreeNode).Add(cnode);
                             new MenuPrinterFlockGroupMethod(cnode, clientForm);
-                        }else
+                        }
+                        else
                         {
                             DialogResult dr = clientForm.showException("该打印机已经分配到一个组中，是否将它分配到现在的组中？", "提示警告", MessageBoxButtons.OKCancel);
                             if (dr == DialogResult.OK)
@@ -159,12 +195,12 @@ namespace ClinetPrints.MenuGroupMethod
                                 {
                                     cnode = new PrinterTreeNode(np.PrinterObject);
                                 }
-                                (nodeParFlock.Nodes.Find(tnode.Name, true)[0].Parent as GroupTreeNode).Remove((nodeParFlock.Nodes.Find(tnode.Name, true)[0]as PrinterTreeNode));
+                                (nodeParFlock.Nodes.Find(tnode.Name, true)[0].Parent as GroupTreeNode).Remove((nodeParFlock.Nodes.Find(tnode.Name, true)[0] as PrinterTreeNode));
                                 (flockNode as GroupTreeNode).Add(cnode);
-                                new MenuPrinterFlockGroupMethod(cnode, clientForm); 
+                                new MenuPrinterFlockGroupMethod(cnode, clientForm);
                             }
                         }
-                        var file=SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                        var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                         SharMethod.SavePrinter(nodeParFlock, file);
                     };
                     menu5.MenuItems.Add(groupMenu);

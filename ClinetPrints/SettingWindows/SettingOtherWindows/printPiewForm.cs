@@ -1,4 +1,5 @@
 ﻿using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.CreatContorl;
 using System;
 using System.Collections.Generic;
@@ -18,19 +19,28 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         {
             InitializeComponent();
         }
-        public bool printTo=false;
+        public bool printTo = false;
         public string fileAddress = "";
         public string jobNum = "1";
         public int num = 1;
         public PrinterObjects lipo;
         private void printPiewForm_Load(object sender, EventArgs e)
         {
-            printPiewControl1.fileAddress = fileAddress;
-            printPiewControl1.jobNum = jobNum;
-            printPiewControl1.num = num;
-            printPiewControl1.PrinterObject = lipo;
-            printPiewControl1.OnBtnClose += PrintPiewControl1_OnBtnClose;
-            printPiewControl1.onBtnPrint += PrintPiewControl1_onBtnPrint;
+            try
+            {
+                printPiewControl1.fileAddress = fileAddress;
+                printPiewControl1.jobNum = jobNum;
+                printPiewControl1.num = num;
+                printPiewControl1.PrinterObject = lipo;
+                printPiewControl1.OnBtnClose += PrintPiewControl1_OnBtnClose;
+                printPiewControl1.onBtnPrint += PrintPiewControl1_onBtnPrint;
+
+            }
+            catch (Exception ex)
+            {
+                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void PrintPiewControl1_onBtnPrint(EventArgs obj)
