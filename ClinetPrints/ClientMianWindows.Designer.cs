@@ -63,6 +63,7 @@
             this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
+            this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -77,7 +78,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.快速查询ToolStripMenuItem,
-            this.设置查询时间ToolStripMenuItem});
+            this.设置查询时间ToolStripMenuItem,
+            this.帮助ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(843, 25);
@@ -379,6 +381,13 @@
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // 帮助ToolStripMenuItem
+            // 
+            this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
+            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.帮助ToolStripMenuItem.Text = "帮助";
+            this.帮助ToolStripMenuItem.Click += new System.EventHandler(this.帮助ToolStripMenuItem_Click);
+            // 
             // ClientMianWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -447,6 +456,7 @@
         private System.Windows.Forms.ToolStripMenuItem 设置查询时间ToolStripMenuItem;
         public System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
         public System.Windows.Forms.ImageList imageSubItems;
+        private System.Windows.Forms.ToolStripMenuItem 帮助ToolStripMenuItem;
     }
 }
 

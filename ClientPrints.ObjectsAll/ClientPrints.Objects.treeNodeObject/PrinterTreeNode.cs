@@ -31,6 +31,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                 if (Text == "")
                 {
                     Text = value.alias + "(" + value.model + ")";
+                }else
+                {
+                    value.alias = Text.Substring(0, Text.IndexOf('('));
                 }
                 switch (value.stateCode)
                 {
@@ -224,6 +227,10 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                 }
             }
             Text = name + oldtext.Substring(index);
+            if (PrinterObject != null)
+            {
+                PrinterObject.alias = name;
+            }
             return Text;
         }
 

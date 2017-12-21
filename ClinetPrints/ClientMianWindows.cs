@@ -707,6 +707,8 @@ namespace ClinetPrints
                             var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
                             if (col.ColTnode != null)//说明刚才选中的是单打印机
                             {
+                                col.liPrinter[0].listviewImages.Clear();
+                                col.liPrinter[0].listviewItemObject.Clear();
                                 for (int i = 0; i < this.listView1.Items.Count; i++)
                                 {
                                     col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]); ;
@@ -1159,10 +1161,7 @@ namespace ClinetPrints
                                 li.Add(succese[1]);
                                 break;
                             }
-                            if (System.IO.File.Exists(filePath))
-                            {
-                                System.IO.File.Delete(filePath);
-                            }
+                          
                         }
                         if (li.Count > 0)
                         {
@@ -1212,6 +1211,7 @@ namespace ClinetPrints
             {
                 if (this.toolStTxb_printer.Text != "")
                 {
+                    MessageBox.Show("打开较慢，请稍等！");
                     var col = listView1.Columns[colmunObject] as listViewColumnTNode;
                     for (int i = 0; i < col.liPrinter.Count; i++)
                     {
@@ -1256,9 +1256,11 @@ namespace ClinetPrints
                         var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
                         if (col.ColTnode != null)//说明刚才选中的是单打印机
                         {
+                            col.liPrinter[0].listviewItemObject.Clear();
+                            col.liPrinter[0].listviewImages.Clear();
                             for (int i = 0; i < this.listView1.Items.Count; i++)
                             {
-                                col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]); ;
+                                col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]);
 
                             }
                             foreach (Image key in imageSubItems.Images)
@@ -1292,22 +1294,25 @@ namespace ClinetPrints
             }
             if (listView1.SelectedItems.Count > 0)
             {
-                printPiewForm pf = new printPiewForm();
-                var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter;
-                if (po.Count > 1)
-                {
-                    MessageBox.Show("群打印不法对图片进行预览设置处理！");
-                    return;
-                }
-                pf.fileAddress = listView1.SelectedItems[0].SubItems[2].Text;
-                pf.jobNum = listView1.SelectedItems[0].SubItems[1].Text;
-                pf.num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
-                pf.lipo = po[0];
-                pf.ShowDialog();
-                if (pf.printTo)//说明选择的任务进行了打印
-                {
-                    toolStBtn_delete_Click(sender, e);
-                }
+                Thread thread = new Thread(() =>
+                  {
+                      printPiewForm pf = new printPiewForm();
+                      var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter;
+                      if (po.Count > 1)
+                      {
+                          MessageBox.Show("群打印不法对图片进行预览设置处理！");
+                          return;
+                      }
+                      pf.fileAddress = listView1.SelectedItems[0].SubItems[2].Text;
+                      pf.jobNum = listView1.SelectedItems[0].SubItems[1].Text;
+                      pf.num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
+                      pf.lipo = po[0];
+                      pf.ShowDialog();
+                      if (pf.printTo)//说明选择的任务进行了打印
+                    {
+                          Invoke(new Action<object, EventArgs>(toolStBtn_delete_Click), sender, e);
+                      }
+                  });
             }
             else
             {
@@ -1315,11 +1320,7 @@ namespace ClinetPrints
             }
         }
 
-        private void ToolBtn_close_Click(object sender, EventArgs e)
-        {
-
-
-        }
+       
 
         private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1346,6 +1347,15 @@ namespace ClinetPrints
                 {
                     listView1.SelectedItems[0].SubItems[3].Text = pn.num;
                 }
+            }
+        }
+
+        private void 帮助ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("将错误信息上传到服务中心，以便更快处理！", "提示", MessageBoxButtons.OKCancel);
+            if (dr == DialogResult.OK)
+            {
+                //将错误日记上传
             }
         }
     }

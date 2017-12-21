@@ -9,6 +9,7 @@ using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -316,138 +317,148 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="num">打印数量</param>
         public List<string> writeDataToDev(string pathFile, PrinterObjects po, string jobnum, int num)
         {
-            List<string> li = new List<string>();
-            if (pathFile == "")
+            try
             {
-                li.Add("error");
-                li.Add("无图片路径");
-                return li;
-            }
-
-            var devProt = new structBmpClass.DeviceProterty()
-            {
-                dmThicken = (short)po.pParams.colorDepth,//01指2位数，就是2色的意思
-                nWidth = (short)po.pParams.maxWidth,
-                nHeight = (short)po.pParams.maxHeight,
-                dmPrintQuality = 0,
-                dmYResolution = 0,
-                dmTag = 0x01
-            };
-            var dsp = new structBmpClass.DS_PARAMETER()
-            {
-                devp = devProt,
-                RGBPalete = IntPtr.Zero,
-                RGBParameter = IntPtr.Zero
-            };
-            DevBmpDllMethod.setDeviceProterty(ref devProt);
-            if (DevBmpDllMethod.LoadBitmapFilePara(pathFile, ref dsp))
-            {
-                IntPtr bites = DevBmpDllMethod.GetBits();
-                int len = DevBmpDllMethod.GetLength();
-
-                var devprop = new structClassDll.DEVPROP_PRNOUT()
-                {
-                    bkBmpID = po.pParams.bkBmpID,
-                    cardInputMode = po.pParams.DevParm[2],
-                    cardOutputMode = po.pParams.DevParm[3],
-                    cardType = po.pParams.DevParm[1],
-                    devType = (byte)WDevCmdObjects.BMP_DEVPROP_PRN,
-                    eraseTemp = po.pParams.DevParm[9],
-                    wipeSpeed = po.pParams.DevParm[8],
-                    grayTemp = po.pParams.DevParm[7],
-                    printContrast = po.pParams.DevParm[5],
-                    printMode = po.pParams.DevParm[10],
-                    printSpeed = po.pParams.DevParm[6],
-                    printTemp = po.pParams.DevParm[4],
-                    revs = new byte[3],
-                    propSize = (byte)Marshal.SizeOf(typeof(structClassDll.DEVPROP_PRNOUT))
-                };
-
-                var devinfo = new structClassDll.DEVPROP_INFO()
-                {
-                    revs = new byte[2],
-                    size = (ushort)(4 + devprop.propSize),
-                    prnProp = devprop
-
-                };
-                var devbm = new structClassDll.DEV_BMP()
-                {
-                    bkPixelH = 0,
-                    txPixelH = (ushort)po.pParams.maxHeight,
-                    bmpType = po.pParams.pixelformat,
-                    bpps = (byte)po.pParams.colorDepth,
-                    dpi = (ushort)po.pParams.DIP,
-                    ID = (ushort)WDevCmdObjects.DEVBMP_ID,
-                    pixelW = (ushort)po.pParams.maxWidth,
-                    posX = po.pParams.posX,
-                    posY = po.pParams.posY,
-                    ret = new byte[4],
-                    devInfo = devinfo
-                };
-
-                var tmp = new byte[len];
-                Marshal.Copy(bites, tmp, 0, len);
-
-                var memblockSize = Marshal.SizeOf(devbm) + len;
-                var memblock = Marshal.AllocHGlobal(memblockSize);
-
-                Marshal.StructureToPtr(devbm, memblock, false);
-                var bmpPtr = IntPtr.Add(memblock, Marshal.SizeOf(devbm));
-                Marshal.Copy(tmp, 0, bmpPtr, len);
-
-                var lope = new structClassDll.UNCMPR_INFO()
-                {
-                    cmprLen = 0,
-                    uncmprLen = 0,
-                    stat = 0,
-                    jobNumber = (ushort)Int16.Parse(jobnum),
-                    resultTag = 0,
-                    cmprType = 0,
-                    frmIdx = 0,
-                    userParm = "DevLog.log"
-                };
-                tmp = null;
-                bool success = false;
-                string error = "";
-                for (int i = 0; i < num; i++)
-                {
-                    try
-                    {
-
-                        success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
-                    }
-                    catch
-                    {
-                        li.Add("error");
-                        li.Add("打印不成功！");
-                    }
-                    if (!success)
-                    {
-                        error = "已打印了" + i + "张：打印已经出现问题，无法继续打印！";
-                        break;
-                    }
-                }
-                Marshal.FreeHGlobal(memblock);
-                WDevDllMethod.dllFunc_CloseLog(po.pHandle);
-                if (!success)
+                List<string> li = new List<string>();
+                if (pathFile == "")
                 {
                     li.Add("error");
-                    li.Add(error);
+                    li.Add("无图片路径");
                     return li;
+                }
+                var devProt = new structBmpClass.DeviceProterty()
+                {
+                    dmThicken = (short)po.pParams.colorDepth,//01指2位数，就是2色的意思
+                    nWidth = (short)po.pParams.maxWidth,
+                    nHeight = (short)po.pParams.maxHeight,
+                    dmPrintQuality = 0,
+                    dmYResolution = 0,
+                    dmTag = 0x01
+                };
+                var dsp = new structBmpClass.DS_PARAMETER()
+                {
+                    devp = devProt,
+                    RGBPalete = IntPtr.Zero,
+                    RGBParameter = IntPtr.Zero
+                };
+                DevBmpDllMethod.setDeviceProterty(ref devProt);
+                if (DevBmpDllMethod.LoadBitmapFilePara(pathFile, ref dsp))
+                {
+                    IntPtr bites = DevBmpDllMethod.GetBits();
+                    int len = DevBmpDllMethod.GetLength();
+
+                    var devprop = new structClassDll.DEVPROP_PRNOUT()
+                    {
+                        bkBmpID = po.pParams.bkBmpID,
+                        cardInputMode = po.pParams.DevParm[2],
+                        cardOutputMode = po.pParams.DevParm[3],
+                        cardType = po.pParams.DevParm[1],
+                        devType = (byte)WDevCmdObjects.BMP_DEVPROP_PRN,
+                        eraseTemp = po.pParams.DevParm[9],
+                        wipeSpeed = po.pParams.DevParm[8],
+                        grayTemp = po.pParams.DevParm[7],
+                        printContrast = po.pParams.DevParm[5],
+                        printMode = po.pParams.DevParm[10],
+                        printSpeed = po.pParams.DevParm[6],
+                        printTemp = po.pParams.DevParm[4],
+                        revs = new byte[3],
+                        propSize = (byte)Marshal.SizeOf(typeof(structClassDll.DEVPROP_PRNOUT))
+                    };
+
+                    var devinfo = new structClassDll.DEVPROP_INFO()
+                    {
+                        revs = new byte[2],
+                        size = (ushort)(4 + devprop.propSize),
+                        prnProp = devprop
+
+                    };
+                    var devbm = new structClassDll.DEV_BMP()
+                    {
+                        bkPixelH = 0,
+                        txPixelH = (ushort)po.pParams.maxHeight,
+                        bmpType = po.pParams.pixelformat,
+                        bpps = (byte)po.pParams.colorDepth,
+                        dpi = (ushort)po.pParams.DIP,
+                        ID = (ushort)WDevCmdObjects.DEVBMP_ID,
+                        pixelW = (ushort)po.pParams.maxWidth,
+                        posX = po.pParams.posX,
+                        posY = po.pParams.posY,
+                        ret = new byte[4],
+                        devInfo = devinfo
+                    };
+
+                    var tmp = new byte[len];
+                    Marshal.Copy(bites, tmp, 0, len);
+
+                    var memblockSize = Marshal.SizeOf(devbm) + len;
+                    var memblock = Marshal.AllocHGlobal(memblockSize);
+
+                    Marshal.StructureToPtr(devbm, memblock, false);
+                    var bmpPtr = IntPtr.Add(memblock, Marshal.SizeOf(devbm));
+                    Marshal.Copy(tmp, 0, bmpPtr, len);
+
+                    var lope = new structClassDll.UNCMPR_INFO()
+                    {
+                        cmprLen = 0,
+                        uncmprLen = 0,
+                        stat = 0,
+                        jobNumber = (ushort)Int16.Parse(jobnum),
+                        resultTag = 0,
+                        cmprType = 0,
+                        frmIdx = 0,
+                        userParm = "DevLog.log"
+                    };
+                    tmp = null;
+                    bool success = false;
+                    string error = "";
+                    for (int i = 0; i < num; i++)
+                    {
+                        try
+                        {
+
+                            success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
+                        }
+                        catch
+                        {
+                            li.Add("error");
+                            li.Add("打印不成功！");
+                        }
+                        if (!success)
+                        {
+                            error = "已打印了" + i + "张：打印已经出现问题，无法继续打印！";
+                            break;
+                        }
+                    }
+                    Marshal.FreeHGlobal(memblock);
+                    WDevDllMethod.dllFunc_CloseLog(po.pHandle);
+                    if (!success)
+                    {
+                        li.Add("error");
+                        li.Add(error);
+                        return li;
+                    }
+                    else
+                    {
+                        li.Add("Ok");
+                        li.Add("工作号：" + jobnum);
+                        return li;
+                    }
                 }
                 else
                 {
-                    li.Add("Ok");
-                    li.Add("工作号：" + jobnum);
+                    li.Add("error");
+                    li.Add("打印失败！");
                     return li;
                 }
             }
-            else
+            finally
             {
-                li.Add("error");
-                li.Add("打印失败！");
-                return li;
+                if (System.IO.File.Exists(pathFile))
+                {
+                    System.IO.File.Delete(pathFile);
+                }
             }
+
         }
 
 

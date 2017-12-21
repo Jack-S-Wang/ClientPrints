@@ -233,7 +233,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         return;
                     }
                 }
-                MessageBox.Show("修改成功！");
+                MessageBox.Show("修改成功！请重新启动该设备！");
             }
             catch (Exception ex)
             {

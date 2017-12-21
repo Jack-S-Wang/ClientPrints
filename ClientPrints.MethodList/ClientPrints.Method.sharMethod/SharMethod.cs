@@ -34,8 +34,15 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         {
             //获取USB类型的打印机
             getUSBPrinter();
+            //得到wife方式的打印机信息
+            getWifePrinter();
             //不同方式获取的打印机总信息
             getAllPrinterList();
+        }
+
+        private static void getWifePrinter()
+        {
+            
         }
 
         /// <summary>

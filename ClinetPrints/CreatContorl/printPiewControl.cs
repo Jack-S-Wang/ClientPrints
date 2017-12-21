@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 
 namespace ClinetPrints.CreatContorl
 {
@@ -325,17 +326,17 @@ namespace ClinetPrints.CreatContorl
                 case 3:
                     int wscale = (ptb_page.Width % oldmap.Width) == 0 ? (ptb_page.Width / oldmap.Width) : (ptb_page.Width / oldmap.Width) + 1;
                     int hscale = (ptb_page.Height % oldmap.Height) == 0 ? (ptb_page.Height / oldmap.Height) : (ptb_page.Height / oldmap.Height) + 1;
-                    for (int i = 0; i <wscale; ++i)
+                    for (int i = 0; i < wscale; ++i)
                     {
-                        for(int j = 0; j < hscale; ++j)
+                        for (int j = 0; j < hscale; ++j)
                         {
                             Graphics g1 = Graphics.FromImage(bmap);
                             g1.SmoothingMode = SmoothingMode.HighQuality;
                             g1.CompositingQuality = CompositingQuality.HighQuality;
                             g1.DrawImage(oldmap,
                                 new Rectangle(
-                                    i*oldmap.Width,
-                                    j*oldmap.Height,
+                                    i * oldmap.Width,
+                                    j * oldmap.Height,
                                     (int)(oldmap.Width),
                                     (int)(oldmap.Height)),
                                 new Rectangle(0, 0, oldmap.Width, oldmap.Height),
@@ -347,8 +348,8 @@ namespace ClinetPrints.CreatContorl
                     wheelEnabled = false;
                     break;
                 case 4:
-                    imageX = ptb_page.Width/2-oldmap.Width/2;
-                    imageY = ptb_page.Height/2-oldmap.Height/2;
+                    imageX = ptb_page.Width / 2 - oldmap.Width / 2;
+                    imageY = ptb_page.Height / 2 - oldmap.Height / 2;
                     imageScale = 0.8;
                     Graphics g2 = Graphics.FromImage(bmap);
                     g2.SmoothingMode = SmoothingMode.HighQuality;
@@ -441,64 +442,81 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_save_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderB = new FolderBrowserDialog();
-            folderB.ShowDialog();
-            var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp";
-            Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
-            Graphics g = Graphics.FromImage(bmap);
-            g.SmoothingMode = SmoothingMode.HighQuality;
-            g.CompositingQuality = CompositingQuality.HighQuality;
-            g.DrawImage(ptb_page.Image,
-                new Rectangle(
-                    0,
-                    0,
-                    (int)(ptb_page.Width),
-                    (int)(ptb_page.Height)),
-                new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
-                GraphicsUnit.Pixel);
-            g.Dispose();
-            bmap.Save(filePath);
-            MessageBox.Show("保存成功！");
+            try
+            {
+                FolderBrowserDialog folderB = new FolderBrowserDialog();
+                folderB.ShowDialog();
+                var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp";
+                Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
+                Graphics g = Graphics.FromImage(bmap);
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.DrawImage(ptb_page.Image,
+                    new Rectangle(
+                        0,
+                        0,
+                        (int)(ptb_page.Width * 1.25),
+                        (int)(ptb_page.Height * 1.25)),
+                    new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
+                    GraphicsUnit.Pixel);
+                g.Dispose();
+                bmap.Save(filePath);
+                MessageBox.Show("保存成功！");
+            }
+            catch (Exception ex)
+            {
+                SharMethod.writeLog(string.Format("异常{0},追踪：{1}", ex, ex.StackTrace));
+                MessageBox.Show(ex.Message);
+            }
+
         }
 
         private void toolBtn_print_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(this.cmb_page.Text))
+            try
             {
-                string p = cmb_page.Text;
-                double width = 0;
-                double height = 0;
-                if (p.Contains("x"))
+                if (!string.IsNullOrWhiteSpace(this.cmb_page.Text))
                 {
-                    width = double.Parse(p.Substring(0, p.IndexOf('x')));
-                    height = double.Parse(p.Substring(p.IndexOf('x') + 1));
-                }
-                else
-                {
-                    width = double.Parse(p.Substring(0, p.IndexOf('*')));
-                    height = double.Parse(p.Substring(p.IndexOf('*') + 1));
-                }
-                width = ((width / 10) / 2.54) * 300;
-                height = ((height / 10) / 2.54) * 300;
-                int nwidth = nNum(width);
-                int nheight = nNum(height);
-                if (nwidth > _prinerObject.pParams.maxWidth || nheight > _prinerObject.pParams.maxHeight)
-                {
-                    MessageBox.Show("现在所设计的尺寸大小与实际设备的尺寸要大，不能打印！");
-                    return;
+                    string p = cmb_page.Text;
+                    double width = 0;
+                    double height = 0;
+                    if (p.Contains("x"))
+                    {
+                        width = double.Parse(p.Substring(0, p.IndexOf('x')));
+                        height = double.Parse(p.Substring(p.IndexOf('x') + 1));
+                    }
+                    else
+                    {
+                        width = double.Parse(p.Substring(0, p.IndexOf('*')));
+                        height = double.Parse(p.Substring(p.IndexOf('*') + 1));
+                    }
+                    width = ((width / 10) / 2.54) * 300;
+                    height = ((height / 10) / 2.54) * 300;
+                    int nwidth = nNum(width);
+                    int nheight = nNum(height);
+                    if (nwidth > _prinerObject.pParams.maxWidth || nheight > _prinerObject.pParams.maxHeight)
+                    {
+                        MessageBox.Show("现在所设计的尺寸大小与实际设备的尺寸要大，不能打印！");
+                        return;
+                    }
+                    printBtn();
+                    onBtnPrint?.Invoke(e);
                 }
             }
-            printBtn();
-            onBtnPrint?.Invoke(e);
+            catch (Exception ex)
+            {
+                SharMethod.writeLog(string.Format("异常{0},追踪：{1}", ex, ex.StackTrace));
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void printBtn()
         {
             if (PrinterObject != null)
             {
-                if(PrinterObject.stateCode==4 || PrinterObject.stateCode==5 || PrinterObject.stateCode == 6)
+                if (PrinterObject.stateCode == 4 || PrinterObject.stateCode == 5 || PrinterObject.stateCode == 6)
                 {
-                    MessageBox.Show("打印机："+PrinterObject.alias+"状态不正常，不能打印！");
+                    MessageBox.Show("打印机：" + PrinterObject.alias + "状态不正常，不能打印！");
                     return;
                 }
                 var filePath = Path.Combine(
@@ -516,7 +534,7 @@ namespace ClinetPrints.CreatContorl
                     new Rectangle(
                         0,
                         0,
-                        (int)(ptb_page.Width),
+                        (int)(ptb_page.Width ),
                         (int)(ptb_page.Height)),
                     new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
                     GraphicsUnit.Pixel);
@@ -533,37 +551,41 @@ namespace ClinetPrints.CreatContorl
                     MessageBox.Show("打印成功，将删除原来的作业任务!");
                 }
 
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
             }
         }
 
         private void cmb_page_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(this.cmb_page.Text))
+            try
             {
-                string p = cmb_page.Text;
-                double width = 0;
-                double height = 0;
-                if (p.Contains("x"))
+                if (!string.IsNullOrWhiteSpace(this.cmb_page.Text))
                 {
-                    width = double.Parse(p.Substring(0, p.IndexOf('x')));
-                    height = double.Parse(p.Substring(p.IndexOf('x') + 1));
+                    string p = cmb_page.Text;
+                    double width = 0;
+                    double height = 0;
+                    if (p.Contains("x"))
+                    {
+                        width = double.Parse(p.Substring(0, p.IndexOf('x')));
+                        height = double.Parse(p.Substring(p.IndexOf('x') + 1));
+                    }
+                    else
+                    {
+                        width = double.Parse(p.Substring(0, p.IndexOf('*')));
+                        height = double.Parse(p.Substring(p.IndexOf('*') + 1));
+                    }
+                    width = ((width / 10) / 2.54) * 300;
+                    height = ((height / 10) / 2.54) * 300;
+                    int nwidth = nNum(width);
+                    int nheight = nNum(height);
+                    page = nwidth + "*" + nheight;
                 }
-                else
-                {
-                    width = double.Parse(p.Substring(0, p.IndexOf('*')));
-                    height = double.Parse(p.Substring(p.IndexOf('*') + 1));
-                }
-                width = ((width / 10) / 2.54) * 300;
-                height = ((height / 10) / 2.54) * 300;
-                int nwidth = nNum(width);
-                int nheight = nNum(height);
-                page = nwidth + "*" + nheight;
             }
+            catch (Exception ex)
+            {
+                SharMethod.writeLog(string.Format("异常{0},追踪：{1}", ex, ex.StackTrace));
+                MessageBox.Show(ex.Message);
+            }
+
         }
         /// <summary>
         /// 四舍五入方法

@@ -40,6 +40,10 @@ namespace ClinetPrints.MenuGroupMethod
                         if (tnode is PrinterTreeNode)
                         {
                             var nod = tnode as PrinterTreeNode;
+                            if (clientForm.toolStTxb_printer.Text == nod.Text)
+                            {
+                                clientForm.toolStTxb_printer.Text = na.name;
+                            }
                             string reName = nod.rename(na.name);
                             var result = nodeParFlock.Nodes.Find(tnode.Name, true);
                             if (result.Length > 0)
@@ -130,6 +134,8 @@ namespace ClinetPrints.MenuGroupMethod
                         var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
                         if (col.ColTnode != null)//说明刚才选中的是单打印机
                         {
+                            col.liPrinter[0].listviewImages.Clear();
+                            col.liPrinter[0].listviewItemObject.Clear();
                             for (int i = 0; i < clientForm.listView1.Items.Count; i++)
                             {
                                 col.liPrinter[0].listviewItemObject.Add(clientForm.listView1.Items[i]); ;

@@ -39,8 +39,11 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
                 Text = "";
                 foreach (PrinterTreeNode node in value.Nodes)
                 {
+                    if (node.PrinterObject != null)
+                    {
                     if (node.PrinterObject.stateCode != 0)
                         liPrinter.Add(node.PrinterObject);
+                    }
                 }
             }
         }
