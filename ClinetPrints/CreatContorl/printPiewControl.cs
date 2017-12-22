@@ -128,9 +128,9 @@ namespace ClinetPrints.CreatContorl
         [Browsable(false)]
         private Bitmap oldmap;
         [Description("退出按钮事件")]
-        public event Action<EventArgs> OnBtnClose;
+        public event Action<object,EventArgs> OnBtnClose;
         [Description("打印按钮事件")]
-        public event Action<EventArgs> onBtnPrint;
+        public event Action<object,EventArgs> onBtnPrint;
 
         private void printPiewControl_Load(object sender, EventArgs e)
         {
@@ -248,7 +248,7 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_close_Click(object sender, EventArgs e)
         {
-            OnBtnClose?.Invoke(e);
+            OnBtnClose?.Invoke(sender,e);
         }
 
         private void toolCob_Intgaiting_SelectedIndexChanged(object sender, EventArgs e)
@@ -445,23 +445,26 @@ namespace ClinetPrints.CreatContorl
             try
             {
                 FolderBrowserDialog folderB = new FolderBrowserDialog();
-                folderB.ShowDialog();
-                var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp";
-                Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
-                Graphics g = Graphics.FromImage(bmap);
-                g.SmoothingMode = SmoothingMode.HighQuality;
-                g.CompositingQuality = CompositingQuality.HighQuality;
-                g.DrawImage(ptb_page.Image,
-                    new Rectangle(
-                        0,
-                        0,
-                        (int)(ptb_page.Width * 1.25),
-                        (int)(ptb_page.Height * 1.25)),
-                    new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
-                    GraphicsUnit.Pixel);
-                g.Dispose();
-                bmap.Save(filePath);
-                MessageBox.Show("保存成功！");
+                DialogResult dr=folderB.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+                    var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp";
+                    Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
+                    Graphics g = Graphics.FromImage(bmap);
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.DrawImage(ptb_page.Image,
+                        new Rectangle(
+                            0,
+                            0,
+                            (int)(ptb_page.Width * 1.25),
+                            (int)(ptb_page.Height * 1.25)),
+                        new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
+                        GraphicsUnit.Pixel);
+                    g.Dispose();
+                    bmap.Save(filePath);
+                    MessageBox.Show("保存成功！");
+                }
             }
             catch (Exception ex)
             {
@@ -499,8 +502,7 @@ namespace ClinetPrints.CreatContorl
                         MessageBox.Show("现在所设计的尺寸大小与实际设备的尺寸要大，不能打印！");
                         return;
                     }
-                    printBtn();
-                    onBtnPrint?.Invoke(e);
+                    printBtn(sender,e);
                 }
             }
             catch (Exception ex)
@@ -510,7 +512,7 @@ namespace ClinetPrints.CreatContorl
             }
         }
 
-        private void printBtn()
+        private void printBtn(object sender,EventArgs e)
         {
             if (PrinterObject != null)
             {
@@ -525,7 +527,7 @@ namespace ClinetPrints.CreatContorl
               DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
                 var method = PrinterObject.MethodsObject as IMethodObjects;
                 //PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
-                Bitmap bmap = new Bitmap((int)(ptb_page.Width * 1.25), (int)(ptb_page.Height * 1.25));
+                Bitmap bmap = new Bitmap((int)(_prinerObject.pParams.maxWidth), (int)(_prinerObject.pParams.maxHeight));
                 Graphics g = Graphics.FromImage(bmap);
                 g.SmoothingMode = SmoothingMode.HighQuality;
                 g.CompositingQuality = CompositingQuality.HighQuality;
@@ -534,8 +536,8 @@ namespace ClinetPrints.CreatContorl
                     new Rectangle(
                         0,
                         0,
-                        (int)(ptb_page.Width ),
-                        (int)(ptb_page.Height)),
+                        (int)(bmap.Width ),
+                        (int)(bmap.Height)),
                     new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
                     GraphicsUnit.Pixel);
                 g.Dispose();
@@ -550,7 +552,7 @@ namespace ClinetPrints.CreatContorl
                 {
                     MessageBox.Show("打印成功，将删除原来的作业任务!");
                 }
-
+                onBtnPrint?.Invoke(sender,e);
             }
         }
 

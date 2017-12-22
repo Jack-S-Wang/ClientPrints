@@ -45,7 +45,12 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     dateTimePicker1.Text = (result as monitorTime).Sdate;
                     dateTimePicker2.Text = (result as monitorTime).Edate;
                     ckb_launch.Checked = (result as monitorTime).checkedStart;
+                    ckb_time.Checked = (result as monitorTime).chekedTime;
                 }
+            }else
+            {
+                dateTimePicker1.Text = "19:00:00";
+                dateTimePicker2.Text = "06:00:00";
             }
         }
 
@@ -69,7 +74,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         time = txb_time.Text,
                         Sdate = dateTimePicker1.Text,
                         Edate = dateTimePicker2.Text,
-                        checkedStart = this.ckb_launch.Checked
+                        checkedStart = this.ckb_launch.Checked,
+                        chekedTime=ckb_time.Checked
                     };
                     SharMethod.monTime = mon;
                     if (this.ckb_launch.Checked)

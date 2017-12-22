@@ -233,7 +233,12 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         return;
                     }
                 }
-                MessageBox.Show("修改成功！请重新启动该设备！");
+                MessageBox.Show("修改成功！将重新启动该设备！");
+                string str = (printerObject.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
+                if (str != "false")
+                {
+                    this.Close();
+                }
             }
             catch (Exception ex)
             {

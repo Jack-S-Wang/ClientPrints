@@ -43,13 +43,13 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
         }
 
-        private void PrintPiewControl1_onBtnPrint(EventArgs obj)
+        private void PrintPiewControl1_onBtnPrint(object sender,EventArgs obj)
         {
             printTo = true;
             this.Close();
         }
 
-        private void PrintPiewControl1_OnBtnClose(EventArgs obj)
+        private void PrintPiewControl1_OnBtnClose(object sender,EventArgs obj)
         {
             this.Close();
         }

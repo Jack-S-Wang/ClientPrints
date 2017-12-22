@@ -30,6 +30,11 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.btn_up = new System.Windows.Forms.Button();
+            this.btn_getFile = new System.Windows.Forms.Button();
+            this.txb_getFile = new System.Windows.Forms.TextBox();
             this.txb_commandText = new System.Windows.Forms.TextBox();
             this.btn_sure = new System.Windows.Forms.Button();
             this.cmb_command = new System.Windows.Forms.ComboBox();
@@ -65,16 +70,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.txb_getFile = new System.Windows.Forms.TextBox();
-            this.btn_getFile = new System.Windows.Forms.Button();
-            this.btn_up = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.ckb_monitor = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -89,6 +90,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.ckb_monitor);
             this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Controls.Add(this.txb_commandText);
             this.groupBox2.Controls.Add(this.btn_sure);
@@ -102,18 +104,66 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "控制";
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.progressBar1);
+            this.groupBox3.Controls.Add(this.btn_up);
+            this.groupBox3.Controls.Add(this.btn_getFile);
+            this.groupBox3.Controls.Add(this.txb_getFile);
+            this.groupBox3.Location = new System.Drawing.Point(18, 150);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(233, 221);
+            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "固件升级";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(6, 176);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(221, 23);
+            this.progressBar1.Step = 1;
+            this.progressBar1.TabIndex = 4;
+            // 
+            // btn_up
+            // 
+            this.btn_up.Location = new System.Drawing.Point(141, 131);
+            this.btn_up.Name = "btn_up";
+            this.btn_up.Size = new System.Drawing.Size(75, 23);
+            this.btn_up.TabIndex = 3;
+            this.btn_up.Text = "升级";
+            this.btn_up.UseVisualStyleBackColor = true;
+            this.btn_up.Click += new System.EventHandler(this.btn_up_Click);
+            // 
+            // btn_getFile
+            // 
+            this.btn_getFile.Location = new System.Drawing.Point(141, 91);
+            this.btn_getFile.Name = "btn_getFile";
+            this.btn_getFile.Size = new System.Drawing.Size(75, 23);
+            this.btn_getFile.TabIndex = 2;
+            this.btn_getFile.Text = "选择文件";
+            this.btn_getFile.UseVisualStyleBackColor = true;
+            this.btn_getFile.Click += new System.EventHandler(this.btn_getFile_Click);
+            // 
+            // txb_getFile
+            // 
+            this.txb_getFile.Location = new System.Drawing.Point(22, 53);
+            this.txb_getFile.Name = "txb_getFile";
+            this.txb_getFile.Size = new System.Drawing.Size(194, 21);
+            this.txb_getFile.TabIndex = 1;
+            // 
             // txb_commandText
             // 
-            this.txb_commandText.Location = new System.Drawing.Point(18, 502);
+            this.txb_commandText.Location = new System.Drawing.Point(18, 390);
             this.txb_commandText.Multiline = true;
             this.txb_commandText.Name = "txb_commandText";
-            this.txb_commandText.Size = new System.Drawing.Size(236, 116);
+            this.txb_commandText.Size = new System.Drawing.Size(236, 228);
             this.txb_commandText.TabIndex = 3;
             this.txb_commandText.TextChanged += new System.EventHandler(this.txb_commandText_TextChanged);
             // 
             // btn_sure
             // 
-            this.btn_sure.Location = new System.Drawing.Point(113, 165);
+            this.btn_sure.Location = new System.Drawing.Point(23, 89);
             this.btn_sure.Name = "btn_sure";
             this.btn_sure.Size = new System.Drawing.Size(75, 23);
             this.btn_sure.TabIndex = 2;
@@ -135,7 +185,7 @@
             "卡擦除",
             "清除打印作业",
             "重启设备"});
-            this.cmb_command.Location = new System.Drawing.Point(91, 107);
+            this.cmb_command.Location = new System.Drawing.Point(92, 30);
             this.cmb_command.Name = "cmb_command";
             this.cmb_command.Size = new System.Drawing.Size(142, 20);
             this.cmb_command.TabIndex = 1;
@@ -144,7 +194,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(20, 110);
+            this.label16.Location = new System.Drawing.Point(21, 33);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(65, 12);
             this.label16.TabIndex = 0;
@@ -446,57 +496,20 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "运行状态：";
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.progressBar1);
-            this.groupBox3.Controls.Add(this.btn_up);
-            this.groupBox3.Controls.Add(this.btn_getFile);
-            this.groupBox3.Controls.Add(this.txb_getFile);
-            this.groupBox3.Location = new System.Drawing.Point(18, 217);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(233, 268);
-            this.groupBox3.TabIndex = 4;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "固件升级";
-            // 
-            // txb_getFile
-            // 
-            this.txb_getFile.Location = new System.Drawing.Point(22, 53);
-            this.txb_getFile.Name = "txb_getFile";
-            this.txb_getFile.Size = new System.Drawing.Size(194, 21);
-            this.txb_getFile.TabIndex = 1;
-            // 
-            // btn_getFile
-            // 
-            this.btn_getFile.Location = new System.Drawing.Point(141, 91);
-            this.btn_getFile.Name = "btn_getFile";
-            this.btn_getFile.Size = new System.Drawing.Size(75, 23);
-            this.btn_getFile.TabIndex = 2;
-            this.btn_getFile.Text = "选择文件";
-            this.btn_getFile.UseVisualStyleBackColor = true;
-            this.btn_getFile.Click += new System.EventHandler(this.btn_getFile_Click);
-            // 
-            // btn_up
-            // 
-            this.btn_up.Location = new System.Drawing.Point(141, 131);
-            this.btn_up.Name = "btn_up";
-            this.btn_up.Size = new System.Drawing.Size(75, 23);
-            this.btn_up.TabIndex = 3;
-            this.btn_up.Text = "升级";
-            this.btn_up.UseVisualStyleBackColor = true;
-            this.btn_up.Click += new System.EventHandler(this.btn_up_Click);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(6, 176);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(221, 23);
-            this.progressBar1.Step = 1;
-            this.progressBar1.TabIndex = 4;
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // ckb_monitor
+            // 
+            this.ckb_monitor.AutoSize = true;
+            this.ckb_monitor.Location = new System.Drawing.Point(138, 93);
+            this.ckb_monitor.Name = "ckb_monitor";
+            this.ckb_monitor.Size = new System.Drawing.Size(96, 16);
+            this.ckb_monitor.TabIndex = 30;
+            this.ckb_monitor.Text = "是否停止监控";
+            this.ckb_monitor.UseVisualStyleBackColor = true;
+            this.ckb_monitor.CheckedChanged += new System.EventHandler(this.ckb_monitor_CheckedChanged);
             // 
             // monitorForm
             // 
@@ -511,10 +524,10 @@
             this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -564,5 +577,6 @@
         private System.Windows.Forms.TextBox txb_getFile;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.CheckBox ckb_monitor;
     }
 }

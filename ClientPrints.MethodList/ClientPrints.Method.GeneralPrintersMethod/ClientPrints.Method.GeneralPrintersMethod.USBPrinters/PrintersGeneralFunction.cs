@@ -48,12 +48,20 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             //设备型号           
             string model = reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, new byte[0]);
             printerModel = model;
+            //设备通用信息
             //序列号
             string sn = reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, new byte[0]);
             //版本号
             string version = reInformation(WDevCmdObjects.DEV_GET_PROTVER, pHandle, new byte[0]);
+            
             //标识
             string onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0x00, 0x00 });
+            string DevInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 1 });
+            if (!DevInfo.Contains("01.01.00.03"))
+            {
+                WDevDllMethod.dllFunc_CloseDev(pHandle);
+                throw (new Exception("设备："+onlyAlias+":版本不一致,需要固件更新！"));
+            }
 
             //系统状态
             string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, new byte[] { 0x30 });
@@ -74,8 +82,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string alias = onlyAlias;
             //厂商
             string vendor = "DASCOM";
-            //设备通用信息
-            string DevInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 1 });
+           
             //设备数据信息
             string dataInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 2 });
             var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
@@ -150,8 +157,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     if (outDats.datLen > 0)
                     {
                         LogText = getDifferentString(ctrlCodeStr, outDats.datLen, reData);
-
+                    }else
+                    {
+                        LogText = "true";
                     }
+                }else
+                {
+                    LogText = "false";
                 }
             }
             else
@@ -329,8 +341,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 var devProt = new structBmpClass.DeviceProterty()
                 {
                     dmThicken = (short)po.pParams.colorDepth,//01指2位数，就是2色的意思
-                    nWidth = (short)po.pParams.maxWidth,
-                    nHeight = (short)po.pParams.maxHeight,
+                    nWidth = (short)(po.pParams.maxWidth+1),
+                    nHeight = (short)(po.pParams.maxHeight+1),
                     dmPrintQuality = 0,
                     dmYResolution = 0,
                     dmTag = 0x01
@@ -415,7 +427,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     {
                         try
                         {
-
+                            System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "image.cmpr", System.IO.FileMode.OpenOrCreate);
+                            var tmp1 = new byte[memblockSize];
+                            Marshal.Copy(memblock, tmp1, 0, memblockSize);
+                            file.Write(tmp1, 0, memblockSize);
+                            file.Flush();
+                            file.Dispose();
+                            file.Close();
                             success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
                         }
                         catch

@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 
 namespace ClinetPrints.SettingWindows
 {
-    
+
     public partial class monitorForm : Form
     {
         public monitorForm()
@@ -40,12 +40,12 @@ namespace ClinetPrints.SettingWindows
         /// </summary>
         private int printStateType = -1;
         bool ative = true;
+        System.Timers.Timer demandTime = new System.Timers.Timer(5000);
         private void monitorForm_Load(object sender, EventArgs e)
         {
             try
             {
                 this.cmb_command.SelectedIndex = 0;
-                System.Timers.Timer demandTime = new System.Timers.Timer(5000);
                 demandTime.Enabled = true;
                 demandTime.Elapsed += ((b, o) =>
                 {
@@ -75,7 +75,7 @@ namespace ClinetPrints.SettingWindows
                 var method = printerObject.MethodsObject as IMethodObjects;
                 //系统状态
                 var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
-                if (stateStr == "false" || stateStr=="")
+                if (stateStr == "false" || stateStr == "")
                 {
                     MessageBox.Show("设备可能已经离线，将主动关闭监控！");
                     return;
@@ -175,7 +175,10 @@ namespace ClinetPrints.SettingWindows
                 str = method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, new byte[] { (byte)(cmb_command.SelectedIndex + 1) });
                 if (str != "false")
                 {
-                    txb_commandText.AppendText(DateTime.Now.ToString() + "指令" + cmb_command.SelectedText + "已执行！");
+                    txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "已执行！");
+                }else
+                {
+                    txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "执行失败！");
                 }
             }
             else
@@ -207,13 +210,13 @@ namespace ClinetPrints.SettingWindows
         {
             ative = false;
         }
-        
+
         private void btn_getFile_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.ShowDialog();
             this.txb_getFile.Text = this.openFileDialog1.FileName;
         }
-      
+
         private void btn_up_Click(object sender, EventArgs e)
         {
             if (this.txb_getFile.Text != "")
@@ -261,6 +264,17 @@ namespace ClinetPrints.SettingWindows
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ckb_monitor_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckb_monitor.Checked)
+            {
+                demandTime.Enabled = false;
+            }else
+            {
+                demandTime.Enabled = true;
             }
         }
     }

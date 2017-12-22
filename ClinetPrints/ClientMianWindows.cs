@@ -153,21 +153,24 @@ namespace ClinetPrints
             {
                 if (SharMethod.monTime != null)
                 {
-                    var startTime = DateTime.Parse(SharMethod.monTime.Sdate);
-                    var endTime = DateTime.Parse(SharMethod.monTime.Edate);
-                    if (startTime >= endTime)//说明这个结束时间是第二天的时间
+                    if (SharMethod.monTime.chekedTime)
                     {
-                        endTime.AddDays(1);
-                    }
-                    if (DateTime.Now >= startTime && DateTime.Now <= endTime)
-                    {
-                        if (tiState.Interval != Int32.Parse(SharMethod.monTime.time) * 1000)//不相等就赋值
-                            tiState.Interval = Int32.Parse(SharMethod.monTime.time) * 1000;
-                    }
-                    else
-                    {
-                        if (tiState.Interval != 5000)//不相等就赋值,设置回原来的默认值
-                            tiState.Interval = 5000;
+                        var startTime = DateTime.Parse(SharMethod.monTime.Sdate);
+                        var endTime = DateTime.Parse(SharMethod.monTime.Edate);
+                        if (startTime >= endTime)//说明这个结束时间是第二天的时间
+                        {
+                            endTime.AddDays(1);
+                        }
+                        if (DateTime.Now >= startTime && DateTime.Now <= endTime)
+                        {
+                            if (tiState.Interval != Int32.Parse(SharMethod.monTime.time) * 1000)//不相等就赋值
+                                tiState.Interval = Int32.Parse(SharMethod.monTime.time) * 1000;
+                        }
+                        else
+                        {
+                            if (tiState.Interval != 5000)//不相等就赋值,设置回原来的默认值
+                                tiState.Interval = 5000;
+                        }
                     }
                 }
                 foreach (var key in SharMethod.liAllPrinter)
@@ -348,9 +351,9 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
                 string str = string.Format("发生了异常：{0}，追踪异常信息：{1}, 异常哈希：{2}", ex.Message, ex.StackTrace, ex.GetHashCode());
-                MessageBox.Show(str);
+                SharMethod.writeLog(str);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -500,6 +503,7 @@ namespace ClinetPrints
         {
             MenuItem menuItem1 = new MenuItem("显示窗体");
             MenuItem menuItem2 = new MenuItem("隐藏窗体");
+            MenuItem promotionDev = new MenuItem("不一致版本固件更新");
             MenuItem menSet = new MenuItem("设置");
             MenuItem menuItem3 = new MenuItem("退出程序");//这个需要保留的按钮程序
             menuItem1.Click += (o, e) =>
@@ -509,6 +513,16 @@ namespace ClinetPrints
             menuItem2.Click += (o, e) =>
             {
                 this.Hide();
+            };
+            promotionDev.Click += (o, e) =>
+            {
+                Thread thread = new Thread(() =>
+                  {
+                      DevPromotion dp = new DevPromotion();
+                      dp.ShowDialog();
+                  });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
             };
             menSet.Click += (o, e) =>
             {
@@ -521,7 +535,7 @@ namespace ClinetPrints
                 this.Dispose();
                 Application.ExitThread();
             };
-            notifyIcon.ContextMenu = new ContextMenu(new MenuItem[] { menuItem1, menuItem2, menSet, menuItem3 });
+            notifyIcon.ContextMenu = new ContextMenu(new MenuItem[] { menuItem1, menuItem2, promotionDev, menSet, menuItem3 });
         }
         /// <summary>
         /// 添加图片
@@ -1161,7 +1175,7 @@ namespace ClinetPrints
                                 li.Add(succese[1]);
                                 break;
                             }
-                          
+
                         }
                         if (li.Count > 0)
                         {
@@ -1294,25 +1308,30 @@ namespace ClinetPrints
             }
             if (listView1.SelectedItems.Count > 0)
             {
+                var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter;
+                if (po.Count > 1)
+                {
+                    MessageBox.Show("群打印不法对图片进行预览设置处理！");
+                    return;
+                }
+                string addre = listView1.SelectedItems[0].SubItems[2].Text;
+                string job = listView1.SelectedItems[0].SubItems[1].Text;
+                int num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
                 Thread thread = new Thread(() =>
                   {
                       printPiewForm pf = new printPiewForm();
-                      var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter;
-                      if (po.Count > 1)
-                      {
-                          MessageBox.Show("群打印不法对图片进行预览设置处理！");
-                          return;
-                      }
-                      pf.fileAddress = listView1.SelectedItems[0].SubItems[2].Text;
-                      pf.jobNum = listView1.SelectedItems[0].SubItems[1].Text;
-                      pf.num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
+                      pf.fileAddress = addre;
+                      pf.jobNum = job;
+                      pf.num = num;
                       pf.lipo = po[0];
                       pf.ShowDialog();
                       if (pf.printTo)//说明选择的任务进行了打印
-                    {
+                      {
                           Invoke(new Action<object, EventArgs>(toolStBtn_delete_Click), sender, e);
                       }
                   });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
             }
             else
             {
@@ -1320,7 +1339,7 @@ namespace ClinetPrints
             }
         }
 
-       
+
 
         private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)
         {

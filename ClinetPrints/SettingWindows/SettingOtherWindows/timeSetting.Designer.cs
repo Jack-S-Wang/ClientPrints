@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.ckb_time = new System.Windows.Forms.CheckBox();
+            this.ckb_launch = new System.Windows.Forms.CheckBox();
             this.btn_sureTime = new System.Windows.Forms.Button();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -39,12 +41,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txb_time = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.ckb_launch = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ckb_time);
             this.panel1.Controls.Add(this.ckb_launch);
             this.panel1.Controls.Add(this.btn_sureTime);
             this.panel1.Controls.Add(this.dateTimePicker2);
@@ -60,6 +62,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(332, 231);
             this.panel1.TabIndex = 0;
+            // 
+            // ckb_time
+            // 
+            this.ckb_time.AutoSize = true;
+            this.ckb_time.Location = new System.Drawing.Point(155, 158);
+            this.ckb_time.Name = "ckb_time";
+            this.ckb_time.Size = new System.Drawing.Size(120, 16);
+            this.ckb_time.TabIndex = 13;
+            this.ckb_time.Text = "是否执行设定时间";
+            this.ckb_time.UseVisualStyleBackColor = true;
+            // 
+            // ckb_launch
+            // 
+            this.ckb_launch.AutoSize = true;
+            this.ckb_launch.Location = new System.Drawing.Point(156, 185);
+            this.ckb_launch.Name = "ckb_launch";
+            this.ckb_launch.Size = new System.Drawing.Size(150, 16);
+            this.ckb_launch.TabIndex = 12;
+            this.ckb_launch.Text = "是否随windows自启程序";
+            this.ckb_launch.UseVisualStyleBackColor = true;
             // 
             // btn_sureTime
             // 
@@ -80,6 +102,7 @@
             this.dateTimePicker2.ShowUpDown = true;
             this.dateTimePicker2.Size = new System.Drawing.Size(150, 21);
             this.dateTimePicker2.TabIndex = 10;
+            this.dateTimePicker2.Value = new System.DateTime(2017, 12, 22, 6, 0, 0, 0);
             // 
             // dateTimePicker1
             // 
@@ -90,6 +113,7 @@
             this.dateTimePicker1.ShowUpDown = true;
             this.dateTimePicker1.Size = new System.Drawing.Size(150, 21);
             this.dateTimePicker1.TabIndex = 9;
+            this.dateTimePicker1.Value = new System.DateTime(2017, 12, 22, 19, 0, 0, 0);
             // 
             // label6
             // 
@@ -142,7 +166,7 @@
             this.txb_time.Name = "txb_time";
             this.txb_time.Size = new System.Drawing.Size(100, 21);
             this.txb_time.TabIndex = 1;
-            this.txb_time.Text = "10";
+            this.txb_time.Text = "60";
             this.txb_time.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txb_time_KeyPress);
             // 
             // label1
@@ -153,16 +177,6 @@
             this.label1.Size = new System.Drawing.Size(113, 12);
             this.label1.TabIndex = 0;
             this.label1.Text = "设置定时查询时间：";
-            // 
-            // ckb_launch
-            // 
-            this.ckb_launch.AutoSize = true;
-            this.ckb_launch.Location = new System.Drawing.Point(156, 185);
-            this.ckb_launch.Name = "ckb_launch";
-            this.ckb_launch.Size = new System.Drawing.Size(150, 16);
-            this.ckb_launch.TabIndex = 12;
-            this.ckb_launch.Text = "是否随windows自启程序";
-            this.ckb_launch.UseVisualStyleBackColor = true;
             // 
             // timeSetting
             // 
@@ -196,5 +210,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Button btn_sureTime;
         private System.Windows.Forms.CheckBox ckb_launch;
+        private System.Windows.Forms.CheckBox ckb_time;
     }
 }
