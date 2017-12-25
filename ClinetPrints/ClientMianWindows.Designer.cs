@@ -36,6 +36,7 @@
             this.全部展开ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全部折叠ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置查询时间ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pan_mainWin1_tree = new System.Windows.Forms.Panel();
             this.printerViewFlock = new System.Windows.Forms.TreeView();
             this.printerViewSingle = new System.Windows.Forms.TreeView();
@@ -63,7 +64,7 @@
             this.toolStBtn_parmSet = new System.Windows.Forms.ToolStripButton();
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
-            this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -123,6 +124,13 @@
             this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.设置查询时间ToolStripMenuItem.Text = "设置";
             this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
+            // 
+            // 帮助ToolStripMenuItem
+            // 
+            this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
+            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.帮助ToolStripMenuItem.Text = "帮助";
+            this.帮助ToolStripMenuItem.Click += new System.EventHandler(this.帮助ToolStripMenuItem_Click);
             // 
             // pan_mainWin1_tree
             // 
@@ -243,7 +251,7 @@
             // 
             // columnHeader2
             // 
-            this.columnHeader2.Text = "作业号";
+            this.columnHeader2.Text = "业务号";
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // columnHeader5
@@ -381,12 +389,9 @@
             this.imageSubItems.ImageSize = new System.Drawing.Size(16, 16);
             this.imageSubItems.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // 帮助ToolStripMenuItem
+            // timer1
             // 
-            this.帮助ToolStripMenuItem.Name = "帮助ToolStripMenuItem";
-            this.帮助ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.帮助ToolStripMenuItem.Text = "帮助";
-            this.帮助ToolStripMenuItem.Click += new System.EventHandler(this.帮助ToolStripMenuItem_Click);
+            this.timer1.Interval = 1000;
             // 
             // ClientMianWindows
             // 
@@ -457,6 +462,7 @@
         public System.Windows.Forms.ToolStripTextBox toolStTxb_printer;
         public System.Windows.Forms.ImageList imageSubItems;
         private System.Windows.Forms.ToolStripMenuItem 帮助ToolStripMenuItem;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

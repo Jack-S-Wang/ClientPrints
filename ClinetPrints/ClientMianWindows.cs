@@ -74,7 +74,7 @@ namespace ClinetPrints
             Marshal.FreeHGlobal(buffer);
         }
 
-
+        bool imageF = true;
         /// <summary>
         /// 设置一个定时器，检测打印机实时状态
         /// </summary>
@@ -86,6 +86,9 @@ namespace ClinetPrints
                 this.Hide();
                 //注册系统检测USB插拔功能
                 registerForHandle();
+                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints";
+                if (!System.IO.File.Exists(flod))
+                    Directory.CreateDirectory(flod);
                 printerViewSingle.Enabled = true;
                 printerViewSingle.Visible = true;
                 printerViewFlock.Enabled = false;
@@ -93,6 +96,19 @@ namespace ClinetPrints
                 printerViewSingle.ShowNodeToolTips = true;
                 printerViewFlock.ShowNodeToolTips = true;
                 listView1.ShowItemToolTips = true;
+                timer1.Tick += (o, ae) =>
+                {
+                    if (imageF)
+                    {
+                        notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
+                        imageF = false;
+                    }
+                    else
+                    {
+                        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                        imageF = true;
+                    }
+                };
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
@@ -117,12 +133,15 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
+       
+       
+
         /// <summary>
         /// 获取在某段时间所执行的定时查询
         /// </summary>
         private void getMonTime()
         {
-            var file = new FileStream(@"./printerXml/printMonitor.xml", FileMode.OpenOrCreate);
+            var file = new FileStream(Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\printMonitor.xml", FileMode.OpenOrCreate);
             if (file.Length > 0)
             {
                 var xml = new XmlSerializer(new monitorTime().GetType());
@@ -205,7 +224,10 @@ namespace ClinetPrints
                                         pInfo.lb_DevInfo.Text = "设备" + po.alias + "出现了问题，需要处理！";
                                         pInfo.ShowDialog();
                                     });
-
+                                    this.BeginInvoke(new MethodInvoker(() =>
+                                    {
+                                        timer1.Enabled = true;
+                                    }));
                                 }
                             }
                         }
@@ -772,7 +794,7 @@ namespace ClinetPrints
                 {
                     if (addfile > 19)
                     {
-                        MessageBox.Show("最多只能添加20个作业！");
+                        MessageBox.Show("最多只能添加20个任务！");
                         return;
                     }
                     OpenFileDialog openfile = new OpenFileDialog();
@@ -1139,12 +1161,19 @@ namespace ClinetPrints
                             });
                             return;
                         }
+                        if (col[c].pParams.outJobNum >= 65000)
+                        {
+                            ThreadPool.QueueUserWorkItem((o) =>
+                            {
+                                MessageBox.Show("打印工作号缓存数过大，请打印完成之后到监控控制界面进行重启该设备进行释放！！");
+                            });
+                        }
                         Thread threadPrint = new Thread((printObject =>
                     {
                         var printOb = printObject as object[];
                         var printer = printOb[0] as PrinterObjects;
                         var liItems = printOb[1] as List<string>[];
-
+                        int count = 0;
                         var method = printer.MethodsObject as IMethodObjects;
                         List<string> li = new List<string>();
                         for (int i = 0; i < liItems.Length; i++)
@@ -1170,6 +1199,7 @@ namespace ClinetPrints
                             g.Dispose();
                             bmap.Save(filePath);
                             List<string> succese = method.writeDataToDev(filePath, printer, liItems[i][0], Int32.Parse(LiItems[i][2]));
+                            count += Int32.Parse(LiItems[i][2]);
                             if (succese[0].Equals("error"))
                             {
                                 li.Add(succese[1]);
@@ -1179,27 +1209,34 @@ namespace ClinetPrints
                         }
                         if (li.Count > 0)
                         {
-                            MessageBox.Show("打印失败！" + li[0]);
+                            PrinterInformation pi = new PrinterInformation();
+                            pi.lb_DevInfo.Text = "打印失败！" + li[0];
+                            pi.ShowDialog();
                         }
                         else
                         {
-                            Thread.Sleep(3000);
-                            this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
-                            {
-                                string jsonState = (printer.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printer.pHandle, new byte[] { 0x30 });
-                                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
-                                printer.stateCode = keyState.stateCode;
-                                printer.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                                printer.state = keyState.majorState;
-                                if (printer.stateCode == 6)
-                                {
-                                    MessageBox.Show("打印失败！有异常：" + printer.stateMessage);
-                                }
-                                else
-                                {
-                                    MessageBox.Show(printer.alias + ":打印成功！");
-                                }
-                            }));
+                            Thread threadmontior = new Thread((ob) =>
+                              {
+                                  PrinterObjects po = ob as PrinterObjects;
+                                  var me = po.MethodsObject as IMethodObjects;
+                                  while (true)
+                                  {
+                                      Thread.Sleep(5000);
+                                      //输出作业
+                                      var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
+                                      var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+                                      if (printOut.workIndex == count + po.pParams.outJobNum)
+                                      {
+                                          string str = "设备:" + po.alias + ",所有打印已完成！";
+                                          PrinterInformation pi = new PrinterInformation();
+                                          pi.lb_DevInfo.Text = str;
+                                          pi.ShowDialog();
+                                          break;
+                                      }
+                                  }
+                              });
+                            threadmontior.SetApartmentState(ApartmentState.STA);
+                            threadmontior.Start(printer);
                         }
                     }));
 

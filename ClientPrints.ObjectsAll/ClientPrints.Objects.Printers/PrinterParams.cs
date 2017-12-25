@@ -85,5 +85,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 实际设备的纸张大小
         /// </summary>
         public string page { get; set; }
+        /// <summary>
+        /// 输出作业号
+        /// </summary>
+        public int outJobNum { get; set; }
     }
 }

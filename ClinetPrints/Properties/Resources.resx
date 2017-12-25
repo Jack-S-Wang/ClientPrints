@@ -184,4 +184,7 @@
   <data name="ooopic_1502413436" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ooopic_1502413436.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ooopic_1502413321" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ooopic_1502413321.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

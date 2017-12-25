@@ -95,11 +95,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             FileStream file;
             if (type == 1)
             {
-                file = new FileStream(@"./printerXml/printerSingle.bin", FileMode.OpenOrCreate);
+                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\printerSingle.bin", FileMode.OpenOrCreate);
 
             }else
             {
-                file = new FileStream(@"./printerXml/printerFlock.bin", FileMode.OpenOrCreate);
+                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\printerFlock.bin", FileMode.OpenOrCreate);
             }
             return file;
         }

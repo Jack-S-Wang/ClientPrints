@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
-using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
-using static ClientPrsintsMethodList.ClientPrints.Method.WDevDll.structClassDll;
-using System.Threading;
-using System.Runtime.InteropServices;
 
 namespace ClinetPrints.SettingWindows
 {

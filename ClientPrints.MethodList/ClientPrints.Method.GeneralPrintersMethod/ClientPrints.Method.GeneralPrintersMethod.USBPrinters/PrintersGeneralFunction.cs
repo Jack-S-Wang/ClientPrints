@@ -53,14 +53,14 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string sn = reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, new byte[0]);
             //版本号
             string version = reInformation(WDevCmdObjects.DEV_GET_PROTVER, pHandle, new byte[0]);
-            
+
             //标识
             string onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0x00, 0x00 });
             string DevInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 1 });
             if (!DevInfo.Contains("01.01.00.03"))
             {
                 WDevDllMethod.dllFunc_CloseDev(pHandle);
-                throw (new Exception("设备："+onlyAlias+":版本不一致,需要固件更新！"));
+                throw (new Exception("设备：" + onlyAlias + ":版本不一致,需要固件更新！"));
             }
 
             //系统状态
@@ -82,7 +82,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string alias = onlyAlias;
             //厂商
             string vendor = "DASCOM";
-           
+
             //设备数据信息
             string dataInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 2 });
             var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
@@ -92,6 +92,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             //设备系统参数信息
             string DevParmInfo = reInformation(WDevCmdObjects.DEV_GET_SYSPARAM, pHandle, new byte[] { 0x81 });
             var devParmInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
+            //输出作业
+            var printOutPut = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, new byte[] { 0x33 });
+            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+            
             var printerParams = new PrinterParams()
             {
                 devInfo = DevInfo,
@@ -106,8 +110,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 pixelformat = Pagejson.pixelformat,
                 xDPL = Pagejson.xDPL,
                 yDPL = Pagejson.yDPL,
-                DevParm = devParmInfoJson.parmData
+                DevParm = devParmInfoJson.parmData,
+                outJobNum = printOut.workIndex
             };
+            if (printOut.workIndex == 65535)
+            {
+                printerParams.outJobNum = 0;
+            }
             var printers = new PrinterObjects()
             {
                 sn = sn,
@@ -157,11 +166,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     if (outDats.datLen > 0)
                     {
                         LogText = getDifferentString(ctrlCodeStr, outDats.datLen, reData);
-                    }else
+                    }
+                    else
                     {
                         LogText = "true";
                     }
-                }else
+                }
+                else
                 {
                     LogText = "false";
                 }
@@ -320,12 +331,14 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             return strCode;
         }
 
+
+        private int outJobNum = 0;
         /// <summary>
         /// 对指定图片进行打印
         /// </summary>
         /// <param name="pathFile">图片路径</param>
         /// <param name="po">打印机对象</param>
-        /// <param name="jobnum">作业号</param>
+        /// <param name="jobnum">业务号</param>
         /// <param name="num">打印数量</param>
         public List<string> writeDataToDev(string pathFile, PrinterObjects po, string jobnum, int num)
         {
@@ -341,8 +354,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 var devProt = new structBmpClass.DeviceProterty()
                 {
                     dmThicken = (short)po.pParams.colorDepth,//01指2位数，就是2色的意思
-                    nWidth = (short)(po.pParams.maxWidth+1),
-                    nHeight = (short)(po.pParams.maxHeight+1),
+                    nWidth = (short)(po.pParams.maxWidth + 1),
+                    nHeight = (short)(po.pParams.maxHeight + 1),
                     dmPrintQuality = 0,
                     dmYResolution = 0,
                     dmTag = 0x01
@@ -409,41 +422,47 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     var bmpPtr = IntPtr.Add(memblock, Marshal.SizeOf(devbm));
                     Marshal.Copy(tmp, 0, bmpPtr, len);
 
-                    var lope = new structClassDll.UNCMPR_INFO()
-                    {
-                        cmprLen = 0,
-                        uncmprLen = 0,
-                        stat = 0,
-                        jobNumber = (ushort)Int16.Parse(jobnum),
-                        resultTag = 0,
-                        cmprType = 0,
-                        frmIdx = 0,
-                        userParm = "DevLog.log"
-                    };
                     tmp = null;
                     bool success = false;
                     string error = "";
+                    if (Int32.Parse(jobnum) == 1)//业务号为一时
+                    {
+                        outJobNum = po.pParams.outJobNum;
+                    }
+
                     for (int i = 0; i < num; i++)
                     {
                         try
                         {
-                            System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "image.cmpr", System.IO.FileMode.OpenOrCreate);
-                            var tmp1 = new byte[memblockSize];
-                            Marshal.Copy(memblock, tmp1, 0, memblockSize);
-                            file.Write(tmp1, 0, memblockSize);
-                            file.Flush();
-                            file.Dispose();
-                            file.Close();
+                            outJobNum = outJobNum + 1;
+                            var lope = new structClassDll.UNCMPR_INFO()
+                            {
+                                cmprLen = 0,
+                                uncmprLen = 0,
+                                stat = 0,
+                                jobNumber = (ushort)outJobNum,
+                                resultTag = 0,
+                                cmprType = 0,
+                                frmIdx = 0,
+                                userParm = "DevLog.log"
+                            };
+                            //System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "image.cmpr", System.IO.FileMode.OpenOrCreate);
+                            //var tmp1 = new byte[memblockSize];
+                            //Marshal.Copy(memblock, tmp1, 0, memblockSize);
+                            //file.Write(tmp1, 0, memblockSize);
+                            //file.Flush();
+                            //file.Dispose();
+                            //file.Close();
                             success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
                         }
                         catch
                         {
                             li.Add("error");
-                            li.Add("打印不成功！");
+                            li.Add("打印方法执行失败！");
                         }
                         if (!success)
                         {
-                            error = "已打印了" + i + "张：打印已经出现问题，无法继续打印！";
+                            error = "打印方法执行失败！已打印:"+(outJobNum - (po.pParams.outJobNum + 1))+"份";
                             break;
                         }
                     }
@@ -458,7 +477,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     else
                     {
                         li.Add("Ok");
-                        li.Add("工作号：" + jobnum);
+                        li.Add("任务号：" + jobnum+"已发送完毕！");
                         return li;
                     }
                 }

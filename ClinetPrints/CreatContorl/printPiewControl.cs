@@ -38,7 +38,6 @@ namespace ClinetPrints.CreatContorl
                     var dirPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "ClinetPrints");
-                    try { Directory.CreateDirectory(dirPath); } catch { }
                     var filePath = Path.Combine(dirPath, "pages.xml");
                     var file = new FileStream(filePath, FileMode.OpenOrCreate);
                     if (file == null)
@@ -520,6 +519,13 @@ namespace ClinetPrints.CreatContorl
                 {
                     MessageBox.Show("打印机：" + PrinterObject.alias + "状态不正常，不能打印！");
                     return;
+                }
+                if (PrinterObject.pParams.outJobNum >= 65000)
+                {
+                    ThreadPool.QueueUserWorkItem((o) =>
+                    {
+                        MessageBox.Show("打印工作号缓存数过大，请打印完成之后到监控控制界面进行重启该设备进行释放！！");
+                    });
                 }
                 var filePath = Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
