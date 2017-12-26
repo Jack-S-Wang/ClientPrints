@@ -74,7 +74,7 @@ namespace ClinetPrints
             Marshal.FreeHGlobal(buffer);
         }
 
-        bool imageF = true;
+
         /// <summary>
         /// 设置一个定时器，检测打印机实时状态
         /// </summary>
@@ -96,8 +96,16 @@ namespace ClinetPrints
                 printerViewSingle.ShowNodeToolTips = true;
                 printerViewFlock.ShowNodeToolTips = true;
                 listView1.ShowItemToolTips = true;
+                bool imageF = true;
                 timer1.Tick += (o, ae) =>
                 {
+                    if (this.Visible)
+                    {
+                        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                        imageF = true;
+                        timer1.Enabled = false;
+                        return;
+                    }
                     if (imageF)
                     {
                         notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
@@ -108,7 +116,7 @@ namespace ClinetPrints
                         notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
                         imageF = true;
                     }
-                };
+                }; 
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
@@ -133,8 +141,8 @@ namespace ClinetPrints
                 MessageBox.Show(ex.Message);
             }
         }
-       
-       
+
+
 
         /// <summary>
         /// 获取在某段时间所执行的定时查询
@@ -165,6 +173,9 @@ namespace ClinetPrints
             file.Dispose();
             file.Close();
         }
+
+
+       
 
         private void TiState_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -214,6 +225,7 @@ namespace ClinetPrints
                                 }));
                                 if (keyState.stateCode == 4 || keyState.stateCode == 5 || keyState.stateCode == 6)
                                 {
+                                    Interlocked.Increment(ref errorCount);
                                     SpeechSynthesizer sp = new SpeechSynthesizer();
                                     sp.Rate = 2;
                                     sp.Volume = 20;
@@ -224,10 +236,20 @@ namespace ClinetPrints
                                         pInfo.lb_DevInfo.Text = "设备" + po.alias + "出现了问题，需要处理！";
                                         pInfo.ShowDialog();
                                     });
-                                    this.BeginInvoke(new MethodInvoker(() =>
+                                    if (!this.Visible)
                                     {
-                                        timer1.Enabled = true;
-                                    }));
+                                        this.BeginInvoke(new MethodInvoker(() =>
+                                        {
+                                            timer1.Enabled = true;
+                                        }));
+                                    }
+                                }else
+                                {
+                                    Interlocked.Decrement(ref errorCount);
+                                    if (errorCount == 0)
+                                    {
+                                        timer1.Enabled = false;
+                                    }
                                 }
                             }
                         }
@@ -446,7 +468,7 @@ namespace ClinetPrints
                 SharMethod.SavePrinter(tnode, file);
             }
         }
-
+        private volatile int errorCount=0;
         /// <summary>
         /// 添加打印机信息到节点上
         /// </summary>
@@ -464,6 +486,7 @@ namespace ClinetPrints
                     new MenuPrinterGroupAddMethod(ptn, this);
                 }
             });
+            
             foreach (var keyva in SharMethod.liAllPrinter)
             {
                 var results = tnode.Nodes.Find(keyva.onlyAlias, true);
@@ -482,6 +505,14 @@ namespace ClinetPrints
                     all.Add(cnode);
                     new MenuPrinterGroupAddMethod(cnode, this);
                 }
+                if(keyva.stateCode==4 || keyva.stateCode==5 || keyva.stateCode == 6)
+                {
+                    Interlocked.Increment(ref errorCount);
+                }
+            }
+            if (errorCount > 0)
+            {
+                timer1.Enabled = true;
             }
             FileStream fileSingle = SharMethod.FileCreateMethod(SharMethod.SINGLE);
             SharMethod.SavePrinter(tnode, fileSingle);
@@ -1412,6 +1443,25 @@ namespace ClinetPrints
             if (dr == DialogResult.OK)
             {
                 //将错误日记上传
+            }
+        }
+
+        private void printerViewSingle_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node == printerViewSingle.SelectedNode)
+            {
+                if (e.Node is PrinterTreeNode)
+                {
+                    var n = e.Node as PrinterTreeNode;
+                    if (n.showToMove)
+                    {
+                        n.showToMove = false;
+                    }
+                    errorText er = new errorText();
+                    er.Owner = this;
+                    er.StartPosition = FormStartPosition.CenterParent;
+                   
+                }
             }
         }
     }

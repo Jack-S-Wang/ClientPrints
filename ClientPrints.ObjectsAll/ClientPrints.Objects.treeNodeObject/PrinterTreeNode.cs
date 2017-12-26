@@ -6,6 +6,10 @@ using System.Drawing;
 using System.Text;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using System.Windows.Forms;
+using System.Threading;
+using System.IO;
+using System.Xml.Serialization;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
 {
@@ -17,7 +21,12 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             : base(info, context)
         {
         }
-
+        /// <summary>
+        /// 显示动态背景颜色
+        /// </summary>
+        public bool showToMove = true;
+       
+        
         private PrinterObjects _PrinterObject;
         /// <summary>
         /// 打印机的对象属性
@@ -35,6 +44,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                 {
                     value.alias = Text.Substring(0, Text.IndexOf('('));
                 }
+               
                 switch (value.stateCode)
                 {
                     case 1://空闲
@@ -69,6 +79,15 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                         break;
                 }
                 ToolTipText = value.stateMessage;
+                if (value.stateCode == 4 || value.stateCode == 5 || value.stateCode == 6)
+                {
+                    treeShowMove();
+                }
+                else
+                {
+                    showToMove = false;
+                }
+                fileWrite(value);
                 StateCode = value.stateCode.ToString();
                 value.StateCodeChanged += Value_StateCodeChanged;
                 _PrinterObject = value;
@@ -112,8 +131,85 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                     break;
             }
             ToolTipText = obj.stateMessage;
+            if (obj.stateCode == 4 || obj.stateCode == 5 || obj.stateCode == 6)
+            {
+                treeShowMove();
+            }
+            else
+            {
+                showToMove = false;
+            }
+            fileWrite(obj);
         }
 
+        private void fileWrite(PrinterObjects obj)
+        {
+            var file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints\\" + Name + ".xml", FileMode.OpenOrCreate);
+            var pe = new printerError();
+            XmlSerializer xml = new XmlSerializer(pe.GetType());
+            pe.Add(DateTime.Now.ToString("yyyy-MM-dd Hh:mm:ss"), obj.stateMessage);
+            xml.Serialize(file, pe);
+            file.Flush();
+            file.Dispose();
+            file.Close();
+        }
+
+        private void treeShowMove()
+        {
+            showToMove = true;
+            bool treeShow = true;
+            Thread thread = new Thread(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+                    if (treeShow)
+                    {
+                        if (this.Parent != null)
+                        {
+                            ForTopEachNode(this.Parent, (nod) =>
+                            {
+                                nod.BackColor = Color.Red;
+                            });
+                        }
+                            BackColor = System.Drawing.Color.DarkSeaGreen;
+                            treeShow = false;
+                        }
+                        else
+                        {
+                            ForTopEachNode(this.Parent, (nod) =>
+                            {
+                                nod.BackColor = Color.White;
+                            });
+                            BackColor = System.Drawing.Color.White;
+                            treeShow = true;
+                        }
+                    if (!showToMove)
+                    {
+                        ForTopEachNode(this.Parent, (nod) =>
+                        {
+                            nod.BackColor = Color.White;
+                        });
+                        BackColor = System.Drawing.Color.White;
+                        break;
+                    }
+                }
+            });
+            thread.Start();
+        }
+        /// <summary>
+        /// 从当前节点递归找到绝对的路径上的节点
+        /// </summary>
+        /// <param name="node">树节点</param>
+        /// <param name="action">执行的方法</param>
+        private static void ForTopEachNode(TreeNode node, Action<TreeNode> action)
+        {
+            action(node);
+            if (node.Parent != null)
+            {
+                ForTopEachNode(node.Parent, action);
+            }
+        }
         /// <summary>
         /// Tag值属性发生改变时发生的事件
         /// </summary>

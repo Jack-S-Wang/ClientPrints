@@ -145,6 +145,7 @@
             // 
             // printerViewFlock
             // 
+            this.printerViewFlock.BackColor = System.Drawing.Color.White;
             this.printerViewFlock.Dock = System.Windows.Forms.DockStyle.Fill;
             this.printerViewFlock.Font = new System.Drawing.Font("微软雅黑", 7.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.printerViewFlock.Location = new System.Drawing.Point(0, 25);
@@ -162,6 +163,7 @@
             this.printerViewSingle.Size = new System.Drawing.Size(209, 547);
             this.printerViewSingle.TabIndex = 0;
             this.printerViewSingle.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewSingle_AfterSelect);
+            this.printerViewSingle.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.printerViewSingle_NodeMouseDoubleClick);
             // 
             // menuStrip2
             // 
