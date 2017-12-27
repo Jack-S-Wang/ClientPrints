@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
 {
+    
     public class printerError
     {
         public class Item
@@ -29,6 +30,19 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         /// <summary>
         /// 记录上报时间和日记信息
         /// </summary>
-        public List<Item> Items = new List<Item>();
+        private List<Item> items = new List<Item>();
+
+        public List<Item> Items
+        {
+            get
+            {
+                return items;
+            }
+
+            set
+            {
+                items = value;
+            }
+        }
     }
 }

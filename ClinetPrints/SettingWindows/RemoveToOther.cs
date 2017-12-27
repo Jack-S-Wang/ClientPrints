@@ -242,7 +242,7 @@ namespace ClinetPrints.SettingWindows
                         PrinterTreeNode nowNode;
                         if (!sureNode.Nodes.ContainsKey(cnode.Name))
                         {
-
+                            cnode.Parent.BackColor = System.Drawing.Color.White;
                             if (cnode.PrinterObject != null)
                             {
                                 nowNode = new PrinterTreeNode(cnode.PrinterObject);

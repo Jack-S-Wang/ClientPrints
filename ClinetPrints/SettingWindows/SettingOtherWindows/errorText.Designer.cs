@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,6 +69,12 @@
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.columnHeader2.Width = 184;
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 3000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // errorText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -76,6 +84,7 @@
             this.MaximizeBox = false;
             this.Name = "errorText";
             this.Text = "错误信息表";
+            this.Load += new System.EventHandler(this.errorText_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -87,5 +96,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         public System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

@@ -67,6 +67,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         /// <param name="action">执行的方法</param>
         public static void ForTopEachNode(TreeNode node,Action<TreeNode> action)
         {
+            if (node == null) { return; }
             action(node);
             if (node.Parent != null)
             {
@@ -95,11 +96,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             FileStream file;
             if (type == 1)
             {
-                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\printerSingle.bin", FileMode.OpenOrCreate);
+                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ClientPrints\\printerSingle.bin", FileMode.OpenOrCreate);
 
             }else
             {
-                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\printerFlock.bin", FileMode.OpenOrCreate);
+                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\printerFlock.bin", FileMode.OpenOrCreate);
             }
             return file;
         }

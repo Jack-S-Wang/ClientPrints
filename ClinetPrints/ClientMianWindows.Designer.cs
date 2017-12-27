@@ -153,6 +153,7 @@
             this.printerViewFlock.Size = new System.Drawing.Size(209, 547);
             this.printerViewFlock.TabIndex = 2;
             this.printerViewFlock.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.printerViewFlock_AfterSelect);
+            this.printerViewFlock.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.printerViewFlock_NodeMouseDoubleClick);
             // 
             // printerViewSingle
             // 
@@ -178,6 +179,7 @@
             // 
             // 单台打印ToolStripMenuItem
             // 
+            this.单台打印ToolStripMenuItem.BackColor = System.Drawing.Color.Green;
             this.单台打印ToolStripMenuItem.Name = "单台打印ToolStripMenuItem";
             this.单台打印ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.单台打印ToolStripMenuItem.Text = "单台打印";
@@ -406,7 +408,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ClientMianWindows";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "客户端打印控制";
+            this.Text = "客户端打印控制 V1.6";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClientMianWindows_FormClosing);
             this.Load += new System.EventHandler(this.ClientMianWindows_Load);

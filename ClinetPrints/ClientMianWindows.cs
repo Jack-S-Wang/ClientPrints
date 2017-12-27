@@ -46,6 +46,8 @@ namespace ClinetPrints
             notifyIcon.Click += (o, e) =>
             {
                 this.Visible = true;
+                timer1.Enabled = false;
+                notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
                 this.WindowState = FormWindowState.Normal;
             };
         }
@@ -86,7 +88,7 @@ namespace ClinetPrints
                 this.Hide();
                 //注册系统检测USB插拔功能
                 registerForHandle();
-                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints";
+                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints";
                 if (!System.IO.File.Exists(flod))
                     Directory.CreateDirectory(flod);
                 printerViewSingle.Enabled = true;
@@ -95,6 +97,9 @@ namespace ClinetPrints
                 printerViewFlock.Visible = false;
                 printerViewSingle.ShowNodeToolTips = true;
                 printerViewFlock.ShowNodeToolTips = true;
+                ToolTip tool = new ToolTip();
+                tool.SetToolTip(printerViewSingle, "双击打印机即可查看消息内容！");
+                tool.SetToolTip(printerViewFlock, "双击打印机即可查看消息内容！");
                 listView1.ShowItemToolTips = true;
                 bool imageF = true;
                 timer1.Tick += (o, ae) =>
@@ -106,17 +111,20 @@ namespace ClinetPrints
                         timer1.Enabled = false;
                         return;
                     }
-                    if (imageF)
-                    {
-                        notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
-                        imageF = false;
-                    }
                     else
                     {
-                        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
-                        imageF = true;
+                        if (imageF)
+                        {
+                            notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
+                            imageF = false;
+                        }
+                        else
+                        {
+                            notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                            imageF = true;
+                        }
                     }
-                }; 
+                };
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
@@ -149,33 +157,33 @@ namespace ClinetPrints
         /// </summary>
         private void getMonTime()
         {
-            var file = new FileStream(Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\printMonitor.xml", FileMode.OpenOrCreate);
-            if (file.Length > 0)
+            using (var file = new FileStream(Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\printMonitor.xml", FileMode.OpenOrCreate))
             {
-                var xml = new XmlSerializer(new monitorTime().GetType());
-                var result = xml.Deserialize(file) as monitorTime;
-                SharMethod.monTime = result;
-                if (result.checkedStart)
+                if (file.Length > 0)
                 {
-                    if (!System.IO.File.Exists(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup) + "\\ClientPrints.lnk"))
+                    var xml = new XmlSerializer(new monitorTime().GetType());
+                    var result = xml.Deserialize(file) as monitorTime;
+                    SharMethod.monTime = result;
+                    if (result.checkedStart)
                     {
-                        string shortcutPath = Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup), string.Format("{0}.lnk", "ClientPrints"));
-                        WshShell shell = new WshShell();
-                        IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);//创建快捷方式对象
-                        shortcut.TargetPath = Application.ExecutablePath;//指定目标路径
-                        shortcut.WorkingDirectory = Path.GetDirectoryName(Application.ExecutablePath);//设置起始位置
-                        shortcut.WindowStyle = 1;//设置运行方式，默认为常规窗口
-                        shortcut.Save();//保存快捷方式
+                        if (!System.IO.File.Exists(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup) + "\\ClientPrints.lnk"))
+                        {
+                            string shortcutPath = Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup), string.Format("{0}.lnk", "ClientPrints"));
+                            WshShell shell = new WshShell();
+                            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutPath);//创建快捷方式对象
+                            shortcut.TargetPath = Application.ExecutablePath;//指定目标路径
+                            shortcut.WorkingDirectory = Path.GetDirectoryName(Application.ExecutablePath);//设置起始位置
+                            shortcut.WindowStyle = 1;//设置运行方式，默认为常规窗口
+                            shortcut.Save();//保存快捷方式
+                        }
                     }
                 }
             }
-            file.Flush();
-            file.Dispose();
-            file.Close();
+
         }
 
 
-       
+
 
         private void TiState_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -243,7 +251,8 @@ namespace ClinetPrints
                                             timer1.Enabled = true;
                                         }));
                                     }
-                                }else
+                                }
+                                else
                                 {
                                     Interlocked.Decrement(ref errorCount);
                                     if (errorCount == 0)
@@ -362,6 +371,7 @@ namespace ClinetPrints
                                         {
                                             var nf = node as PrinterTreeNode;
                                             nf.SetOffline();
+                                            nf.showToMove = false;
                                             var filef = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                             SharMethod.SavePrinter(this.printerViewFlock.Nodes[0], filef);
                                         }
@@ -422,6 +432,7 @@ namespace ClinetPrints
                     if (nod is GroupTreeNode)
                     {
                         var n = nod as GroupTreeNode;
+                        n.BackColor = Color.White;
                         new MenuFlockGroupMethod(n, this);
                     }
                 });
@@ -453,6 +464,7 @@ namespace ClinetPrints
                     if (nod is GroupTreeNode)
                     {
                         var n = nod as GroupTreeNode;
+                        n.BackColor = Color.White;
                         new MenuGroupAddMethod(n, this);
                     }
                 });
@@ -468,7 +480,7 @@ namespace ClinetPrints
                 SharMethod.SavePrinter(tnode, file);
             }
         }
-        private volatile int errorCount=0;
+        private volatile int errorCount = 0;
         /// <summary>
         /// 添加打印机信息到节点上
         /// </summary>
@@ -486,7 +498,7 @@ namespace ClinetPrints
                     new MenuPrinterGroupAddMethod(ptn, this);
                 }
             });
-            
+
             foreach (var keyva in SharMethod.liAllPrinter)
             {
                 var results = tnode.Nodes.Find(keyva.onlyAlias, true);
@@ -505,7 +517,7 @@ namespace ClinetPrints
                     all.Add(cnode);
                     new MenuPrinterGroupAddMethod(cnode, this);
                 }
-                if(keyva.stateCode==4 || keyva.stateCode==5 || keyva.stateCode == 6)
+                if (keyva.stateCode == 4 || keyva.stateCode == 5 || keyva.stateCode == 6)
                 {
                     Interlocked.Increment(ref errorCount);
                 }
@@ -561,6 +573,8 @@ namespace ClinetPrints
             MenuItem menuItem3 = new MenuItem("退出程序");//这个需要保留的按钮程序
             menuItem1.Click += (o, e) =>
             {
+                timer1.Enabled = false;
+                notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
                 this.Visible = true;
             };
             menuItem2.Click += (o, e) =>
@@ -584,9 +598,10 @@ namespace ClinetPrints
             };
             menuItem3.Click += (o, e) =>
             {
-                this.Close();
+                timer1.Enabled = false;
                 this.Dispose();
-                Application.ExitThread();
+                //PrinterTreeNode.Quit = true;
+                Application.Exit();
             };
             notifyIcon.ContextMenu = new ContextMenu(new MenuItem[] { menuItem1, menuItem2, promotionDev, menSet, menuItem3 });
         }
@@ -725,25 +740,124 @@ namespace ClinetPrints
             return dr;
         }
         #endregion
-
+        #region....//切换单打印与群打印时所记录的信息
+        private ListView liVewF = null;
+        private List<Image> liVeIamgeF = new List<Image>();
+        private List<ListViewItem> liItemF = new List<ListViewItem>();
+        private bool sToF = false;
+        private string liNameF = "";
+        private ListView liVewS = null;
+        private List<Image> liVeIamgeS = new List<Image>();
+        private List<ListViewItem> liItemS = new List<ListViewItem>();
+        private string liNameS = "";
+        private bool fToS = false;
+        #endregion
         private void 单台打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (printerViewSingle.Enabled == false)
+            {
+                fToS = true;
+                liVeIamgeF.Clear();
+                liItemF.Clear();
+                liVewF = listView1;
+                for (int i = 0; i < imageSubItems.Images.Count; i++)
+                {
+                    liVeIamgeF.Add(imageSubItems.Images[i]);
+                }
+                foreach (ListViewItem item in listView1.Items)
+                {
+                    liItemF.Add(item);
+                }
+                liNameF = toolStTxb_printer.Text;
+                imageSubItems.Images.Clear();
+                listView1.Items.Clear();
+                toolStTxb_printer.Text = "";
+                addfile = 0;
+            }
+            单台打印ToolStripMenuItem.BackColor = Color.Green;
+            群打印ToolStripMenuItem.BackColor = Color.White;
             printerViewSingle.Enabled = true;
             printerViewSingle.Visible = true;
             printerViewFlock.Enabled = false;
             printerViewFlock.Visible = false;
             printerViewSingle.Focus();
             toolStBtn_printPerview.Enabled = true;
+            if (fToS)
+            {
+                if (liVewS != null)
+                {
+                    listView1 = liVewS;
+                    imageSubItems.Images.Clear();
+                    listView1.Items.Clear();
+                    foreach (Image img in liVeIamgeS)
+                    {
+                        imageSubItems.Images.Add(img);
+                    }
+                    listView1.SmallImageList = imageSubItems;
+                    foreach (var item in liItemS)
+                    {
+                        listView1.Items.Add(item);
+                    }
+                    addfile = liItemS.Count;
+                    toolStTxb_printer.Text = liNameS;
+                    fToS = false;
+                }
+            }
+
         }
 
         private void 群打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (printerViewSingle.Enabled)
+            {
+                sToF = true;
+                liVeIamgeS.Clear();
+                liItemS.Clear();
+                liVewS = listView1;
+                for (int i = 0; i < imageSubItems.Images.Count; i++)
+                {
+                    liVeIamgeS.Add(imageSubItems.Images[i]);
+                }
+                foreach (ListViewItem item in listView1.Items)
+                {
+                    liItemS.Add(item);
+                }
+                liNameS = toolStTxb_printer.Text;
+                imageSubItems.Images.Clear();
+                listView1.Items.Clear();
+                toolStTxb_printer.Text = "";
+                addfile = 0;
+            }
+            单台打印ToolStripMenuItem.BackColor = Color.White;
+            群打印ToolStripMenuItem.BackColor = Color.Green;
             printerViewSingle.Enabled = false;
             printerViewSingle.Visible = false;
             printerViewFlock.Enabled = true;
             printerViewFlock.Visible = true;
             printerViewFlock.Focus();
             toolStBtn_printPerview.Enabled = false;
+            if (sToF)//说明是群转换为单打印过来的
+            {
+                if (liVewF != null)
+                {
+                    listView1 = liVewF;
+                    imageSubItems.Images.Clear();
+                    listView1.Items.Clear();
+                    foreach (Image img in liVeIamgeF)
+                    {
+                        imageSubItems.Images.Add(img);
+                    }
+                    listView1.SmallImageList = imageSubItems;
+                    foreach (var item in liItemF)
+                    {
+                        listView1.Items.Add(item);
+                    }
+                    addfile = liItemF.Count;
+                    toolStTxb_printer.Text = liNameF;
+                    sToF = false;
+                }
+
+            }
         }
         /// <summary>
         /// 设置listview中列保存对象的索引，会随着自定义增加其他列时需要改变，其他列是提前添加的！
@@ -778,8 +892,7 @@ namespace ClinetPrints
                                 col.liPrinter[0].listviewItemObject.Clear();
                                 for (int i = 0; i < this.listView1.Items.Count; i++)
                                 {
-                                    col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]); ;
-
+                                    col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]);
                                 }
                                 foreach (Image key in imageSubItems.Images)
                                 {
@@ -1211,7 +1324,7 @@ namespace ClinetPrints
                         {
                             var filePath = Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-              "ClinetPrints",
+              "ClientPrints",
               DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
                             var image = new Bitmap(liItems[i][1]);
                             Bitmap bmap = new Bitmap(printer.pParams.maxWidth, printer.pParams.maxHeight);
@@ -1460,7 +1573,30 @@ namespace ClinetPrints
                     errorText er = new errorText();
                     er.Owner = this;
                     er.StartPosition = FormStartPosition.CenterParent;
-                   
+                    er.Text = "设备：" + n.Text;
+                    er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
+                    er.Show();
+                }
+            }
+        }
+
+        private void printerViewFlock_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node == printerViewFlock.SelectedNode)
+            {
+                if (e.Node is PrinterTreeNode)
+                {
+                    var n = e.Node as PrinterTreeNode;
+                    if (n.showToMove)
+                    {
+                        n.showToMove = false;
+                    }
+                    errorText er = new errorText();
+                    er.Owner = this;
+                    er.StartPosition = FormStartPosition.CenterParent;
+                    er.Text = "设备：" + n.Text;
+                    er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
+                    er.Show();
                 }
             }
         }

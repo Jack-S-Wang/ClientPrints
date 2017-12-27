@@ -23,7 +23,14 @@ namespace ClinetPrints.MenuGroupMethod
                         col.liPrinter.Remove((tnode as PrinterTreeNode).PrinterObject);
                     }
                 }
-                (tnode.Parent as GroupTreeNode).Remove((tnode as PrinterTreeNode));
+                SharMethod.ForTopEachNode(tnode.Parent, (nod) =>
+                {
+                    if (nod != null)
+                    {
+                        nod.BackColor = System.Drawing.Color.White;
+                    }
+                });
+               (tnode.Parent as GroupTreeNode).Remove((tnode as PrinterTreeNode));
                 var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                 SharMethod.SavePrinter(nodeParFlock, file);
             };
@@ -43,6 +50,13 @@ namespace ClinetPrints.MenuGroupMethod
                         }
                     }
                     var node = tnode as PrinterTreeNode;
+                    SharMethod.ForTopEachNode(tnode.Parent, (n) =>
+                    {
+                        if (n != null)
+                        {
+                            n.BackColor = System.Drawing.Color.White;
+                        }
+                    });
                     (tnode.Parent as GroupTreeNode).Remove(node);
                     (cnode as GroupTreeNode).Add(node);
                     var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);

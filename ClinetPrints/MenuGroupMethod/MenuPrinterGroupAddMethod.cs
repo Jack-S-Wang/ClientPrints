@@ -79,8 +79,6 @@ namespace ClinetPrints.MenuGroupMethod
                       removeTo.Enabled = true;
                       removeTo.StartPosition = FormStartPosition.CenterParent;
                       removeTo.ShowDialog();
-                      var thread = Thread.CurrentThread;
-                      thread.Abort();
                   });
                 threadShow.Start();
             };
@@ -147,20 +145,25 @@ namespace ClinetPrints.MenuGroupMethod
                             }
                         }
                     }
-                    clientForm.listView1.Columns.RemoveAt(4);
-                    clientForm.listView1.Columns.Add(new listViewColumnTNode(tnode as PrinterTreeNode));
-                    clientForm.toolStTxb_printer.Text = (tnode as PrinterTreeNode).Text;
-                    var item = (tnode as PrinterTreeNode).PrinterObject.listviewItemObject;
-                    foreach(Image key in (tnode as PrinterTreeNode).PrinterObject.listviewImages)
+                    if (clientForm.listView1.Columns.Count > 4)
                     {
-                        clientForm.imageSubItems.Images.Add(key);
+                        clientForm.listView1.Columns.RemoveAt(4);
+                        clientForm.listView1.Columns.Add(new listViewColumnTNode(tnode as PrinterTreeNode));
+                        clientForm.toolStTxb_printer.Text = (tnode as PrinterTreeNode).Text;
+                        var item = (tnode as PrinterTreeNode).PrinterObject.listviewItemObject;
+                        clientForm.imageSubItems.Images.Clear();
+                        foreach (Image key in (tnode as PrinterTreeNode).PrinterObject.listviewImages)
+                        {
+                            clientForm.imageSubItems.Images.Add(key);
+                        }
+                        clientForm.listView1.SmallImageList = clientForm.imageSubItems;
+                        clientForm.listView1.Items.Clear();
+                        for (int i = 0; i < item.Count; i++)
+                        {
+                            clientForm.listView1.Items.Add(item[i]);
+                        }
+                        clientForm.addfile = item.Count;
                     }
-                    clientForm.listView1.SmallImageList = clientForm.imageSubItems;
-                    for (int i = 0; i < item.Count; i++)
-                    {
-                        clientForm.listView1.Items.Add(item[i]);
-                    }
-                    clientForm.addfile = item.Count;
                 }
             };
 
@@ -201,6 +204,13 @@ namespace ClinetPrints.MenuGroupMethod
                                 {
                                     cnode = new PrinterTreeNode(np.PrinterObject);
                                 }
+                                SharMethod.ForTopEachNode(nodeParFlock.Nodes.Find(tnode.Name, true)[0].Parent, (n) =>
+                                {
+                                    if (n != null)
+                                    {
+                                        n.BackColor = Color.White;
+                                    }
+                                });
                                 (nodeParFlock.Nodes.Find(tnode.Name, true)[0].Parent as GroupTreeNode).Remove((nodeParFlock.Nodes.Find(tnode.Name, true)[0] as PrinterTreeNode));
                                 (flockNode as GroupTreeNode).Add(cnode);
                                 new MenuPrinterFlockGroupMethod(cnode, clientForm);

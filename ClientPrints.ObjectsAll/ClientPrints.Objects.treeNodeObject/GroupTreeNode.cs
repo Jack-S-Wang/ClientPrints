@@ -24,6 +24,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             this.ImageIndex = imageNum;
             this.SelectedImageIndex = imageNum;
             ForeColor = System.Drawing.Color.Green;
+            BackColor = Color.White;
         }
         /// <summary>
         /// 添加打印机

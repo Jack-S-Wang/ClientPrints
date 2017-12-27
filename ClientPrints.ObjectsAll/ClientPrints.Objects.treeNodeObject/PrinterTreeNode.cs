@@ -25,8 +25,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         /// 显示动态背景颜色
         /// </summary>
         public bool showToMove = true;
-       
-        
+
+        private static bool quit = false;
+
         private PrinterObjects _PrinterObject;
         /// <summary>
         /// 打印机的对象属性
@@ -40,11 +41,12 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                 if (Text == "")
                 {
                     Text = value.alias + "(" + value.model + ")";
-                }else
+                }
+                else
                 {
                     value.alias = Text.Substring(0, Text.IndexOf('('));
                 }
-               
+
                 switch (value.stateCode)
                 {
                     case 1://空闲
@@ -144,14 +146,28 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
 
         private void fileWrite(PrinterObjects obj)
         {
-            var file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints\\" + Name + ".xml", FileMode.OpenOrCreate);
-            var pe = new printerError();
-            XmlSerializer xml = new XmlSerializer(pe.GetType());
-            pe.Add(DateTime.Now.ToString("yyyy-MM-dd Hh:mm:ss"), obj.stateMessage);
-            xml.Serialize(file, pe);
-            file.Flush();
-            file.Dispose();
-            file.Close();
+            printerError pe = null;
+            XmlSerializer xml = new XmlSerializer(typeof(printerError));
+
+            var filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + Name + ".xml";
+            try
+            {
+                using (var fs = new FileStream(filePath, FileMode.Open))//有释放Dispose的方法可用using直接执行并自动释放
+                {
+                    pe = xml.Deserialize(fs) as printerError;
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                pe = new printerError();
+            }
+
+            pe.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), obj.stateMessage);
+
+            using (var fs = new FileStream(filePath, FileMode.Create))
+            {
+                xml.Serialize(fs, pe);
+            }
         }
 
         private void treeShowMove()
@@ -160,7 +176,11 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             bool treeShow = true;
             Thread thread = new Thread(() =>
             {
-                while (true)
+                Application.ApplicationExit += new EventHandler((o, e) => {
+                    quit = true;
+                });
+
+                while (!quit)
                 {
                     Thread.Sleep(1000);
                     if (treeShow)
@@ -172,18 +192,21 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
                                 nod.BackColor = Color.Red;
                             });
                         }
-                            BackColor = System.Drawing.Color.DarkSeaGreen;
-                            treeShow = false;
-                        }
-                        else
+                        BackColor = System.Drawing.Color.DarkSeaGreen;
+                        treeShow = false;
+                    }
+                    else
+                    {
+                        ForTopEachNode(this.Parent, (nod) =>
                         {
-                            ForTopEachNode(this.Parent, (nod) =>
+                            if (nod != null)
                             {
                                 nod.BackColor = Color.White;
-                            });
-                            BackColor = System.Drawing.Color.White;
-                            treeShow = true;
-                        }
+                            }
+                        });
+                        BackColor = System.Drawing.Color.White;
+                        treeShow = true;
+                    }
                     if (!showToMove)
                     {
                         ForTopEachNode(this.Parent, (nod) =>
@@ -204,6 +227,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         /// <param name="action">执行的方法</param>
         private static void ForTopEachNode(TreeNode node, Action<TreeNode> action)
         {
+            if (node == null) { return; }
             action(node);
             if (node.Parent != null)
             {
@@ -224,7 +248,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             {
                 Tag = value;
                 TagChanged?.Invoke();
-                
+
             }
         }
 
@@ -251,6 +275,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             ForeColor = Color.Gray;
             ToolTipText = "离线";
             StateCode = "0";
+            BackColor = Color.White;
         }
 
         /// <summary>
@@ -263,7 +288,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             ForeColor = Color.Gray;
             ToolTipText = "离线";
             StateCode = "0";
-            
+            BackColor = Color.White;
         }
 
         /// <summary>

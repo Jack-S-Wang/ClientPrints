@@ -30,7 +30,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 e.Handled = true;
             }
         }
-        FileStream file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\printMonitor.xml", FileMode.OpenOrCreate);
+        FileStream file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ClientPrints\\printMonitor.xml", FileMode.OpenOrCreate);
         XmlSerializer xml = new XmlSerializer(new monitorTime().GetType());
         private void timeSetting_Load(object sender, EventArgs e)
         {

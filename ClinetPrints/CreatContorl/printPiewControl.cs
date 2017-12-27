@@ -37,7 +37,7 @@ namespace ClinetPrints.CreatContorl
                     this.cmb_page.Items.Add(value.pParams.page);
                     var dirPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "ClinetPrints");
+                "ClientPrints");
                     var filePath = Path.Combine(dirPath, "pages.xml");
                     var file = new FileStream(filePath, FileMode.OpenOrCreate);
                     if (file == null)
@@ -127,9 +127,9 @@ namespace ClinetPrints.CreatContorl
         [Browsable(false)]
         private Bitmap oldmap;
         [Description("退出按钮事件")]
-        public event Action<object,EventArgs> OnBtnClose;
+        public event Action<object, EventArgs> OnBtnClose;
         [Description("打印按钮事件")]
-        public event Action<object,EventArgs> onBtnPrint;
+        public event Action<object, EventArgs> onBtnPrint;
 
         private void printPiewControl_Load(object sender, EventArgs e)
         {
@@ -177,10 +177,10 @@ namespace ClinetPrints.CreatContorl
             if (this.txb_customPage.Text != "")
             {
                 this.cmb_page.Items.Add(this.txb_customPage.Text);
-                this.cmb_page.SelectedText = txb_customPage.Text;
+                this.cmb_page.Text = txb_customPage.Text;
                 var filePath = Path.Combine(
                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-               "ClinetPrints",
+               "ClientPrints",
                "pages.xml");
                 var file = new FileStream(filePath, FileMode.OpenOrCreate);
                 printPiewControlXml xmlp = new printPiewControlXml();
@@ -210,18 +210,25 @@ namespace ClinetPrints.CreatContorl
         {
             if (this.cmb_page.Text != "")
             {
-                this.cmb_page.Items.RemoveAt(this.cmb_page.SelectedIndex);
+                if (this.cmb_page.SelectedIndex != -1)
+                {
+                    this.cmb_page.Items.RemoveAt(this.cmb_page.SelectedIndex);
+                }
+                else
+                {
+                    this.cmb_page.Items.Remove(cmb_page.Text);
+                }
                 if (cmb_page.Items.Count > 0)
                 {
                     cmb_page.SelectedIndex = 0;
                 }
                 else
                 {
-                    this.cmb_page.SelectedText = "";
+                    this.cmb_page.Text = "";
                 }
                 var filePath = Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-              "ClinetPrints",
+              "ClientPrints",
               "pages.xml");
                 var file = new FileStream(filePath, FileMode.OpenOrCreate);
                 printPiewControlXml xmlp = new printPiewControlXml();
@@ -247,7 +254,7 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_close_Click(object sender, EventArgs e)
         {
-            OnBtnClose?.Invoke(sender,e);
+            OnBtnClose?.Invoke(sender, e);
         }
 
         private void toolCob_Intgaiting_SelectedIndexChanged(object sender, EventArgs e)
@@ -281,6 +288,7 @@ namespace ClinetPrints.CreatContorl
                         ReDraw(imageX, imageY, imageScale);
                     }
                     wheelEnabled = true;
+                    moveTo=true;
                     break;
                 case 1:
                     if (oldmap.Width > oldmap.Height)
@@ -305,6 +313,7 @@ namespace ClinetPrints.CreatContorl
                         ReDraw(imageX, imageY, imageScale);
                     }
                     wheelEnabled = true;
+                    moveTo = true;
                     break;
                 case 2:
                     Graphics g = Graphics.FromImage(bmap);
@@ -321,6 +330,7 @@ namespace ClinetPrints.CreatContorl
                     g.Dispose();
                     ptb_page.Image = bmap;
                     wheelEnabled = false;
+                    moveTo = false;
                     break;
                 case 3:
                     int wscale = (ptb_page.Width % oldmap.Width) == 0 ? (ptb_page.Width / oldmap.Width) : (ptb_page.Width / oldmap.Width) + 1;
@@ -345,6 +355,7 @@ namespace ClinetPrints.CreatContorl
                     }
                     ptb_page.Image = bmap;
                     wheelEnabled = false;
+                    moveTo = false;
                     break;
                 case 4:
                     imageX = ptb_page.Width / 2 - oldmap.Width / 2;
@@ -364,6 +375,7 @@ namespace ClinetPrints.CreatContorl
                     g2.Dispose();
                     ptb_page.Image = bmap;
                     wheelEnabled = true;
+                    moveTo = true;
                     break;
                 case 5:
                     ptb_page.Image = oldmap;
@@ -371,6 +383,7 @@ namespace ClinetPrints.CreatContorl
                     imageY = 0;
                     imageScale = 0.8;
                     wheelEnabled = true;
+                    moveTo = true;
                     break;
             }
         }
@@ -390,12 +403,15 @@ namespace ClinetPrints.CreatContorl
             Bitmap map = new Bitmap(image, new Size((int)(image.Width * proportion), (int)(image.Height * proportion)));
             return map;
         }
-
+        private bool moveTo = true;
         private void ptb_page_MouseUp(object sender, MouseEventArgs e)
         {
-            imageX = imageX + (e.X - clickPiont.X);
-            imageY = imageY + (e.Y - clickPiont.Y);
-            ReDraw(imageX, imageY, imageScale);
+            if (moveTo)
+            {
+                imageX = imageX + (e.X - clickPiont.X);
+                imageY = imageY + (e.Y - clickPiont.Y);
+                ReDraw(imageX, imageY, imageScale);
+            }
         }
 
         private void ReDraw(int x, int y, double scale)
@@ -433,10 +449,17 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_reMap_Click(object sender, EventArgs e)
         {
-            this.ptb_page.Image = oldmap;
-            imageX = 0;
-            imageY = 0;
-            imageScale = 1.0;
+            if (this.toolCob_Intgaiting.SelectedIndex == 5)
+            {
+                ptb_page.Image = oldmap;
+                imageX = 0;
+                imageY = 0;
+                imageScale = 0.8;
+            }
+            else
+            {
+                this.toolCob_Intgaiting.SelectedIndex = 5;
+            }
         }
 
         private void toolBtn_save_Click(object sender, EventArgs e)
@@ -444,7 +467,7 @@ namespace ClinetPrints.CreatContorl
             try
             {
                 FolderBrowserDialog folderB = new FolderBrowserDialog();
-                DialogResult dr=folderB.ShowDialog();
+                DialogResult dr = folderB.ShowDialog();
                 if (dr == DialogResult.OK)
                 {
                     var filePath = folderB.SelectedPath + "/" + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp";
@@ -501,7 +524,7 @@ namespace ClinetPrints.CreatContorl
                         MessageBox.Show("现在所设计的尺寸大小与实际设备的尺寸要大，不能打印！");
                         return;
                     }
-                    printBtn(sender,e);
+                    printBtn(sender, e);
                 }
             }
             catch (Exception ex)
@@ -511,7 +534,7 @@ namespace ClinetPrints.CreatContorl
             }
         }
 
-        private void printBtn(object sender,EventArgs e)
+        private void printBtn(object sender, EventArgs e)
         {
             if (PrinterObject != null)
             {
@@ -529,7 +552,7 @@ namespace ClinetPrints.CreatContorl
                 }
                 var filePath = Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-              "ClinetPrints",
+              "ClientPrints",
               DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
                 var method = PrinterObject.MethodsObject as IMethodObjects;
                 //PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
@@ -542,8 +565,8 @@ namespace ClinetPrints.CreatContorl
                     new Rectangle(
                         0,
                         0,
-                        (int)(bmap.Width ),
-                        (int)(bmap.Height)),
+                        (int)(ptb_page.Width*1.25),
+                        (int)(ptb_page.Height*1.25)),
                     new Rectangle(0, 0, ptb_page.Width, ptb_page.Height),
                     GraphicsUnit.Pixel);
                 g.Dispose();
@@ -558,7 +581,7 @@ namespace ClinetPrints.CreatContorl
                 {
                     MessageBox.Show("打印成功，将删除原来的作业任务!");
                 }
-                onBtnPrint?.Invoke(sender,e);
+                onBtnPrint?.Invoke(sender, e);
             }
         }
 
