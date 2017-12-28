@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,11 +20,19 @@ namespace ClinetPrints.SettingWindows
         {
             this.Close();
         }
-       
+
         private void PrinterInformation_Load(object sender, EventArgs e)
         {
-            Point p = new Point(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width - this.Width, Screen.PrimaryScreen.WorkingArea.Height - this.Height);
-            this.Location = p;
+            try
+            {
+                Point p = new Point(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width - this.Width, Screen.PrimaryScreen.WorkingArea.Height - this.Height);
+                this.Location = p;
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
     }
 }

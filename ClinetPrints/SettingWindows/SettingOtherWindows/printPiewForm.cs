@@ -38,7 +38,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
             }
         }

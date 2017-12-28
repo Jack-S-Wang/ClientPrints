@@ -101,6 +101,7 @@
             this.Name = "printNumber";
             this.Text = "打印数量";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.printNumber_FormClosing);
+            this.Load += new System.EventHandler(this.printNumber_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UpDown_num)).EndInit();

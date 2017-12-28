@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -45,6 +46,18 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         {
             if (num == "")
                 num = "1";
+        }
+        private void printNumber_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                UpDown_num.Value = decimal.Parse(num);
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
     }
 }

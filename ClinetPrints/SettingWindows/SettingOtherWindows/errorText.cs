@@ -1,4 +1,5 @@
 ﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,15 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         public string filepath = "";
         private void timer1_Tick(object sender, EventArgs e)
         {
-            getFileMessage();
+            try
+            {
+                getFileMessage();
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
 
         private void getFileMessage()
@@ -53,7 +62,15 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void errorText_Load(object sender, EventArgs e)
         {
-            getFileMessage();
+            try
+            {
+                getFileMessage();
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
     }
 }

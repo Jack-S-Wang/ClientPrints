@@ -6,6 +6,7 @@ using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.
 using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 
 namespace ClinetPrints.SettingWindows
 {
@@ -48,7 +49,10 @@ namespace ClinetPrints.SettingWindows
             }
             catch (Exception ex)
             {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
+                this.Close();
                 return;
             }
 
@@ -158,28 +162,37 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_sure_Click(object sender, EventArgs e)
         {
-            var method = printerObject.MethodsObject as IMethodObjects;
-            string str = "";
-            if (cmb_command.SelectedIndex < 9)
+            try
             {
-                str = method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, new byte[] { (byte)(cmb_command.SelectedIndex + 1) });
-                if (str != "false")
+                var method = printerObject.MethodsObject as IMethodObjects;
+                string str = "";
+                if (cmb_command.SelectedIndex < 9)
                 {
-                    txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "已执行！");
-                }else
+                    str = method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, new byte[] { (byte)(cmb_command.SelectedIndex + 1) });
+                    if (str != "false")
+                    {
+                        txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "已执行！");
+                    }
+                    else
+                    {
+                        txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "执行失败！");
+                    }
+                }
+                else
                 {
-                    txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "执行失败！");
+                    MessageBox.Show("重启之后监控界面将自动关闭！");
+                    str = method.reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
+                    if (str != "false")
+                    {
+                        txb_commandText.AppendText(DateTime.Now.ToString() + ":设备已进行重启！");
+                        this.Close();
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("重启之后监控界面将自动关闭！");
-                str = method.reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
-                if (str != "false")
-                {
-                    txb_commandText.AppendText(DateTime.Now.ToString() + ":设备已进行重启！");
-                    this.Close();
-                }
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -203,22 +216,38 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_getFile_Click(object sender, EventArgs e)
         {
-            this.openFileDialog1.ShowDialog();
-            this.txb_getFile.Text = this.openFileDialog1.FileName;
+            try
+            {
+                this.openFileDialog1.ShowDialog();
+                this.txb_getFile.Text = this.openFileDialog1.FileName;
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
 
         private void btn_up_Click(object sender, EventArgs e)
         {
-            if (this.txb_getFile.Text != "")
+            try
             {
-                readS = false;
-                if (WDevDllMethod.dllFunc_OpenDfu(printerObject.pHandle, txb_getFile.Text, this.Handle))
+                if (this.txb_getFile.Text != "")
                 {
-                    txb_commandText.AppendText("已加载固件文件！监控已关闭！");
-                    uint tages = 0x01;
-                    WDevDllMethod.dllFunc_DFUStart(printerObject.pHandle, tages);
-                    txb_commandText.AppendText("正在更新固件！");
+                    readS = false;
+                    if (WDevDllMethod.dllFunc_OpenDfu(printerObject.pHandle, txb_getFile.Text, this.Handle))
+                    {
+                        txb_commandText.AppendText("已加载固件文件！监控已关闭！");
+                        uint tages = 0x01;
+                        WDevDllMethod.dllFunc_DFUStart(printerObject.pHandle, tages);
+                        txb_commandText.AppendText("正在更新固件！");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -253,6 +282,8 @@ namespace ClinetPrints.SettingWindows
             }
             catch (Exception ex)
             {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -262,7 +293,8 @@ namespace ClinetPrints.SettingWindows
             if (ckb_monitor.Checked)
             {
                 demandTime.Enabled = false;
-            }else
+            }
+            else
             {
                 demandTime.Enabled = true;
             }

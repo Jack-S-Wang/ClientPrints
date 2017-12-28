@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using System.Text;
 
 namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 {
@@ -14,7 +15,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 
         public static readonly int SINGLE = 1;
         public static readonly int FLOCK = 2;
-      
+
         /// <summary>
         /// 记录枚举到的地址信息和打印机对象，针对于USB插口的
         /// </summary>
@@ -42,7 +43,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
 
         private static void getWifePrinter()
         {
-            
+
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         /// </summary>
         /// <param name="node">树节点</param>
         /// <param name="action">执行的方法</param>
-        public static void ForTopEachNode(TreeNode node,Action<TreeNode> action)
+        public static void ForTopEachNode(TreeNode node, Action<TreeNode> action)
         {
             if (node == null) { return; }
             action(node);
@@ -80,7 +81,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         /// </summary>
         private static void getAllPrinterList()
         {
-            foreach(var key in dicPrinterUSB)
+            foreach (var key in dicPrinterUSB)
             {
                 liAllPrinter.Add(key.Value);
             }
@@ -96,9 +97,10 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             FileStream file;
             if (type == 1)
             {
-                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ClientPrints\\printerSingle.bin", FileMode.OpenOrCreate);
+                file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\printerSingle.bin", FileMode.OpenOrCreate);
 
-            }else
+            }
+            else
             {
                 file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\printerFlock.bin", FileMode.OpenOrCreate);
             }
@@ -110,7 +112,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         /// </summary>
         /// <param name="tnode">根节点</param>
         /// <param name="file">文件流</param>
-        public static void SavePrinter(TreeNode tnode,FileStream file)
+        public static void SavePrinter(TreeNode tnode, FileStream file)
         {
             var bf = new BinaryFormatter();
             if (file.Length > 0)
@@ -141,11 +143,32 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             PrinterUSBMethod pum = new PrinterUSBMethod();
             pum.getPrinterObjects();
         }
-
+        /// <summary>
+        /// 调用设备动态库写日志文档
+        /// </summary>
+        /// <param name="str"></param>
         public static void writeLog(string str)
         {
             WDevDllMethod.dllFunc_SetLogRecord(str, true, true, true);
         }
-      
+
+        /// <summary>
+        /// 记录下所有的日志错误信息！！以便上传报告
+        /// </summary>
+        /// <param name="str"></param>
+        public static void writeErrorLog(string str)
+        {
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\Error.log";
+            bool done = false;
+            while (!done)
+            {
+                try
+                {
+                    File.AppendAllText(filePath, str);
+                    done = true;
+                }
+                catch { };
+            }
+        }
     }
 }

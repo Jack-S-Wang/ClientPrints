@@ -20,28 +20,44 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         {
             InitializeComponent();
         }
-        
+
         private void btn_getFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog of = new OpenFileDialog();
-            DialogResult dr=of.ShowDialog();
-            if (dr == DialogResult.OK)
+            try
             {
-                this.txb_getFile.Text = of.FileName;
+                OpenFileDialog of = new OpenFileDialog();
+                DialogResult dr = of.ShowDialog();
+                if (dr == DialogResult.OK)
+                {
+                    this.txb_getFile.Text = of.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
         private void btn_up_Click(object sender, EventArgs e)
         {
-            if (this.txb_getFile.Text != "" && listView1.SelectedItems.Count>0)
+            try
             {
-                if (WDevDllMethod.dllFunc_OpenDfu(new IntPtr(Int32.Parse(listView1.SelectedItems[0].SubItems[1].Text)), txb_getFile.Text, this.Handle))
+                if (this.txb_getFile.Text != "" && listView1.SelectedItems.Count > 0)
                 {
-                    txb_commandText.AppendText("已加载固件文件！监控已关闭！");
-                    uint tages = 0x01;
-                    WDevDllMethod.dllFunc_DFUStart(new IntPtr(Int32.Parse(listView1.SelectedItems[0].SubItems[1].Text)), tages);
-                    txb_commandText.AppendText("正在更新固件！");
+                    if (WDevDllMethod.dllFunc_OpenDfu(new IntPtr(Int32.Parse(listView1.SelectedItems[0].SubItems[1].Text)), txb_getFile.Text, this.Handle))
+                    {
+                        txb_commandText.AppendText("已加载固件文件！监控已关闭！");
+                        uint tages = 0x01;
+                        WDevDllMethod.dllFunc_DFUStart(new IntPtr(Int32.Parse(listView1.SelectedItems[0].SubItems[1].Text)), tages);
+                        txb_commandText.AppendText("正在更新固件！");
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
         protected override void WndProc(ref Message m)
@@ -76,13 +92,23 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
             catch (Exception ex)
             {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
             }
         }
 
         private void DevPromotion_Load(object sender, EventArgs e)
         {
-            getDev();
+            try
+            {
+                getDev();
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
 
         private void getDev()
@@ -163,9 +189,17 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void txb_commandText_TextChanged(object sender, EventArgs e)
         {
-            if (txb_commandText.TextLength >= 5000)
+            try
             {
-                txb_commandText.Clear();
+                if (txb_commandText.TextLength >= 5000)
+                {
+                    txb_commandText.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
     }

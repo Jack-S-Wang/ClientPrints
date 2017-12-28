@@ -289,6 +289,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
             ToolTipText = "离线";
             StateCode = "0";
             BackColor = Color.White;
+            showToMove = false;
         }
 
         /// <summary>

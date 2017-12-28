@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.ListViewItem;
 using System.Collections;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 
 namespace ClinetPrints.CreatContorl
 {
@@ -17,7 +18,7 @@ namespace ClinetPrints.CreatContorl
         {
             InitializeComponent();
         }
-        
+
         private UserColumnHanderCollection _handers;
         [Description("标头信息集合")]
         public UserColumnHanderCollection handers
@@ -25,20 +26,29 @@ namespace ClinetPrints.CreatContorl
             get { return _handers; }
             set
             {
-                _handers = value;
-                if (_handers != null)
+                try
                 {
-                    for (int i = 0; i < _handers.Count; i++)
+                    _handers = value;
+                    if (_handers != null)
                     {
-                        _handers[i].Location = new Point(10 + (i * _handers[i].Width), 10);
+                        for (int i = 0; i < _handers.Count; i++)
+                        {
+                            _handers[i].Location = new Point(10 + (i * _handers[i].Width), 10);
 
+                        }
+                    }
+                    else
+                    {
+                        _handers = new UserColumnHanderCollection(this);
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    _handers = new UserColumnHanderCollection(this);
+                    string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                    SharMethod.writeErrorLog(str);
                 }
             }
+
         }
         private UserItems _items;
         [Description("字项目集合")]
@@ -47,13 +57,21 @@ namespace ClinetPrints.CreatContorl
             get { return _items; }
             set
             {
-                _items = value;
-                if (_items != null)
+                try
                 {
+                    _items = value;
+                    if (_items != null)
+                    {
+                    }
+                    else
+                    {
+                        _items = new UserItems(this);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    _items = new UserItems(this);
+                    string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                    SharMethod.writeErrorLog(str);
                 }
             }
         }
@@ -85,8 +103,16 @@ namespace ClinetPrints.CreatContorl
             /// <param name="value"></param>
             public void Add(UserColumnHander value)
             {
-                (Owner as dataGrieViewControl1).Controls.Add(value);
-                colls.Add(value);
+                try
+                {
+                    (Owner as dataGrieViewControl1).Controls.Add(value);
+                    colls.Add(value);
+                }
+                catch (Exception ex)
+                {
+                    string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                    SharMethod.writeErrorLog(str);
+                }
             }
             /// <summary>
             /// 清空集合
@@ -186,11 +212,19 @@ namespace ClinetPrints.CreatContorl
             /// <param name="subControl"></param>
             public void Remove(newSubControl subControl)
             {
-                foreach (var key in subControl.Value)
+                try
                 {
-                    (Owner as dataGrieViewControl1).Controls.Remove(key.control);
+                    foreach (var key in subControl.Value)
+                    {
+                        (Owner as dataGrieViewControl1).Controls.Remove(key.control);
+                    }
+                    li.Remove(subControl);
                 }
-                li.Remove(subControl);
+                catch (Exception ex)
+                {
+                    string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                    SharMethod.writeErrorLog(str);
+                }
             }
             /// <summary>
             /// 清楚所有行项目
@@ -259,7 +293,7 @@ namespace ClinetPrints.CreatContorl
             /// </summary>
             /// <param name="value">控件</param>
             /// <param name="isEndable">设置控件是否可以响应</param>
-            public UserSubControl(Control value,bool isEndable)
+            public UserSubControl(Control value, bool isEndable)
             {
                 value.Enabled = isEndable;
                 control = value;
@@ -269,7 +303,7 @@ namespace ClinetPrints.CreatContorl
             /// </summary>
             /// <param name="str">文本内容名称</param>
             /// <param name="isEndable">设置控件是否可以响应</param>
-            public UserSubControl(string str,bool isEndable)
+            public UserSubControl(string str, bool isEndable)
             {
                 TextBox txb = new TextBox();
                 txb.Name = str;
@@ -295,42 +329,50 @@ namespace ClinetPrints.CreatContorl
             /// <param name="row">当前的行数</param>
             public newSubControl(UserSubControl[] value, dataGrieViewControl1 owner, int row)
             {
-                Owner = owner;
-                Row = row;
-                Value = value;
-                if (owner.handers.Count >= value.Length)
+                try
                 {
-                    for (int i = 0; i < owner.handers.Count; i++)
+                    Owner = owner;
+                    Row = row;
+                    Value = value;
+                    if (owner.handers.Count >= value.Length)
                     {
-                        if (i < value.Length)
+                        for (int i = 0; i < owner.handers.Count; i++)
                         {
-
-                            if ((value[i].control as Control) is ComboBox)
+                            if (i < value.Length)
                             {
-                                var com = (value[i].control as Control) as ComboBox;
-                                com.Width = owner.handers[i].Width;
-                                com.Height = 20;
+
+                                if ((value[i].control as Control) is ComboBox)
+                                {
+                                    var com = (value[i].control as Control) as ComboBox;
+                                    com.Width = owner.handers[i].Width;
+                                    com.Height = 20;
+                                }
+                                else
+                                {
+                                    value[i].control.Size = new Size(owner.handers[i].Width, 20);
+                                }
+                                value[i].control.Location = new Point(10 + (i * value[i].control.Width), 10 + 20 * (Row + 1));
+                                Owner.Controls.Add(value[i].control);
                             }
                             else
                             {
-                                value[i].control.Size = new Size(owner.handers[i].Width, 20);
+                                TextBox textbox = new TextBox();
+                                textbox.BorderStyle = BorderStyle.FixedSingle;
+                                textbox.Size = new Size(owner.handers[i].Width, 20);
+                                textbox.Location = new Point(10 + (i * value[i].control.Width), 10 + 20 * (Row + 1));
+                                Owner.Controls.Add(textbox);
                             }
-                            value[i].control.Location = new Point(10 + (i * value[i].control.Width), 10 + 20 * (Row + 1));
-                            Owner.Controls.Add(value[i].control);
-                        }
-                        else
-                        {
-                            TextBox textbox = new TextBox();
-                            textbox.BorderStyle = BorderStyle.FixedSingle;
-                            textbox.Size = new Size(owner.handers[i].Width, 20);
-                            textbox.Location = new Point(10 + (i * value[i].control.Width), 10 + 20 * (Row + 1));
-                            Owner.Controls.Add(textbox);
                         }
                     }
+
                 }
-
-
+                catch (Exception ex)
+                {
+                    string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                    SharMethod.writeErrorLog(str);
+                }
             }
+
         }
 
         /// <summary>

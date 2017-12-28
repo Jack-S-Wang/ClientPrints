@@ -30,27 +30,36 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 e.Handled = true;
             }
         }
-        FileStream file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ClientPrints\\printMonitor.xml", FileMode.OpenOrCreate);
+        FileStream file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\printMonitor.xml", FileMode.OpenOrCreate);
         XmlSerializer xml = new XmlSerializer(new monitorTime().GetType());
         private void timeSetting_Load(object sender, EventArgs e)
         {
-            ToolTip tool = new ToolTip();
-            tool.SetToolTip(this.panel1, "设置该时间段按所设置的时间进行定时监控设备状态");
-            if (file.Length != 0)
+            try
             {
-                var result = xml.Deserialize(file);
-                if (result != null)
+                ToolTip tool = new ToolTip();
+                tool.SetToolTip(this.panel1, "设置该时间段按所设置的时间进行定时监控设备状态");
+                if (file.Length != 0)
                 {
-                    txb_time.Text = (result as monitorTime).time;
-                    dateTimePicker1.Text = (result as monitorTime).Sdate;
-                    dateTimePicker2.Text = (result as monitorTime).Edate;
-                    ckb_launch.Checked = (result as monitorTime).checkedStart;
-                    ckb_time.Checked = (result as monitorTime).chekedTime;
+                    var result = xml.Deserialize(file);
+                    if (result != null)
+                    {
+                        txb_time.Text = (result as monitorTime).time;
+                        dateTimePicker1.Text = (result as monitorTime).Sdate;
+                        dateTimePicker2.Text = (result as monitorTime).Edate;
+                        ckb_launch.Checked = (result as monitorTime).checkedStart;
+                        ckb_time.Checked = (result as monitorTime).chekedTime;
+                    }
                 }
-            }else
+                else
+                {
+                    dateTimePicker1.Text = "19:00:00";
+                    dateTimePicker2.Text = "06:00:00";
+                }
+            }
+            catch (Exception ex)
             {
-                dateTimePicker1.Text = "19:00:00";
-                dateTimePicker2.Text = "06:00:00";
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -75,7 +84,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         Sdate = dateTimePicker1.Text,
                         Edate = dateTimePicker2.Text,
                         checkedStart = this.ckb_launch.Checked,
-                        chekedTime=ckb_time.Checked
+                        chekedTime = ckb_time.Checked
                     };
                     SharMethod.monTime = mon;
                     if (this.ckb_launch.Checked)
@@ -91,9 +100,9 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     }
                     else
                     {
-                        if (System.IO.File.Exists(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup)+ "\\ClientPrints.lnk"))
+                        if (System.IO.File.Exists(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup) + "\\ClientPrints.lnk"))
                         {
-                            System.IO.File.Delete(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup)+"\\ClientPrints.lnk");
+                            System.IO.File.Delete(Environment.GetFolderPath(System.Environment.SpecialFolder.Startup) + "\\ClientPrints.lnk");
                         }
                     }
 
@@ -109,7 +118,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
             }
         }

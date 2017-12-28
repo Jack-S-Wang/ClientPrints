@@ -71,7 +71,7 @@ namespace ClinetPrints
             if (registration == IntPtr.Zero)
             {
                 var code = Marshal.GetLastWin32Error();
-                MessageBox.Show("注册失败:" + code);
+                MessageBox.Show("USB检测注册失败:" + code);
             }
             Marshal.FreeHGlobal(buffer);
         }
@@ -145,7 +145,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -187,83 +188,91 @@ namespace ClinetPrints
 
         private void TiState_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (IsHandleCreated && SetTiming)
+            try
             {
-                if (SharMethod.monTime != null)
+                if (IsHandleCreated && SetTiming)
                 {
-                    if (SharMethod.monTime.chekedTime)
+                    if (SharMethod.monTime != null)
                     {
-                        var startTime = DateTime.Parse(SharMethod.monTime.Sdate);
-                        var endTime = DateTime.Parse(SharMethod.monTime.Edate);
-                        if (startTime >= endTime)//说明这个结束时间是第二天的时间
+                        if (SharMethod.monTime.chekedTime)
                         {
-                            endTime.AddDays(1);
-                        }
-                        if (DateTime.Now >= startTime && DateTime.Now <= endTime)
-                        {
-                            if (tiState.Interval != Int32.Parse(SharMethod.monTime.time) * 1000)//不相等就赋值
-                                tiState.Interval = Int32.Parse(SharMethod.monTime.time) * 1000;
-                        }
-                        else
-                        {
-                            if (tiState.Interval != 5000)//不相等就赋值,设置回原来的默认值
-                                tiState.Interval = 5000;
+                            var startTime = DateTime.Parse(SharMethod.monTime.Sdate);
+                            var endTime = DateTime.Parse(SharMethod.monTime.Edate);
+                            if (startTime >= endTime)//说明这个结束时间是第二天的时间
+                            {
+                                endTime.AddDays(1);
+                            }
+                            if (DateTime.Now >= startTime && DateTime.Now <= endTime)
+                            {
+                                if (tiState.Interval != Int32.Parse(SharMethod.monTime.time) * 1000)//不相等就赋值
+                                    tiState.Interval = Int32.Parse(SharMethod.monTime.time) * 1000;
+                            }
+                            else
+                            {
+                                if (tiState.Interval != 5000)//不相等就赋值,设置回原来的默认值
+                                    tiState.Interval = 5000;
+                            }
                         }
                     }
-                }
-                foreach (var key in SharMethod.liAllPrinter)
-                {
-                    if (key.MethodsObject != null)
+                    foreach (var key in SharMethod.liAllPrinter)
                     {
-                        var method = key.MethodsObject as IMethodObjects;
-                        var po = key;
-                        string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, key.pHandle, new byte[] { 0x30 });
-                        if (str != "false")
+                        if (key.MethodsObject != null)
                         {
-                            var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
-                            if (key.stateCode != keyState.stateCode)
+                            var method = key.MethodsObject as IMethodObjects;
+                            var po = key;
+                            string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, key.pHandle, new byte[] { 0x30 });
+                            if (str != "false")
                             {
-                                this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
+                                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
+                                if (key.stateCode != keyState.stateCode)
                                 {
-                                    printerViewSingle.BeginUpdate();
-                                    key.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                                    key.state = keyState.majorState;
-                                    key.stateCode = keyState.stateCode;
-                                    printerViewSingle.EndUpdate();
-                                }));
-                                if (keyState.stateCode == 4 || keyState.stateCode == 5 || keyState.stateCode == 6)
-                                {
-                                    Interlocked.Increment(ref errorCount);
-                                    SpeechSynthesizer sp = new SpeechSynthesizer();
-                                    sp.Rate = 2;
-                                    sp.Volume = 20;
-                                    sp.SpeakAsync("设备异常");
-                                    ThreadPool.QueueUserWorkItem((o) =>
+                                    this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
                                     {
-                                        PrinterInformation pInfo = new PrinterInformation();
-                                        pInfo.lb_DevInfo.Text = "设备" + po.alias + "出现了问题，需要处理！";
-                                        pInfo.ShowDialog();
-                                    });
-                                    if (!this.Visible)
+                                        printerViewSingle.BeginUpdate();
+                                        key.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
+                                        key.state = keyState.majorState;
+                                        key.stateCode = keyState.stateCode;
+                                        printerViewSingle.EndUpdate();
+                                    }));
+                                    if (keyState.stateCode == 4 || keyState.stateCode == 5 || keyState.stateCode == 6)
                                     {
-                                        this.BeginInvoke(new MethodInvoker(() =>
+                                        Interlocked.Increment(ref errorCount);
+                                        SpeechSynthesizer sp = new SpeechSynthesizer();
+                                        sp.Rate = 2;
+                                        sp.Volume = 20;
+                                        sp.SpeakAsync("设备异常");
+                                        ThreadPool.QueueUserWorkItem((o) =>
                                         {
-                                            timer1.Enabled = true;
-                                        }));
+                                            PrinterInformation pInfo = new PrinterInformation();
+                                            pInfo.lb_DevInfo.Text = "设备" + po.alias + "出现了问题，需要处理！";
+                                            pInfo.ShowDialog();
+                                        });
+                                        if (!this.Visible)
+                                        {
+                                            this.BeginInvoke(new MethodInvoker(() =>
+                                            {
+                                                timer1.Enabled = true;
+                                            }));
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    Interlocked.Decrement(ref errorCount);
-                                    if (errorCount == 0)
+                                    else
                                     {
-                                        timer1.Enabled = false;
+                                        Interlocked.Decrement(ref errorCount);
+                                        if (errorCount == 0)
+                                        {
+                                            timer1.Enabled = false;
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -405,8 +414,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                string str = string.Format("发生了异常：{0}，追踪异常信息：{1}, 异常哈希：{2}", ex.Message, ex.StackTrace, ex.GetHashCode());
-                SharMethod.writeLog(str);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
             }
         }
@@ -687,8 +696,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -724,7 +733,6 @@ namespace ClinetPrints
         /// <param name="ex"></param>
         public void showException(string ex)
         {
-            SharMethod.writeLog(string.Format("有错误：{0}", ex));
             MessageBox.Show(ex);
         }
 
@@ -754,109 +762,141 @@ namespace ClinetPrints
         #endregion
         private void 单台打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (printerViewSingle.Enabled == false)
+            try
             {
-                fToS = true;
-                liVeIamgeF.Clear();
-                liItemF.Clear();
-                liVewF = listView1;
-                for (int i = 0; i < imageSubItems.Images.Count; i++)
+                if (printerViewSingle.Enabled == false)
                 {
-                    liVeIamgeF.Add(imageSubItems.Images[i]);
-                }
-                foreach (ListViewItem item in listView1.Items)
-                {
-                    liItemF.Add(item);
-                }
-                liNameF = toolStTxb_printer.Text;
-                imageSubItems.Images.Clear();
-                listView1.Items.Clear();
-                toolStTxb_printer.Text = "";
-                addfile = 0;
-            }
-            单台打印ToolStripMenuItem.BackColor = Color.Green;
-            群打印ToolStripMenuItem.BackColor = Color.White;
-            printerViewSingle.Enabled = true;
-            printerViewSingle.Visible = true;
-            printerViewFlock.Enabled = false;
-            printerViewFlock.Visible = false;
-            printerViewSingle.Focus();
-            toolStBtn_printPerview.Enabled = true;
-            if (fToS)
-            {
-                if (liVewS != null)
-                {
-                    listView1 = liVewS;
+                    fToS = true;
+                    liVeIamgeF.Clear();
+                    liItemF.Clear();
+                    liVewF = listView1;
+                    for (int i = 0; i < imageSubItems.Images.Count; i++)
+                    {
+                        liVeIamgeF.Add(imageSubItems.Images[i]);
+                    }
+                    foreach (ListViewItem item in listView1.Items)
+                    {
+                        liItemF.Add(item);
+                    }
+                    liNameF = toolStTxb_printer.Text;
                     imageSubItems.Images.Clear();
                     listView1.Items.Clear();
-                    foreach (Image img in liVeIamgeS)
+                    toolStTxb_printer.Text = "";
+                    addfile = 0;
+                }
+                单台打印ToolStripMenuItem.BackColor = Color.Green;
+                群打印ToolStripMenuItem.BackColor = Color.White;
+                printerViewSingle.Enabled = true;
+                printerViewSingle.Visible = true;
+                printerViewFlock.Enabled = false;
+                printerViewFlock.Visible = false;
+                printerViewSingle.Focus();
+                toolStBtn_printPerview.Enabled = true;
+                if (fToS)
+                {
+                    if (liVewS != null)
                     {
-                        imageSubItems.Images.Add(img);
+                        if((liVewS.Columns[colmunObject] as listViewColumnTNode).liPrinter[0] == null)
+                        {
+                            return;
+                        }
+                        listView1 = liVewS;
+                        imageSubItems.Images.Clear();
+                        listView1.Items.Clear();
+                        foreach (Image img in liVeIamgeS)
+                        {
+                            imageSubItems.Images.Add(img);
+                        }
+                        listView1.SmallImageList = imageSubItems;
+                        foreach (var item in liItemS)
+                        {
+                            listView1.Items.Add(item);
+                        }
+                        addfile = liItemS.Count;
+                        toolStTxb_printer.Text = liNameS;
+                        fToS = false;
                     }
-                    listView1.SmallImageList = imageSubItems;
-                    foreach (var item in liItemS)
-                    {
-                        listView1.Items.Add(item);
-                    }
-                    addfile = liItemS.Count;
-                    toolStTxb_printer.Text = liNameS;
-                    fToS = false;
                 }
             }
-
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
 
         private void 群打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (printerViewSingle.Enabled)
+            try
             {
-                sToF = true;
-                liVeIamgeS.Clear();
-                liItemS.Clear();
-                liVewS = listView1;
-                for (int i = 0; i < imageSubItems.Images.Count; i++)
+                if (printerViewSingle.Enabled)
                 {
-                    liVeIamgeS.Add(imageSubItems.Images[i]);
-                }
-                foreach (ListViewItem item in listView1.Items)
-                {
-                    liItemS.Add(item);
-                }
-                liNameS = toolStTxb_printer.Text;
-                imageSubItems.Images.Clear();
-                listView1.Items.Clear();
-                toolStTxb_printer.Text = "";
-                addfile = 0;
-            }
-            单台打印ToolStripMenuItem.BackColor = Color.White;
-            群打印ToolStripMenuItem.BackColor = Color.Green;
-            printerViewSingle.Enabled = false;
-            printerViewSingle.Visible = false;
-            printerViewFlock.Enabled = true;
-            printerViewFlock.Visible = true;
-            printerViewFlock.Focus();
-            toolStBtn_printPerview.Enabled = false;
-            if (sToF)//说明是群转换为单打印过来的
-            {
-                if (liVewF != null)
-                {
-                    listView1 = liVewF;
+                    sToF = true;
+                    liVeIamgeS.Clear();
+                    liItemS.Clear();
+                    liVewS = listView1;
+                    for (int i = 0; i < imageSubItems.Images.Count; i++)
+                    {
+                        liVeIamgeS.Add(imageSubItems.Images[i]);
+                    }
+                    foreach (ListViewItem item in listView1.Items)
+                    {
+                        liItemS.Add(item);
+                    }
+                    liNameS = toolStTxb_printer.Text;
                     imageSubItems.Images.Clear();
                     listView1.Items.Clear();
-                    foreach (Image img in liVeIamgeF)
-                    {
-                        imageSubItems.Images.Add(img);
-                    }
-                    listView1.SmallImageList = imageSubItems;
-                    foreach (var item in liItemF)
-                    {
-                        listView1.Items.Add(item);
-                    }
-                    addfile = liItemF.Count;
-                    toolStTxb_printer.Text = liNameF;
-                    sToF = false;
+                    toolStTxb_printer.Text = "";
+                    addfile = 0;
                 }
+                单台打印ToolStripMenuItem.BackColor = Color.White;
+                群打印ToolStripMenuItem.BackColor = Color.Green;
+                printerViewSingle.Enabled = false;
+                printerViewSingle.Visible = false;
+                printerViewFlock.Enabled = true;
+                printerViewFlock.Visible = true;
+                printerViewFlock.Focus();
+                toolStBtn_printPerview.Enabled = false;
+                if (sToF)//说明是群转换为单打印过来的
+                {
+                    if (liVewF != null)
+                    {
+                        int count = 0;
+                        var lp = (liVewF.Columns[colmunObject] as listViewColumnTNode).liPrinter;
+                        for (int i=0;i< lp.Count; i++)
+                        {
+                            if(lp[i] == null)
+                            {
+                                count++;
+                            }
+                        }
+                        if (count == lp.Count)//说明全下线了
+                        {
+                            return;
+                        }
+                        listView1 = liVewF;
+                        imageSubItems.Images.Clear();
+                        listView1.Items.Clear();
+                        foreach (Image img in liVeIamgeF)
+                        {
+                            imageSubItems.Images.Add(img);
+                        }
+                        listView1.SmallImageList = imageSubItems;
+                        foreach (var item in liItemF)
+                        {
+                            listView1.Items.Add(item);
+                        }
+                        addfile = liItemF.Count;
+                        toolStTxb_printer.Text = liNameF;
+                        sToF = false;
+                    }
 
+                }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
         /// <summary>
@@ -918,8 +958,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
 
         }
@@ -975,8 +1015,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -1015,8 +1055,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
         /// <summary>
@@ -1108,8 +1148,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
         /// <summary>
@@ -1224,8 +1264,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -1259,8 +1299,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -1303,90 +1343,99 @@ namespace ClinetPrints
                             {
                                 MessageBox.Show("打印机：" + strc + "状态有问题不能打印！");
                             });
-                            return;
-                        }
-                        if (col[c].pParams.outJobNum >= 65000)
-                        {
-                            ThreadPool.QueueUserWorkItem((o) =>
-                            {
-                                MessageBox.Show("打印工作号缓存数过大，请打印完成之后到监控控制界面进行重启该设备进行释放！！");
-                            });
-                        }
-                        Thread threadPrint = new Thread((printObject =>
-                    {
-                        var printOb = printObject as object[];
-                        var printer = printOb[0] as PrinterObjects;
-                        var liItems = printOb[1] as List<string>[];
-                        int count = 0;
-                        var method = printer.MethodsObject as IMethodObjects;
-                        List<string> li = new List<string>();
-                        for (int i = 0; i < liItems.Length; i++)
-                        {
-                            var filePath = Path.Combine(
-              Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-              "ClientPrints",
-              DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
-                            var image = new Bitmap(liItems[i][1]);
-                            Bitmap bmap = new Bitmap(printer.pParams.maxWidth, printer.pParams.maxHeight);
-                            Graphics g = Graphics.FromImage(bmap);
-                            g.SmoothingMode = SmoothingMode.HighQuality;
-                            g.CompositingQuality = CompositingQuality.HighQuality;
-                            g.FillRectangle(Brushes.White, new Rectangle(0, 0, bmap.Width, bmap.Height));
-                            g.DrawImage(image,
-                                new Rectangle(
-                                    0,
-                                    0,
-                                    image.Width,
-                                    image.Height),
-                                new Rectangle(0, 0, image.Width, image.Height),
-                                GraphicsUnit.Pixel);
-                            g.Dispose();
-                            bmap.Save(filePath);
-                            List<string> succese = method.writeDataToDev(filePath, printer, liItems[i][0], Int32.Parse(LiItems[i][2]));
-                            count += Int32.Parse(LiItems[i][2]);
-                            if (succese[0].Equals("error"))
-                            {
-                                li.Add(succese[1]);
-                                break;
-                            }
-
-                        }
-                        if (li.Count > 0)
-                        {
-                            PrinterInformation pi = new PrinterInformation();
-                            pi.lb_DevInfo.Text = "打印失败！" + li[0];
-                            pi.ShowDialog();
                         }
                         else
                         {
-                            Thread threadmontior = new Thread((ob) =>
-                              {
-                                  PrinterObjects po = ob as PrinterObjects;
-                                  var me = po.MethodsObject as IMethodObjects;
-                                  while (true)
-                                  {
-                                      Thread.Sleep(5000);
-                                      //输出作业
-                                      var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
-                                      var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-                                      if (printOut.workIndex == count + po.pParams.outJobNum)
-                                      {
-                                          string str = "设备:" + po.alias + ",所有打印已完成！";
-                                          PrinterInformation pi = new PrinterInformation();
-                                          pi.lb_DevInfo.Text = str;
-                                          pi.ShowDialog();
-                                          break;
-                                      }
-                                  }
-                              });
-                            threadmontior.SetApartmentState(ApartmentState.STA);
-                            threadmontior.Start(printer);
-                        }
-                    }));
+                            if (col[c].pParams.outJobNum >= 65000)
+                            {
+                                ThreadPool.QueueUserWorkItem((o) =>
+                                {
+                                    MessageBox.Show("打印工作号缓存数过大，请打印完成之后到监控控制界面进行重启该设备进行释放！！");
+                                });
+                            }
+                            Thread threadPrint = new Thread((printObject =>
+                            {
+                                var printOb = printObject as object[];
+                                var printer = printOb[0] as PrinterObjects;
+                                var liItems = printOb[1] as List<string>[];
+                                int count = 0;
+                                var method = printer.MethodsObject as IMethodObjects;
+                                List<string> li = new List<string>();
+                                for (int i = 0; i < liItems.Length; i++)
+                                {
+                                    var filePath = Path.Combine(
+                      Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                      "ClientPrints",
+                      printer.onlyAlias + " " + DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
+                                    var image = new Bitmap(liItems[i][1]);
+                                    Bitmap bmap = new Bitmap(printer.pParams.maxWidth, printer.pParams.maxHeight);
+                                    Graphics g = Graphics.FromImage(bmap);
+                                    g.SmoothingMode = SmoothingMode.HighQuality;
+                                    g.CompositingQuality = CompositingQuality.HighQuality;
+                                    g.FillRectangle(Brushes.White, new Rectangle(0, 0, bmap.Width, bmap.Height));
+                                    g.DrawImage(image,
+                                        new Rectangle(
+                                            0,
+                                            0,
+                                            image.Width,
+                                            image.Height),
+                                        new Rectangle(0, 0, image.Width, image.Height),
+                                        GraphicsUnit.Pixel);
+                                    g.Dispose();
+                                    bmap.Save(filePath);
+                                    List<string> succese = method.writeDataToDev(filePath, printer, liItems[i][0], Int32.Parse(LiItems[i][2]));
+                                    count += Int32.Parse(LiItems[i][2]);
+                                    if (succese[0].Equals("error"))
+                                    {
+                                        li.Add(succese[1]);
+                                        break;
+                                    }
 
-                        threadPrint.Start(new object[] { col[c], LiItems });
-                        threadPrint.Join();
+                                }
+                                if (li.Count > 0)
+                                {
+                                    PrinterInformation pi = new PrinterInformation();
+                                    pi.lb_DevInfo.Text = "打印失败！" + li[0];
+                                    pi.ShowDialog();
+                                }
+                                else
+                                {
+                                    Thread threadmontior = new Thread((ob) =>
+                                    {
+                                        PrinterObjects po = ob as PrinterObjects;
+                                        var me = po.MethodsObject as IMethodObjects;
+                                        while (true)
+                                        {
+                                            Thread.Sleep(5000);
+                                            //输出作业
+                                            var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
+                                            if (printOutPut == "false")
+                                            {
+                                                MessageBox.Show("打印机已离线或无法获取！");
+                                                break;
+                                            }
+                                            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+                                            if (printOut.workIndex == count + po.pParams.outJobNum)
+                                            {
+                                                string str = "设备:" + po.alias + ",所有打印已完成！";
+                                                po.pParams.outJobNum = printOut.workIndex;
+                                                PrinterInformation pi = new PrinterInformation();
+                                                pi.lb_DevInfo.Text = str;
+                                                pi.ShowDialog();
+                                                break;
+                                            }
+                                        }
+                                    });
+                                    threadmontior.SetApartmentState(ApartmentState.STA);
+                                    threadmontior.Start(printer);
+                                }
+                            }));
+
+                            threadPrint.Start(new object[] { col[c], LiItems });
+                        }
                     }
+
+
                 }
                 else
                 {
@@ -1395,8 +1444,8 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -1431,92 +1480,108 @@ namespace ClinetPrints
             }
             catch (Exception ex)
             {
-                SharMethod.writeLog(string.Format("有错误：{0}，跟踪：{1}", ex, ex.StackTrace));
-                MessageBox.Show(ex.Message);
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
         private void printerViewFlock_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node == printerViewFlock.SelectedNode && e.Node.Name != "打印机群")
+            try
             {
-                if (printerViewFlock.SelectedNode is GroupTreeNode)
+                if (e.Node == printerViewFlock.SelectedNode && e.Node.Name != "打印机群")
                 {
-                    this.toolStTxb_printer.Text = e.Node.Text;
-                    addfile = 0;
-                    //如果已经存在该列则删除该列重新赋值对象
-                    if (this.listView1.Columns.Count > 4)
+                    if (printerViewFlock.SelectedNode is GroupTreeNode)
                     {
-                        //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
-                        var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
-                        if (col.ColTnode != null)//说明刚才选中的是单打印机
+                        this.toolStTxb_printer.Text = e.Node.Text;
+                        addfile = 0;
+                        //如果已经存在该列则删除该列重新赋值对象
+                        if (this.listView1.Columns.Count > 4)
                         {
-                            col.liPrinter[0].listviewItemObject.Clear();
-                            col.liPrinter[0].listviewImages.Clear();
-                            for (int i = 0; i < this.listView1.Items.Count; i++)
+                            //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
+                            var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
+                            if (col.ColTnode != null)//说明刚才选中的是单打印机
                             {
-                                col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]);
+                                col.liPrinter[0].listviewItemObject.Clear();
+                                col.liPrinter[0].listviewImages.Clear();
+                                for (int i = 0; i < this.listView1.Items.Count; i++)
+                                {
+                                    col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]);
 
+                                }
+                                foreach (Image key in imageSubItems.Images)
+                                {
+                                    col.liPrinter[0].listviewImages.Add(key);
+                                }
                             }
-                            foreach (Image key in imageSubItems.Images)
-                            {
-                                col.liPrinter[0].listviewImages.Add(key);
-                            }
+                            this.listView1.Columns.RemoveAt(colmunObject);
                         }
-                        this.listView1.Columns.RemoveAt(colmunObject);
+                        this.listView1.Columns.Add(new listViewColumnTNode((e.Node as GroupTreeNode)));
+                        this.listView1.Items.Clear();
+                        imageSubItems.Images.Clear();
+                        listView1.SmallImageList = imageSubItems;
                     }
-                    this.listView1.Columns.Add(new listViewColumnTNode((e.Node as GroupTreeNode)));
-                    this.listView1.Items.Clear();
-                    imageSubItems.Images.Clear();
-                    listView1.SmallImageList = imageSubItems;
+                }
+                else
+                {
+                    if (addfile == 0)
+                    {
+                        toolStTxb_printer.Text = "";
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                if (addfile == 0)
-                {
-                    toolStTxb_printer.Text = "";
-                }
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
         private void toolStBtn_printPerview_Click(object sender, EventArgs e)
         {
-            if (this.toolStTxb_printer.Text == "")
+            try
             {
-                MessageBox.Show("请先选择打印机或群打印组！");
-                return;
-            }
-            if (listView1.SelectedItems.Count > 0)
-            {
-                var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter;
-                if (po.Count > 1)
+                if (this.toolStTxb_printer.Text == "")
                 {
-                    MessageBox.Show("群打印不法对图片进行预览设置处理！");
+                    MessageBox.Show("请先选择打印机或群打印组！");
                     return;
                 }
-                string addre = listView1.SelectedItems[0].SubItems[2].Text;
-                string job = listView1.SelectedItems[0].SubItems[1].Text;
-                int num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
-                Thread thread = new Thread(() =>
-                  {
-                      printPiewForm pf = new printPiewForm();
-                      pf.fileAddress = addre;
-                      pf.jobNum = job;
-                      pf.num = num;
-                      pf.lipo = po[0];
-                      pf.ShowDialog();
-                      if (pf.printTo)//说明选择的任务进行了打印
+                if (listView1.SelectedItems.Count > 0)
+                {
+                    var po = (listView1.Columns[4] as listViewColumnTNode).liPrinter;
+                    if (po.Count > 1)
+                    {
+                        MessageBox.Show("群打印不法对图片进行预览设置处理！");
+                        return;
+                    }
+                    string addre = listView1.SelectedItems[0].SubItems[2].Text;
+                    string job = listView1.SelectedItems[0].SubItems[1].Text;
+                    int num = Int32.Parse(listView1.SelectedItems[0].SubItems[3].Text);
+                    Thread thread = new Thread(() =>
                       {
-                          Invoke(new Action<object, EventArgs>(toolStBtn_delete_Click), sender, e);
-                      }
-                  });
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
+                          printPiewForm pf = new printPiewForm();
+                          pf.fileAddress = addre;
+                          pf.jobNum = job;
+                          pf.num = num;
+                          pf.lipo = po[0];
+                          pf.ShowDialog();
+                          if (pf.printTo)//说明选择的任务进行了打印
+                          {
+                              Invoke(new Action<object, EventArgs>(toolStBtn_delete_Click), sender, e);
+                          }
+                      });
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
+                }
+                else
+                {
+                    MessageBox.Show("请先选择要预览的任务！");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("请先选择要预览的任务！");
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -1524,29 +1589,47 @@ namespace ClinetPrints
 
         private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            timeSetting set = new timeSetting();
-            set.ShowDialog();
+            try
+            {
+                timeSetting set = new timeSetting();
+                set.ShowDialog();
+
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
         }
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count > 0)
+            try
             {
-                printNumber pn = new printNumber();
-                pn.Owner = this;
-                pn.StartPosition = FormStartPosition.CenterParent;
-                pn.ShowDialog();
-                if (pn.checkVal)
+                if (listView1.SelectedItems.Count > 0)
                 {
-                    foreach (ListViewItem item in listView1.Items)
+                    printNumber pn = new printNumber();
+                    pn.num = listView1.SelectedItems[0].SubItems[3].Text;
+                    pn.Owner = this;
+                    pn.StartPosition = FormStartPosition.CenterParent;
+                    pn.ShowDialog();
+                    if (pn.checkVal)
                     {
-                        item.SubItems[3].Text = pn.num;
+                        foreach (ListViewItem item in listView1.Items)
+                        {
+                            item.SubItems[3].Text = pn.num;
+                        }
+                    }
+                    else
+                    {
+                        listView1.SelectedItems[0].SubItems[3].Text = pn.num;
                     }
                 }
-                else
-                {
-                    listView1.SelectedItems[0].SubItems[3].Text = pn.num;
-                }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
@@ -1555,50 +1638,74 @@ namespace ClinetPrints
             DialogResult dr = MessageBox.Show("将错误信息上传到服务中心，以便更快处理！", "提示", MessageBoxButtons.OKCancel);
             if (dr == DialogResult.OK)
             {
-                //将错误日记上传
+                MessageBox.Show("没有服务器，还不能上传！");
             }
         }
 
         private void printerViewSingle_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node == printerViewSingle.SelectedNode)
+            try
             {
-                if (e.Node is PrinterTreeNode)
+                if (e.Node == printerViewSingle.SelectedNode)
                 {
-                    var n = e.Node as PrinterTreeNode;
-                    if (n.showToMove)
+                    if (e.Node is PrinterTreeNode)
                     {
-                        n.showToMove = false;
+                        var n = e.Node as PrinterTreeNode;
+                        if (n.showToMove)
+                        {
+                            n.showToMove = false;
+                        }
+                        errorText er = new errorText();
+                        er.Owner = this;
+                        er.StartPosition = FormStartPosition.CenterParent;
+                        er.Text = "设备：" + n.Text;
+                        er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
+                        er.Show();
                     }
-                    errorText er = new errorText();
-                    er.Owner = this;
-                    er.StartPosition = FormStartPosition.CenterParent;
-                    er.Text = "设备：" + n.Text;
-                    er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
-                    er.Show();
                 }
+            }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
             }
         }
 
         private void printerViewFlock_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Node == printerViewFlock.SelectedNode)
+            try
             {
-                if (e.Node is PrinterTreeNode)
+                if (e.Node == printerViewFlock.SelectedNode)
                 {
-                    var n = e.Node as PrinterTreeNode;
-                    if (n.showToMove)
+                    if (e.Node is PrinterTreeNode)
                     {
-                        n.showToMove = false;
+                        var n = e.Node as PrinterTreeNode;
+                        if (n.showToMove)
+                        {
+                            n.showToMove = false;
+                        }
+                        errorText er = new errorText();
+                        er.Owner = this;
+                        er.StartPosition = FormStartPosition.CenterParent;
+                        er.Text = "设备：" + n.Text;
+                        er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
+                        er.Show();
                     }
-                    errorText er = new errorText();
-                    er.Owner = this;
-                    er.StartPosition = FormStartPosition.CenterParent;
-                    er.Text = "设备：" + n.Text;
-                    er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
-                    er.Show();
                 }
             }
+            catch (Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
+        }
+
+        private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = false;
+            this.Dispose();
+            //PrinterTreeNode.Quit = true;
+            Application.Exit();
         }
     }
 }
