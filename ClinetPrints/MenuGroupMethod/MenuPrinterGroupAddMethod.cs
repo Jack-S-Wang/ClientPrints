@@ -174,6 +174,10 @@ namespace ClinetPrints.MenuGroupMethod
                         groupMenu.Click += (o, e) =>
                         {
                             var np = tnode as PrinterTreeNode;
+                            if (flockNode.Nodes.ContainsKey(np.Name))
+                            {
+                                return;
+                            }
                             if (nodeParFlock.Nodes.Find(tnode.Name, true).Length <= 0)
                             {
                                 PrinterTreeNode cnode;
@@ -187,6 +191,14 @@ namespace ClinetPrints.MenuGroupMethod
                                 }
                                 (flockNode as GroupTreeNode).Add(cnode);
                                 new MenuPrinterFlockGroupMethod(cnode, clientForm);
+                                //检查群打印记录中是否属于同一个组，是则将对象添加进去
+                                if (clientForm.liVewF != null)
+                                {
+                                    if (flockNode.Equals(clientForm.liVewF.ColGroupNode))
+                                    {
+                                        clientForm.liVewF.liPrinter.Add(cnode.PrinterObject);
+                                    }
+                                }
                             }
                             else
                             {
@@ -212,6 +224,14 @@ namespace ClinetPrints.MenuGroupMethod
                                     (nodeParFlock.Nodes.Find(tnode.Name, true)[0].Parent as GroupTreeNode).Remove((nodeParFlock.Nodes.Find(tnode.Name, true)[0] as PrinterTreeNode));
                                     (flockNode as GroupTreeNode).Add(cnode);
                                     new MenuPrinterFlockGroupMethod(cnode, clientForm);
+                                    //检查群打印记录中是否属于同一个组，是则将对象添加进去
+                                    if (clientForm.liVewF != null)
+                                    {
+                                        if (flockNode.Equals(clientForm.liVewF.ColGroupNode) && !clientForm.liVewF.liPrinter.Contains(cnode.PrinterObject))
+                                        {
+                                            clientForm.liVewF.liPrinter.Add(cnode.PrinterObject);
+                                        }
+                                    }
                                 }
                             }
                             var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);

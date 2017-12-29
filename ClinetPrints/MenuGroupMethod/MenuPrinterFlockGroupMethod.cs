@@ -20,10 +20,13 @@ namespace ClinetPrints.MenuGroupMethod
                 {
                     if (clientForm.toolStTxb_printer.Text == tnode.Parent.Text)
                     {
-                        var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
-                        if (col.liPrinter.Contains((tnode as PrinterTreeNode).PrinterObject))
+                        if (clientForm.listView1.Columns.Count > 4)
                         {
-                            col.liPrinter.Remove((tnode as PrinterTreeNode).PrinterObject);
+                            var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
+                            if (col.liPrinter.Contains((tnode as PrinterTreeNode).PrinterObject))
+                            {
+                                col.liPrinter.Remove((tnode as PrinterTreeNode).PrinterObject);
+                            }
                         }
                     }
                     SharMethod.ForTopEachNode(tnode.Parent, (nod) =>
@@ -46,11 +49,15 @@ namespace ClinetPrints.MenuGroupMethod
                     {
                         if (clientForm.toolStTxb_printer.Text == tnode.Parent.Text)
                         {
-                            var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
-                            if (col.liPrinter.Contains((tnode as PrinterTreeNode).PrinterObject))
+                            if (clientForm.listView1.Columns.Count > 4)
                             {
-                                col.liPrinter.Remove((tnode as PrinterTreeNode).PrinterObject);
+                                var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
+                                if (col.liPrinter.Contains((tnode as PrinterTreeNode).PrinterObject))
+                                {
+                                    col.liPrinter.Remove((tnode as PrinterTreeNode).PrinterObject);
+                                }
                             }
+
                         }
                         var node = tnode as PrinterTreeNode;
                         SharMethod.ForTopEachNode(tnode.Parent, (n) =>
@@ -62,6 +69,14 @@ namespace ClinetPrints.MenuGroupMethod
                         });
                         (tnode.Parent as GroupTreeNode).Remove(node);
                         (cnode as GroupTreeNode).Add(node);
+                        if (clientForm.listView1.Columns.Count > 4)
+                        {
+                            var col = clientForm.listView1.Columns[4] as listViewColumnTNode;
+                            if (col.ColGroupNode == cnode)
+                            {
+                                col.liPrinter.Add(node.PrinterObject);
+                            }
+                        }
                         var file = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                         SharMethod.SavePrinter(nodeParFlock, file);
                     };

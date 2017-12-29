@@ -95,7 +95,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             //输出作业
             var printOutPut = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, new byte[] { 0x33 });
             var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-            
+
             var printerParams = new PrinterParams()
             {
                 devInfo = DevInfo,
@@ -432,20 +432,21 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                     for (int i = 0; i < num; i++)
                     {
+
+                        outJobNum = outJobNum + 1;
+                        var lope = new structClassDll.UNCMPR_INFO()
+                        {
+                            cmprLen = 0,
+                            uncmprLen = 0,
+                            stat = 0,
+                            jobNumber = (ushort)outJobNum,
+                            resultTag = 0,
+                            cmprType = 0,
+                            frmIdx = 0,
+                            userParm = "DevLog.log"
+                        };
                         try
                         {
-                            outJobNum = outJobNum + 1;
-                            var lope = new structClassDll.UNCMPR_INFO()
-                            {
-                                cmprLen = 0,
-                                uncmprLen = 0,
-                                stat = 0,
-                                jobNumber = (ushort)outJobNum,
-                                resultTag = 0,
-                                cmprType = 0,
-                                frmIdx = 0,
-                                userParm = "DevLog.log"
-                            };
                             //System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClinetPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "image.cmpr", System.IO.FileMode.OpenOrCreate);
                             //var tmp1 = new byte[memblockSize];
                             //Marshal.Copy(memblock, tmp1, 0, memblockSize);
@@ -455,14 +456,15 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                             //file.Close();
                             success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             li.Add("error");
                             li.Add("打印方法执行失败！");
+                            SharMethod.writeErrorLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":动态库调用方法执行异常！"+string.Format("异常追踪：{0}",ex.StackTrace));
                         }
                         if (!success)
                         {
-                            error = "打印方法执行失败！已打印:"+(outJobNum - (po.pParams.outJobNum + 1))+"份";
+                            error = "打印方法执行失败！已打印:" + (outJobNum - (po.pParams.outJobNum + 1)) + "份";
                             break;
                         }
                     }
@@ -477,7 +479,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     else
                     {
                         li.Add("Ok");
-                        li.Add("任务号：" + jobnum+"已发送完毕！");
+                        li.Add("任务号：" + jobnum + "已发送完毕！");
                         return li;
                     }
                 }

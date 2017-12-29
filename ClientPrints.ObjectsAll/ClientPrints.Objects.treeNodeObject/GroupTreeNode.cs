@@ -34,6 +34,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
         public int Add(PrinterTreeNode tnode)
         {
             tnode.TagChanged += Tnode_TagChanged;
+            Tnode_TagChanged();
             return Nodes.Add(tnode);
         }
 

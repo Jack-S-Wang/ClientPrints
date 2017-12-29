@@ -158,13 +158,13 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         /// <param name="str"></param>
         public static void writeErrorLog(string str)
         {
-            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\Error.log";
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\"+DateTime.Now.Date.ToString("yyyyMMdd")+"Error.Log";
             bool done = false;
             while (!done)
             {
                 try
                 {
-                    File.AppendAllText(filePath, str);
+                    File.AppendAllText(filePath, str+"\r\n");
                     done = true;
                 }
                 catch { };

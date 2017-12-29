@@ -324,6 +324,28 @@ namespace ClinetPrints
                                     nf.PrinterObject = SharMethod.dicPrinterUSB[path];
                                     var filef = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                     SharMethod.SavePrinter(printerViewFlock.Nodes[0], filef);
+                                    //是否是群打印设置里的其中一台设备
+                                    if (this.listView1.Columns.Count > colmunObject)//设置列表中有数据
+                                    {
+                                        var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
+                                        if (col.ColGroupNode != null)//说明是群打印
+                                        {
+                                            if (col.ColGroupNode.Nodes.ContainsKey(nf.Name))//是否是正在操作设置里的设备
+                                            {
+                                                col.liPrinter.Add(nf.PrinterObject);
+                                            }
+                                        }
+                                    }
+                                    if (liVewF != null)//说明可能刚才将群的设置信息已经保存下来了
+                                    {
+                                        if (liVewF.ColGroupNode != null)//说明是群打印
+                                        {
+                                            if (liVewF.ColGroupNode.Nodes.ContainsKey(nf.Name))//是否是正在操作设置里的设备
+                                            {
+                                                liVewF.liPrinter.Add(nf.PrinterObject);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else
@@ -335,6 +357,7 @@ namespace ClinetPrints
                             }
                             var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                             SharMethod.SavePrinter(printerViewSingle.Nodes[0], file);
+
                             Thread.Sleep(100);
                             ThreadPool.QueueUserWorkItem((o) =>
                             {
@@ -359,8 +382,8 @@ namespace ClinetPrints
                                 if (node is PrinterTreeNode)
                                 {
                                     var n = node as PrinterTreeNode;
-                                    //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
-                                    if (this.listView1.Columns.Count > colmunObject)
+                                    //删除已下线设备的所有的设置内容
+                                    if (this.listView1.Columns.Count > colmunObject)//设置列表里有数据
                                     {
                                         var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
                                         if (col.ColTnode == n)//说明刚才选中的是离线的那台打印机
@@ -370,7 +393,72 @@ namespace ClinetPrints
                                             this.listView1.Items.Clear();
 
                                         }
+                                        else//判断是否是群里的最后一台设备下线了，全下线则清理，否则就只删除下线设备的对象不清理
+                                        {
+                                            if (col.ColGroupNode.Nodes.ContainsKey(n.Name))//是否存在该下线设备
+                                            {
+                                                int index = 0;
+                                                for (int i = 0; i < col.liPrinter.Count; ++i)
+                                                {
+                                                    if (col.liPrinter[i] == n.PrinterObject)
+                                                    {
+                                                        index = i;
+                                                        break;
+                                                    }
+                                                }
+                                                col.liPrinter.RemoveAt(index);
+                                                if (col.liPrinter.Count == 0)
+                                                {
+                                                    this.toolStTxb_printer.Text = "";
+                                                    this.listView1.Columns.RemoveAt(colmunObject);
+                                                    this.listView1.Items.Clear();
+                                                }
+                                            }
+                                        }
                                     }
+                                    if (liVewF != null)//记录群中是否也有该设备
+                                    {
+                                        if (liVewF.ColGroupNode != null)
+                                        {
+                                            if (liVewF.ColGroupNode.Nodes.ContainsKey(n.Name))//是否存在该下线设备
+                                            {
+                                                int index = 0;
+                                                for (int i = 0; i < liVewF.liPrinter.Count; ++i)
+                                                {
+                                                    if (liVewF.liPrinter[i] == n.PrinterObject)
+                                                    {
+                                                        index = i;
+                                                        break;
+                                                    }
+                                                }
+                                                liVewF.liPrinter.RemoveAt(index);
+                                                if (liVewF.liPrinter.Count == 0)
+                                                {
+                                                    liNameF = "";
+                                                    liItemF.Clear();
+                                                    liVeIamgeF.Clear();
+                                                    liVewF = null;
+                                                    this.toolStTxb_printer.Text = "";
+                                                    this.listView1.Columns.RemoveAt(colmunObject);
+                                                    this.listView1.Items.Clear();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (liVewS != null)//记录中单打印机是否是该设备
+                                    {
+                                        if (liVewS.ColTnode.Name == n.Name)//说明是该下线设备
+                                        {
+                                            liVewS = null;
+                                            liVeIamgeS.Clear();
+                                            liItemS.Clear();
+                                            liNameS = "";
+                                            this.toolStTxb_printer.Text = "";
+                                            this.listView1.Columns.RemoveAt(colmunObject);
+                                            this.listView1.Items.Clear();
+                                        }
+                                    }
+
                                     SharMethod.liAllPrinter.Remove(n.PrinterObject);
                                     n.SetOffline();
                                     if (this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)
@@ -749,27 +837,27 @@ namespace ClinetPrints
         }
         #endregion
         #region....//切换单打印与群打印时所记录的信息
-        private ListView liVewF = null;
-        private List<Image> liVeIamgeF = new List<Image>();
-        private List<ListViewItem> liItemF = new List<ListViewItem>();
+        public listViewColumnTNode liVewF = null;
+        public List<Image> liVeIamgeF = new List<Image>();
+        public List<ListViewItem> liItemF = new List<ListViewItem>();
         private bool sToF = false;
-        private string liNameF = "";
-        private ListView liVewS = null;
-        private List<Image> liVeIamgeS = new List<Image>();
-        private List<ListViewItem> liItemS = new List<ListViewItem>();
-        private string liNameS = "";
+        public string liNameF = "";
+        public listViewColumnTNode liVewS = null;
+        public List<Image> liVeIamgeS = new List<Image>();
+        public List<ListViewItem> liItemS = new List<ListViewItem>();
+        public string liNameS = "";
         private bool fToS = false;
         #endregion
         private void 单台打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                if (printerViewSingle.Enabled == false)
+                if (printerViewSingle.Enabled == false && listView1.Columns.Count>colmunObject)
                 {
-                    fToS = true;
                     liVeIamgeF.Clear();
                     liItemF.Clear();
-                    liVewF = listView1;
+                    liVewF = listView1.Columns[colmunObject] as listViewColumnTNode;
+                    listView1.Columns.RemoveAt(colmunObject);
                     for (int i = 0; i < imageSubItems.Images.Count; i++)
                     {
                         liVeIamgeF.Add(imageSubItems.Images[i]);
@@ -784,6 +872,7 @@ namespace ClinetPrints
                     toolStTxb_printer.Text = "";
                     addfile = 0;
                 }
+                fToS = true;
                 单台打印ToolStripMenuItem.BackColor = Color.Green;
                 群打印ToolStripMenuItem.BackColor = Color.White;
                 printerViewSingle.Enabled = true;
@@ -796,11 +885,7 @@ namespace ClinetPrints
                 {
                     if (liVewS != null)
                     {
-                        if((liVewS.Columns[colmunObject] as listViewColumnTNode).liPrinter[0] == null)
-                        {
-                            return;
-                        }
-                        listView1 = liVewS;
+                        listView1.Columns.Add(liVewS);
                         imageSubItems.Images.Clear();
                         listView1.Items.Clear();
                         foreach (Image img in liVeIamgeS)
@@ -814,9 +899,9 @@ namespace ClinetPrints
                         }
                         addfile = liItemS.Count;
                         toolStTxb_printer.Text = liNameS;
-                        fToS = false;
                     }
                 }
+                fToS = false;
             }
             catch (Exception ex)
             {
@@ -829,12 +914,12 @@ namespace ClinetPrints
         {
             try
             {
-                if (printerViewSingle.Enabled)
+                if (printerViewSingle.Enabled && listView1.Columns.Count>colmunObject)
                 {
-                    sToF = true;
                     liVeIamgeS.Clear();
                     liItemS.Clear();
-                    liVewS = listView1;
+                    liVewS = listView1.Columns[colmunObject] as listViewColumnTNode;
+                    listView1.Columns.RemoveAt(colmunObject);
                     for (int i = 0; i < imageSubItems.Images.Count; i++)
                     {
                         liVeIamgeS.Add(imageSubItems.Images[i]);
@@ -849,6 +934,7 @@ namespace ClinetPrints
                     toolStTxb_printer.Text = "";
                     addfile = 0;
                 }
+                sToF = true;
                 单台打印ToolStripMenuItem.BackColor = Color.White;
                 群打印ToolStripMenuItem.BackColor = Color.Green;
                 printerViewSingle.Enabled = false;
@@ -862,19 +948,12 @@ namespace ClinetPrints
                     if (liVewF != null)
                     {
                         int count = 0;
-                        var lp = (liVewF.Columns[colmunObject] as listViewColumnTNode).liPrinter;
-                        for (int i=0;i< lp.Count; i++)
-                        {
-                            if(lp[i] == null)
-                            {
-                                count++;
-                            }
-                        }
+                        var lp = liVewF.liPrinter;
                         if (count == lp.Count)//说明全下线了
                         {
                             return;
                         }
-                        listView1 = liVewF;
+                        listView1.Columns.Add(liVewF);
                         imageSubItems.Images.Clear();
                         listView1.Items.Clear();
                         foreach (Image img in liVeIamgeF)
@@ -888,10 +967,10 @@ namespace ClinetPrints
                         }
                         addfile = liItemF.Count;
                         toolStTxb_printer.Text = liNameF;
-                        sToF = false;
+                       
                     }
-
                 }
+                sToF = false;
             }
             catch (Exception ex)
             {
@@ -1655,6 +1734,42 @@ namespace ClinetPrints
                         {
                             n.showToMove = false;
                         }
+                        if (printerViewSingle.SelectedNode.Name == e.Node.Name)
+                        {
+                            var node = e.Node as PrinterTreeNode;
+                            if (node.StateCode.Equals("0"))
+                            {
+                                MessageBox.Show("离线设备无法进行设置！");
+                                return;
+                            }
+                            this.toolStTxb_printer.Text = node.Text;
+                            addfile = 0;
+                            //如果已经存在该列则删除该列重新赋值对象
+                            if (this.listView1.Columns.Count > 4)
+                            {
+                                //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
+                                var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
+                                if (col.ColTnode != null)//说明刚才选中的是单打印机
+                                {
+                                    col.liPrinter[0].listviewImages.Clear();
+                                    col.liPrinter[0].listviewItemObject.Clear();
+                                    for (int i = 0; i < this.listView1.Items.Count; i++)
+                                    {
+                                        col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]);
+                                    }
+                                    foreach (Image key in imageSubItems.Images)
+                                    {
+                                        col.liPrinter[0].listviewImages.Add(key);
+                                    }
+                                }
+                                this.listView1.Columns.RemoveAt(colmunObject);
+
+                            }
+                            this.listView1.Columns.Add(new listViewColumnTNode(node));
+                            this.listView1.Items.Clear();
+                            imageSubItems.Images.Clear();
+                            listView1.SmallImageList = imageSubItems;
+                        }
                         errorText er = new errorText();
                         er.Owner = this;
                         er.StartPosition = FormStartPosition.CenterParent;
@@ -1663,6 +1778,7 @@ namespace ClinetPrints
                         er.Show();
                     }
                 }
+
             }
             catch (Exception ex)
             {
@@ -1690,6 +1806,46 @@ namespace ClinetPrints
                         er.Text = "设备：" + n.Text;
                         er.filepath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + n.PrinterObject.onlyAlias + ".xml";
                         er.Show();
+                    }
+                }
+                if (e.Node == printerViewFlock.SelectedNode && e.Node.Name != "打印机群")
+                {
+                    if (printerViewFlock.SelectedNode is GroupTreeNode)
+                    {
+                        this.toolStTxb_printer.Text = e.Node.Text;
+                        addfile = 0;
+                        //如果已经存在该列则删除该列重新赋值对象
+                        if (this.listView1.Columns.Count > 4)
+                        {
+                            //将原来存在的信息记录下来，以便打印出问题时可以直接获取重新设置
+                            var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
+                            if (col.ColTnode != null)//说明刚才选中的是单打印机
+                            {
+                                col.liPrinter[0].listviewItemObject.Clear();
+                                col.liPrinter[0].listviewImages.Clear();
+                                for (int i = 0; i < this.listView1.Items.Count; i++)
+                                {
+                                    col.liPrinter[0].listviewItemObject.Add(this.listView1.Items[i]);
+
+                                }
+                                foreach (Image key in imageSubItems.Images)
+                                {
+                                    col.liPrinter[0].listviewImages.Add(key);
+                                }
+                            }
+                            this.listView1.Columns.RemoveAt(colmunObject);
+                        }
+                        this.listView1.Columns.Add(new listViewColumnTNode((e.Node as GroupTreeNode)));
+                        this.listView1.Items.Clear();
+                        imageSubItems.Images.Clear();
+                        listView1.SmallImageList = imageSubItems;
+                    }
+                }
+                else
+                {
+                    if (addfile == 0)
+                    {
+                        toolStTxb_printer.Text = "";
                     }
                 }
             }
