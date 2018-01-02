@@ -1,4 +1,5 @@
-﻿using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,6 +38,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         public string num = "";
         private void button1_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, button1.Name, "确认执行的任务数");
             num = UpDown_num.Value.ToString();
             MessageBox.Show("设置完成！");
             this.Close();
@@ -44,6 +46,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void printNumber_FormClosing(object sender, FormClosingEventArgs e)
         {
+            new addCommend(SharMethod.user, "printNumber_FormClosing", "直接退出执行任务数");
             if (num == "")
                 num = "1";
         }

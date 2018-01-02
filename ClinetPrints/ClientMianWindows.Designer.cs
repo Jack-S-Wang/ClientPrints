@@ -36,6 +36,7 @@
             this.全部展开ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.全部折叠ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置查询时间ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pan_mainWin1_tree = new System.Windows.Forms.Panel();
             this.printerViewFlock = new System.Windows.Forms.TreeView();
@@ -65,7 +66,6 @@
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -126,6 +126,13 @@
             this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.设置查询时间ToolStripMenuItem.Text = "设置";
             this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
+            // 
+            // 退出ToolStripMenuItem
+            // 
+            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.退出ToolStripMenuItem.Text = "退出";
+            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // 帮助ToolStripMenuItem
             // 
@@ -224,10 +231,10 @@
             // 
             this.groupBox2.Controls.Add(this.listView1);
             this.groupBox2.Controls.Add(this.toolStrip1);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 17);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(614, 552);
+            this.groupBox2.Size = new System.Drawing.Size(628, 552);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "打印设置";
@@ -244,7 +251,7 @@
             this.listView1.GridLines = true;
             this.listView1.Location = new System.Drawing.Point(3, 42);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(608, 507);
+            this.listView1.Size = new System.Drawing.Size(622, 507);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -284,7 +291,7 @@
             this.toolStBtn_parmSet});
             this.toolStrip1.Location = new System.Drawing.Point(3, 17);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(608, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(622, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -398,13 +405,6 @@
             // timer1
             // 
             this.timer1.Interval = 1000;
-            // 
-            // 退出ToolStripMenuItem
-            // 
-            this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.退出ToolStripMenuItem.Text = "退出";
-            this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
             // ClientMianWindows
             // 

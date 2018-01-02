@@ -1,4 +1,5 @@
-﻿using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,6 +35,7 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_sure_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_sure.Name, "移动作业任务位置");
             try
             {
                 if (items.Contains(Int32.Parse(txb_index.Text.Trim())))

@@ -50,6 +50,8 @@ namespace ClinetPrints
                 notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
                 this.WindowState = FormWindowState.Normal;
             };
+            SharMethod.user = new UserCommend();
+
         }
 
 
@@ -313,6 +315,7 @@ namespace ClinetPrints
                                 MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
                                 return;
                             }
+                            new addCommend(SharMethod.user, "usbs上线", "");
                             if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明该设备正处于离线状态
                             {
                                 var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
@@ -377,6 +380,7 @@ namespace ClinetPrints
                             string path = dbd.devicePath.ToLower();
                             if (SharMethod.dicPrinterUSB.ContainsKey(path))
                             {
+                                new addCommend(SharMethod.user, "usb下线", "");
                                 SetTiming = false;
                                 var node = this.printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
                                 if (node is PrinterTreeNode)
@@ -438,9 +442,6 @@ namespace ClinetPrints
                                                     liItemF.Clear();
                                                     liVeIamgeF.Clear();
                                                     liVewF = null;
-                                                    this.toolStTxb_printer.Text = "";
-                                                    this.listView1.Columns.RemoveAt(colmunObject);
-                                                    this.listView1.Items.Clear();
                                                 }
                                             }
                                         }
@@ -453,9 +454,6 @@ namespace ClinetPrints
                                             liVeIamgeS.Clear();
                                             liItemS.Clear();
                                             liNameS = "";
-                                            this.toolStTxb_printer.Text = "";
-                                            this.listView1.Columns.RemoveAt(colmunObject);
-                                            this.listView1.Items.Clear();
                                         }
                                     }
 
@@ -670,19 +668,23 @@ namespace ClinetPrints
             MenuItem menuItem3 = new MenuItem("退出程序");//这个需要保留的按钮程序
             menuItem1.Click += (o, e) =>
             {
+                new addCommend(SharMethod.user, menuItem1.Name, menuItem1.Text);
                 timer1.Enabled = false;
                 notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
                 this.Visible = true;
             };
             menuItem2.Click += (o, e) =>
             {
+                new addCommend(SharMethod.user, menuItem2.Name, menuItem2.Text);
                 this.Hide();
             };
             promotionDev.Click += (o, e) =>
             {
+                new addCommend(SharMethod.user, promotionDev.Name, promotionDev.Text);
                 Thread thread = new Thread(() =>
                   {
                       DevPromotion dp = new DevPromotion();
+                      dp.StartPosition = FormStartPosition.CenterScreen;
                       dp.ShowDialog();
                   });
                 thread.SetApartmentState(ApartmentState.STA);
@@ -690,11 +692,17 @@ namespace ClinetPrints
             };
             menSet.Click += (o, e) =>
             {
-                timeSetting set = new timeSetting();
-                set.ShowDialog();
+                new addCommend(SharMethod.user, menSet.Name, menSet.Text);
+                (new Thread(() =>
+                {
+                    timeSetting set = new timeSetting();
+                    set.StartPosition = FormStartPosition.CenterScreen;
+                    set.ShowDialog();
+                })).Start();
             };
             menuItem3.Click += (o, e) =>
             {
+                new addCommend(SharMethod.user, menuItem3.Name, menuItem3.Text);
                 timer1.Enabled = false;
                 this.Dispose();
                 //PrinterTreeNode.Quit = true;
@@ -734,6 +742,7 @@ namespace ClinetPrints
         static object ObjectLock = new object();
         private void 分组名称查询ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 分组名称查询ToolStripMenuItem.Name, 分组名称查询ToolStripMenuItem.Text);
             try
             {
                 lock (ObjectLock)
@@ -850,9 +859,10 @@ namespace ClinetPrints
         #endregion
         private void 单台打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 单台打印ToolStripMenuItem.Name, 单台打印ToolStripMenuItem.Text);
             try
             {
-                if (printerViewSingle.Enabled == false && listView1.Columns.Count>colmunObject)
+                if (printerViewSingle.Enabled == false && listView1.Columns.Count > colmunObject)
                 {
                     liVeIamgeF.Clear();
                     liItemF.Clear();
@@ -912,9 +922,10 @@ namespace ClinetPrints
 
         private void 群打印ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 群打印ToolStripMenuItem.Name, 群打印ToolStripMenuItem.Text);
             try
             {
-                if (printerViewSingle.Enabled && listView1.Columns.Count>colmunObject)
+                if (printerViewSingle.Enabled && listView1.Columns.Count > colmunObject)
                 {
                     liVeIamgeS.Clear();
                     liItemS.Clear();
@@ -967,7 +978,7 @@ namespace ClinetPrints
                         }
                         addfile = liItemF.Count;
                         toolStTxb_printer.Text = liNameF;
-                       
+
                     }
                 }
                 sToF = false;
@@ -986,6 +997,7 @@ namespace ClinetPrints
         #region....//节点选择执行方法
         private void printerViewSingle_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            new addCommend(SharMethod.user, printerViewSingle.Name, "printerViewSingle_AfterSelect");
             try
             {
                 if (e.Node is PrinterTreeNode)
@@ -1051,6 +1063,7 @@ namespace ClinetPrints
         public volatile int addfile = 0;
         private void toolStBtn_add_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_add.Name, toolStBtn_add.Text);
             try
             {
                 if (this.toolStTxb_printer.Text != "")
@@ -1101,6 +1114,7 @@ namespace ClinetPrints
 
         private void toolStBtn_delete_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_delete.Name, toolStBtn_delete.Text);
             try
             {
                 if (this.toolStTxb_printer.Text != "")
@@ -1153,6 +1167,7 @@ namespace ClinetPrints
 
         private void toolStbtn_moveUp_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStbtn_moveUp.Name, toolStbtn_moveUp.Text);
             try
             {
                 if (this.toolStTxb_printer.Text != "")
@@ -1268,6 +1283,7 @@ namespace ClinetPrints
 
         private void toolStBtn_moveNext_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_moveNext.Name, toolStBtn_moveNext.Text);
             try
             {
                 if (this.toolStTxb_printer.Text != "")
@@ -1350,6 +1366,7 @@ namespace ClinetPrints
 
         private void toolStBtn_monitor_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_monitor.Name, toolStBtn_monitor.Text);
             try
             {
                 if (this.toolStTxb_printer.Text != "")
@@ -1385,6 +1402,7 @@ namespace ClinetPrints
 
         private void toolStBtn_print_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_print.Name, toolStBtn_print.Text);
             try
             {
 
@@ -1530,6 +1548,7 @@ namespace ClinetPrints
 
         private void toolStBtn_parmSet_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_parmSet.Name, toolStBtn_parmSet.Text);
             try
             {
                 if (this.toolStTxb_printer.Text != "")
@@ -1566,6 +1585,7 @@ namespace ClinetPrints
 
         private void printerViewFlock_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            new addCommend(SharMethod.user, printerViewFlock.Name, "printerViewFlock_AfterSelect");
             try
             {
                 if (e.Node == printerViewFlock.SelectedNode && e.Node.Name != "打印机群")
@@ -1618,6 +1638,7 @@ namespace ClinetPrints
 
         private void toolStBtn_printPerview_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_printPerview.Name, toolStBtn_printPerview.Text);
             try
             {
                 if (this.toolStTxb_printer.Text == "")
@@ -1668,6 +1689,7 @@ namespace ClinetPrints
 
         private void 设置查询时间ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 设置查询时间ToolStripMenuItem.Name, 设置查询时间ToolStripMenuItem.Text);
             try
             {
                 timeSetting set = new timeSetting();
@@ -1683,6 +1705,7 @@ namespace ClinetPrints
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, listView1.Name, "listView1_DoubleClick");
             try
             {
                 if (listView1.SelectedItems.Count > 0)
@@ -1723,6 +1746,7 @@ namespace ClinetPrints
 
         private void printerViewSingle_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            new addCommend(SharMethod.user, printerViewSingle.Name, "printerViewSingle_NodeMouseDoubleClick");
             try
             {
                 if (e.Node == printerViewSingle.SelectedNode)
@@ -1789,6 +1813,7 @@ namespace ClinetPrints
 
         private void printerViewFlock_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            new addCommend(SharMethod.user, printerViewFlock.Name, "printerViewFlock_NodeMouseDoubleClick");
             try
             {
                 if (e.Node == printerViewFlock.SelectedNode)

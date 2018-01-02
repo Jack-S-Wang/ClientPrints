@@ -82,6 +82,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_sureParm_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_sureParm.Name, "");
             try
             {
                 byte[] data = new byte[20];
@@ -212,6 +213,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_sureCfg_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_sureCfg.Name, "");
             try
             {
                 string name = "";

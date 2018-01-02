@@ -28,6 +28,8 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         public static List<PrinterObjects> liAllPrinter = new List<PrinterObjects>();
 
         public static monitorTime monTime { get; set; }
+
+        public static UserCommend user;
         /// <summary>
         /// 获取所有打印机的信息
         /// </summary>
@@ -164,7 +166,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             {
                 try
                 {
-                    File.AppendAllText(filePath, str+"\r\n");
+                    File.AppendAllText(filePath, user.getCommendInfo().ToString()+"\r\n"+str+"\r\n");
                     done = true;
                 }
                 catch { };

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 
 namespace ClinetPrints.SettingWindows
 {
@@ -162,6 +163,8 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_sure_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, "控制选择命令的内容", cmb_command.Text);
+            new addCommend(SharMethod.user, btn_sure.Name, "监控控制指令确认");
             try
             {
                 var method = printerObject.MethodsObject as IMethodObjects;
@@ -216,6 +219,7 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_getFile_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_getFile.Name, "监控选择文件");
             try
             {
                 this.openFileDialog1.ShowDialog();
@@ -230,6 +234,7 @@ namespace ClinetPrints.SettingWindows
 
         private void btn_up_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_up.Name, "监控更新");
             try
             {
                 if (this.txb_getFile.Text != "")
@@ -290,6 +295,7 @@ namespace ClinetPrints.SettingWindows
 
         private void ckb_monitor_CheckedChanged(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, ckb_monitor.Name, "自主监控是否启用");
             if (ckb_monitor.Checked)
             {
                 demandTime.Enabled = false;

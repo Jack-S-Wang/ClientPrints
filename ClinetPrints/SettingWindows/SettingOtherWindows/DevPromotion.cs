@@ -1,4 +1,5 @@
-﻿using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using System;
@@ -23,6 +24,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_getFile_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_getFile.Name, btn_getFile.Text);
             try
             {
                 OpenFileDialog of = new OpenFileDialog();
@@ -41,6 +43,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_up_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_up.Name, btn_up.Text);
             try
             {
                 if (this.txb_getFile.Text != "" && listView1.SelectedItems.Count > 0)

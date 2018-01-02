@@ -210,11 +210,13 @@ namespace ClinetPrints.CreatContorl
 
         private void btn_custom_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_custom.Name, btn_custom.Text);
             this.txb_customPage.Enabled = true;
         }
 
         private void toolBtn_Add_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolBtn_Add.Name, toolBtn_Add.Text);
             try
             {
                 if (this.txb_customPage.Text != "")
@@ -257,6 +259,7 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_clear_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolBtn_clear.Name, toolBtn_clear.Text);
             try
             {
                 if (this.cmb_page.Text != "")
@@ -311,11 +314,13 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_close_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolBtn_close.Name, toolBtn_close.Text);
             OnBtnClose?.Invoke(sender, e);
         }
 
         private void toolCob_Intgaiting_SelectedIndexChanged(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolCob_Intgaiting.Name, toolCob_Intgaiting.Text);
             try
             {
                 int min = 0;
@@ -558,6 +563,7 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_reMap_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolBtn_reMap.Name, toolBtn_reMap.Text);
             if (this.toolCob_Intgaiting.SelectedIndex == 5)
             {
                 ptb_page.Image = oldmap;
@@ -576,6 +582,7 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_save_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolBtn_save.Name, toolBtn_save.Text);
             try
             {
                 FolderBrowserDialog folderB = new FolderBrowserDialog();
@@ -610,6 +617,7 @@ namespace ClinetPrints.CreatContorl
 
         private void toolBtn_print_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolBtn_print.Name, toolBtn_print.Text);
             try
             {
                 if (!string.IsNullOrWhiteSpace(this.cmb_page.Text))
@@ -771,6 +779,7 @@ namespace ClinetPrints.CreatContorl
         private bool rotaX = false;
         private void 向左旋转90ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 向左旋转90ToolStripMenuItem.Name, 向左旋转90ToolStripMenuItem.Text);
             try
             {
                 getRota(3);
@@ -808,6 +817,7 @@ namespace ClinetPrints.CreatContorl
 
         private void 向右旋转90ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 向右旋转90ToolStripMenuItem.Name, 向右旋转90ToolStripMenuItem.Text);
             try
             {
                 getRota(1);
@@ -822,6 +832,7 @@ namespace ClinetPrints.CreatContorl
 
         private void 旋转180ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 旋转180ToolStripMenuItem.Name, 旋转180ToolStripMenuItem.Text);
             try
             {
                 getRota(2);
@@ -836,6 +847,7 @@ namespace ClinetPrints.CreatContorl
 
         private void 垂直旋转ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 垂直旋转ToolStripMenuItem.Name, 垂直旋转ToolStripMenuItem.Text);
             try
             {
                 if (rotaY)
@@ -856,6 +868,7 @@ namespace ClinetPrints.CreatContorl
 
         private void 水平旋转ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, 水平旋转ToolStripMenuItem.Name, 水平旋转ToolStripMenuItem.Text);
             try
             {              
                 if (rotaX)

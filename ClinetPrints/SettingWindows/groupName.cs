@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,6 +20,7 @@ namespace ClinetPrints.SettingWindows
         public string name = "";
         private void groupName_KeyDown(object sender, KeyEventArgs e)
         {
+            new addCommend(SharMethod.user, "groupName_KeyDown", "键盘确认键");
             if (e.KeyCode == Keys.Enter)
             {
                 if (this.txb_groupText.Text != "")

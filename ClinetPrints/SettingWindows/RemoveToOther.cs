@@ -1,4 +1,5 @@
-﻿using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.MenuGroupMethod;
 using System;
@@ -114,7 +115,6 @@ namespace ClinetPrints.SettingWindows
                             if (nod.Parent.Name == Pnode.Name && nod.Level - 1 == Pnode.Level)
                             {
                                 this.listView1.Items.Add(new RemoveItems(nod));
-
                             }
                         }
                     }
@@ -129,6 +129,7 @@ namespace ClinetPrints.SettingWindows
 
         private void toolStBtn_back_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_back.Name, "返回上一级");
             try
             {
                 var col = this.listView1.Columns[0] as RemoveColumns;
@@ -151,6 +152,7 @@ namespace ClinetPrints.SettingWindows
 
         private void toolStBtn_next_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_next.Name, "进入下一级");
             try
             {
                 if (sureNode != null)
@@ -173,6 +175,7 @@ namespace ClinetPrints.SettingWindows
 
         private void toolStBtn_Exit_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_Exit.Name, "退出");
             try
             {
                 this.Close();
@@ -187,6 +190,7 @@ namespace ClinetPrints.SettingWindows
 
         private void toolStBtn_serach_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_serach.Name, "搜索指定的组名");
             try
             {
                 if (toolStTxb_groupName.Text != "")
@@ -226,6 +230,7 @@ namespace ClinetPrints.SettingWindows
 
         private void toolStBtn_backTop_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_backTop.Name, "直接返回最顶级");
             try
             {
                 this.toolStBtn_back.Enabled = false;
@@ -257,6 +262,7 @@ namespace ClinetPrints.SettingWindows
         delegate DialogResult messageShow(string str);
         private void toolStBtn_sure_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, toolStBtn_sure.Name, "确认将打印机移位到对应的组");
             try
             {
                 if (sureNode != null)

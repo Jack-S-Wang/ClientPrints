@@ -72,6 +72,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_sureTime_Click(object sender, EventArgs e)
         {
+            new addCommend(SharMethod.user, btn_sureTime.Name, "确认保存设置");
             try
             {
 
