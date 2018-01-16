@@ -228,9 +228,9 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// 1、RAWMODE_DEV_REQ时,inDats应为指向DEVREQ_INFO的数据结构，outDats应为接收数据缓冲,outLen为数据长度。
         /// 2、RAWMODE_DEV_RESP时,inDats为数据，inLen为数据长度，outDats应为DEVACK_INFO数据结构。</returns>
         [DllImport("WDevObj.dll", EntryPoint = "dllFunc_devRawDats", CharSet = CharSet.Unicode)]
-        public static extern bool devRawDatsREQ(ref structClassDll.DEVREQ_INFO2 inDat, IntPtr ptr, uint modeTag);
+        public static extern bool devRawDatsREQ([In,Out] ref structClassDll.DEVREQ_INFO2 inDat, IntPtr ptr, uint modeTag=1);
 
         [DllImport("WDevObj.dll", EntryPoint = "dllFunc_devRawDats", CharSet = CharSet.Unicode)]
-        public static extern bool devRawDatsACK(IntPtr ptr,ref structClassDll.DEVACK_INFO2 outDats,uint modeTag);
+        public static extern bool devRawDatsACK(IntPtr ptr,ref structClassDll.DEVACK_INFO2 outDats,uint modeTag=2);
     }
 }

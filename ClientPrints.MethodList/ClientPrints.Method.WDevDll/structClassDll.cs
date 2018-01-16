@@ -250,7 +250,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 当命令符为CTRL_DEVCMD_ST时,表示设备命令,lpDat[0]则为命令码0x80 ~ 0x9f
             /// </summary>
-            public IntPtr lpDat;		//设备请求数据
+            public byte[] lpDat;		//设备请求数据
             /// <summary>
             /// 数据长度
             /// </summary>
@@ -262,7 +262,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 设备数据包,设置长度512
             /// </summary>
-            public byte[] devPktBuf;
+            public IntPtr devPktBuf;
 	        /// <summary>
             /// 设备数据包长度
 	        /// </summary>
@@ -279,7 +279,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 用户数据缓冲
             /// </summary>
-            public IntPtr lpBuf;
+            public byte[] lpBuf;
             /// <summary>
             /// 缓冲大小
             /// </summary>
@@ -291,7 +291,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 设备返回 长度为512
             /// </summary>
-            public byte[] devPktBuf;
+            public IntPtr devPktBuf;
             /// <summary>
             /// 设备返回的长度
             /// </summary>

@@ -1139,7 +1139,6 @@ namespace ClinetPrints
                         Interlocked.Decrement(ref addfile);
                         setItems();
                     }
-
                 }
                 else
                 {
@@ -1531,8 +1530,6 @@ namespace ClinetPrints
                             threadPrint.Start(new object[] { col[c], LiItems });
                         }
                     }
-
-
                 }
                 else
                 {
@@ -1888,5 +1885,12 @@ namespace ClinetPrints
             //PrinterTreeNode.Quit = true;
             Application.Exit();
         }
+
+        //private void toolStripButton1_Click(object sender, EventArgs e)
+        //{
+        //    var cm=listView1.Columns[colmunObject] as listViewColumnTNode;
+        //    var method=cm.liPrinter[0].MethodsObject as IMethodObjects;
+        //    method.getRa(cm.liPrinter[0]);
+        //}
     }
 }

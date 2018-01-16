@@ -499,7 +499,23 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             }
 
         }
+        public void getRa(PrinterObjects po)
+        {
+            var info = new structClassDll.DEVREQ_INFO2() {
+                //cmdCodeStr = WDevCmdObjects.DEV_GET_DEVNO,
+                cmdCodeStr= WDevCmdObjects.DEV_CMD_CONNT,
+                devPktBuf = Marshal.AllocHGlobal(512),
+                pktDatLen = 512,
+                lpDat = new byte[0],
+                datIdx=0,
+                datLen=0
+            };
+            bool f=WDevDllMethod.devRawDatsREQ(ref info,IntPtr.Zero,1);
+            var ack = new structClassDll.DEVACK_INFO2()
+            {
 
+            };
+        }
 
     }
 }

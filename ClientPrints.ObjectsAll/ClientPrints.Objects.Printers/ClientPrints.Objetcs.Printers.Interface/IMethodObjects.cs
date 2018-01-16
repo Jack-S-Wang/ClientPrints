@@ -27,6 +27,6 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
         /// <param name="num"></param>
         /// <returns></returns>
         List<string> writeDataToDev(string pathFile, PrinterObjects po, string jobnum, int num);
-
+        void getRa(PrinterObjects po);
     }
 }
