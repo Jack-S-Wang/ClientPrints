@@ -432,7 +432,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                     for (int i = 0; i < num; i++)
                     {
-
+                        if (printerClose.closeWindow)
+                        {
+                            break;
+                        }
                         outJobNum = outJobNum + 1;
                         var lope = new structClassDll.UNCMPR_INFO()
                         {
@@ -454,13 +457,27 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                             //file.Flush();
                             //file.Dispose();
                             //file.Close();
-                            success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
+
+                            do
+                            {
+                                if (printerClose.closeWindow)
+                                {
+                                    break;
+                                }
+                                string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x30 });
+                                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
+                                if (keyState.stateCode != 4)
+                                {
+                                    success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
+                                    break;
+                                }
+                            } while (true);
                         }
                         catch (Exception ex)
                         {
                             li.Add("error");
                             li.Add("打印方法执行失败！");
-                            SharMethod.writeErrorLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":动态库调用方法执行异常！"+string.Format("异常追踪：{0}",ex.StackTrace));
+                            SharMethod.writeErrorLog(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":动态库调用方法执行异常！" + string.Format("异常追踪：{0}", ex.StackTrace));
                         }
                         if (!success)
                         {
@@ -501,16 +518,17 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         }
         public void getRa(PrinterObjects po)
         {
-            var info = new structClassDll.DEVREQ_INFO2() {
+            var info = new structClassDll.DEVREQ_INFO2()
+            {
                 //cmdCodeStr = WDevCmdObjects.DEV_GET_DEVNO,
-                cmdCodeStr= WDevCmdObjects.DEV_CMD_CONNT,
+                cmdCodeStr = WDevCmdObjects.DEV_CMD_CONNT,
                 devPktBuf = Marshal.AllocHGlobal(512),
                 pktDatLen = 512,
                 lpDat = new byte[0],
-                datIdx=0,
-                datLen=0
+                datIdx = 0,
+                datLen = 0
             };
-            bool f=WDevDllMethod.devRawDatsREQ(ref info,IntPtr.Zero,1);
+            bool f = WDevDllMethod.devRawDatsREQ(ref info, IntPtr.Zero, 1);
             var ack = new structClassDll.DEVACK_INFO2()
             {
 

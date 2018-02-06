@@ -182,6 +182,10 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject
 
                 while (!quit)
                 {
+                    if (printerClose.closeWindow)
+                    {
+                        break;
+                    }
                     Thread.Sleep(1000);
                     if (treeShow)
                     {

@@ -6,6 +6,7 @@ using System.Drawing;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using System.Windows.Forms;
 using static System.Windows.Forms.ListView;
+using System.Threading;
 
 namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 {
@@ -93,6 +94,10 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         ///  ListViewItems控件记录下图片列表对象内容
         /// </summary>
         public List<Image> listviewImages = new List<Image>();
+        /// <summary>
+        /// 存储正在执行打印查询是否完成的工作线程
+        /// </summary>
+        public Thread threadObject { get; set; }
 
         public int CompareTo(object obj)
         {
@@ -108,5 +113,9 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
 
             return result;
         }
+    }
+    public class printerClose
+    {
+        public static bool closeWindow = false;
     }
 }

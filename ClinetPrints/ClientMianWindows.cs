@@ -26,6 +26,9 @@ using ClinetPrints.CreatContorl;
 using System.Drawing.Drawing2D;
 using System.Speech.Synthesis;
 using IWshRuntimeLibrary;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
+using System.ComponentModel;
+using System.Net.Mail;
 
 namespace ClinetPrints
 {
@@ -187,7 +190,11 @@ namespace ClinetPrints
 
 
 
-
+        /// <summary>
+        /// 定时执行查询状态事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TiState_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
@@ -243,6 +250,7 @@ namespace ClinetPrints
                                         sp.Rate = 2;
                                         sp.Volume = 20;
                                         sp.SpeakAsync("设备异常");
+                                        errorToMail mail = new errorToMail(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")+" 设备" + po.alias+":"+ po.stateMessage);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
                                         ThreadPool.QueueUserWorkItem((o) =>
                                         {
                                             PrinterInformation pInfo = new PrinterInformation();
@@ -395,6 +403,7 @@ namespace ClinetPrints
                                             this.toolStTxb_printer.Text = "";
                                             this.listView1.Columns.RemoveAt(colmunObject);
                                             this.listView1.Items.Clear();
+                                            addfile = 0;
 
                                         }
                                         else//判断是否是群里的最后一台设备下线了，全下线则清理，否则就只删除下线设备的对象不清理
@@ -416,6 +425,7 @@ namespace ClinetPrints
                                                     this.toolStTxb_printer.Text = "";
                                                     this.listView1.Columns.RemoveAt(colmunObject);
                                                     this.listView1.Items.Clear();
+                                                    addfile = 0;
                                                 }
                                             }
                                         }
@@ -705,7 +715,7 @@ namespace ClinetPrints
                 new addCommend(SharMethod.user, menuItem3.Name, menuItem3.Text);
                 timer1.Enabled = false;
                 this.Dispose();
-                //PrinterTreeNode.Quit = true;
+                printerClose.closeWindow = true;
                 Application.Exit();
             };
             notifyIcon.ContextMenu = new ContextMenu(new MenuItem[] { menuItem1, menuItem2, promotionDev, menSet, menuItem3 });
@@ -1399,12 +1409,12 @@ namespace ClinetPrints
             }
         }
 
+
         private void toolStBtn_print_Click(object sender, EventArgs e)
         {
             new addCommend(SharMethod.user, toolStBtn_print.Name, toolStBtn_print.Text);
             try
             {
-
                 if (this.toolStTxb_printer.Text != "")
                 {
                     string jobNum = "";
@@ -1496,34 +1506,8 @@ namespace ClinetPrints
                                 }
                                 else
                                 {
-                                    Thread threadmontior = new Thread((ob) =>
-                                    {
-                                        PrinterObjects po = ob as PrinterObjects;
-                                        var me = po.MethodsObject as IMethodObjects;
-                                        while (true)
-                                        {
-                                            Thread.Sleep(5000);
-                                            //输出作业
-                                            var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
-                                            if (printOutPut == "false")
-                                            {
-                                                MessageBox.Show("打印机已离线或无法获取！");
-                                                break;
-                                            }
-                                            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-                                            if (printOut.workIndex == count + po.pParams.outJobNum)
-                                            {
-                                                string str = "设备:" + po.alias + ",所有打印已完成！";
-                                                po.pParams.outJobNum = printOut.workIndex;
-                                                PrinterInformation pi = new PrinterInformation();
-                                                pi.lb_DevInfo.Text = str;
-                                                pi.ShowDialog();
-                                                break;
-                                            }
-                                        }
-                                    });
-                                    threadmontior.SetApartmentState(ApartmentState.STA);
-                                    threadmontior.Start(printer);
+                                    printer.pParams.outJobNum += count;
+                                    detectionPrint(printer, count);
                                 }
                             }));
 
@@ -1540,6 +1524,49 @@ namespace ClinetPrints
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
+            }
+        }
+
+        private static void detectionPrint(PrinterObjects printer, int count)
+        {
+            if (printer.threadObject == null)
+            {
+                Thread threadmontior = new Thread((ob) =>
+                {
+                    var obj = ob as object[];
+                    PrinterObjects po = obj[0] as PrinterObjects;
+                    var me = po.MethodsObject as IMethodObjects;
+                    int c = (int)obj[1];
+                    while (true)
+                    {
+                        Thread.Sleep(5000);
+                        if (printerClose.closeWindow)
+                        {
+                            break;
+                        }
+                    //输出作业
+                    var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
+                        if (printOutPut == "false")
+                        {
+                            MessageBox.Show("打印机已离线或无法获取！");
+                            break;
+                        }
+                        var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+
+                        if (printOut.workIndex == po.pParams.outJobNum)
+                        {
+                            string str = "设备:" + po.alias + ",所有打印已完成！";
+                            PrinterInformation pi = new PrinterInformation();
+                            pi.lb_DevInfo.Text = str;
+                            pi.ShowDialog();
+                            break;
+                        }
+                    }
+                    printer.threadObject = null;
+                });
+                threadmontior.SetApartmentState(ApartmentState.STA);
+                printer.threadObject = threadmontior;
+                threadmontior.Start(new object[] { printer, count });
             }
         }
 
@@ -1665,6 +1692,8 @@ namespace ClinetPrints
                           if (pf.printTo)//说明选择的任务进行了打印
                           {
                               Invoke(new Action<object, EventArgs>(toolStBtn_delete_Click), sender, e);
+                              po[0].pParams.outJobNum += num;
+                              detectionPrint(po[0], num);
                           }
                       });
                     thread.SetApartmentState(ApartmentState.STA);
@@ -1882,7 +1911,7 @@ namespace ClinetPrints
         {
             timer1.Enabled = false;
             this.Dispose();
-            //PrinterTreeNode.Quit = true;
+            printerClose.closeWindow = true;
             Application.Exit();
         }
 
