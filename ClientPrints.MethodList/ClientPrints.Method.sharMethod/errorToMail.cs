@@ -8,9 +8,9 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
     public class errorToMail
     {
         private MailMessage mailMessage = new MailMessage();
-        private string toClient = "822757872@qq.com";
-        private string user = "13738161611@163.com";
-        private string password = "WKH13738161611wj";
+        private string toClient = "";
+        private string user = "";
+        private string password = "";
         private string title = "设备异常提示";
         public errorToMail(string message)
         {

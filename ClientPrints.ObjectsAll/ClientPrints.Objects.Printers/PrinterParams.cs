@@ -13,8 +13,12 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// </summary>
         public int DIP
         {
-            get { return 203; }
+            get;set;
         }
+        /// <summary>
+        /// 记录设备系统参数是否存在
+        /// </summary>
+        public bool IsdevInfoParm { get; set; }
         /// <summary>
         /// 设备信息
         /// </summary>
@@ -36,9 +40,17 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// </summary>
         public int maxWidth { get; set; }
         /// <summary>
+        /// 实际打印宽度
+        /// </summary>
+        public int printWidth { get; set; }
+        /// <summary>
         /// 最大页高，像素单位
         /// </summary>
         public int maxHeight { get; set; }
+        /// <summary>
+        /// 实际打印的高度
+        /// </summary>
+        public int printHeight { get; set; }
         /// <summary>
         /// 页面边界，从左到右，上到下，单位像素
         /// </summary>

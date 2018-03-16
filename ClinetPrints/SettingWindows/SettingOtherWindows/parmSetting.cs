@@ -135,18 +135,26 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             {
                 if (printerObject != null)
                 {
-                    byte[] data = printerObject.pParams.DevParm;
-                    cmb_wipeType.SelectedIndex = data[0];
-                    cmb_cardType.SelectedIndex = data[1];
-                    cmb_inCardWay.SelectedIndex = data[2];
-                    cmb_outCardWay.SelectedIndex = data[3];
-                    cmb_printTemperature.SelectedIndex = data[4];
-                    cmb_printContrast.SelectedIndex = data[5];
-                    cmb_printSheep.SelectedIndex = data[6];
-                    cmb_grayTemperature.SelectedIndex = data[7];
-                    cmb_wipeSheep.SelectedIndex = data[8];
-                    cmb_wipeTemperatuer.SelectedIndex = data[9];
-                    cmb_printModel.SelectedIndex = data[10];
+                    if (printerObject.pParams.IsdevInfoParm)
+                    {
+                        byte[] data = printerObject.pParams.DevParm;
+                        cmb_wipeType.SelectedIndex = data[0];
+                        cmb_cardType.SelectedIndex = data[1];
+                        cmb_inCardWay.SelectedIndex = data[2];
+                        cmb_outCardWay.SelectedIndex = data[3];
+                        cmb_printTemperature.SelectedIndex = data[4];
+                        cmb_printContrast.SelectedIndex = data[5];
+                        cmb_printSheep.SelectedIndex = data[6];
+                        cmb_grayTemperature.SelectedIndex = data[7];
+                        cmb_wipeSheep.SelectedIndex = data[8];
+                        cmb_wipeTemperatuer.SelectedIndex = data[9];
+                        cmb_printModel.SelectedIndex = data[10];
+                    }else
+                    {
+                        this.groupBox5.Enabled = false;
+                        btn_sureParm.Enabled = false;
+                        this.groupBox5.Text = "该设备无此数据";
+                    }
                     bool cfg = WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
                     if (cfg)
                     {
@@ -155,13 +163,14 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         List<CfgDataObjects> liob = new List<CfgDataObjects>();
                         char[] buf = new char[512];
                         ushort cnt = 512;
-                        for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++, cnt = 512)
+                        //L210最后一个参数为1
+                        for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 1); i++, cnt = 512)
                         {
                             string str = new string(buf).Replace('\0', ' ').TrimEnd();
                             string name = str.Substring(5, str.Substring(0, str.IndexOf(',')).Length - 5);
                             buf = new char[512];
                             cnt = 512;
-                            bool fg = WDevDllMethod.dllFunc_GetVal(printerObject.pHandle, name, buf, ref cnt, WDevCmdObjects.DEVCFG_VAL_INFO, 0);
+                            bool fg = WDevDllMethod.dllFunc_GetVal(printerObject.pHandle, name, buf, ref cnt, WDevCmdObjects.DEVCFG_VAL_INFO, 1);
                             if (fg)
                             {
                                 string val = new string(buf).Replace('\0', ' ').TrimEnd();
@@ -230,7 +239,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     {
                         val = dataGrieViewControl11.items[i].Value[1].control.Text;
                     }
-                    bool flge = WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 0, 1);
+                    bool flge = WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 1, 0);//L210为最后一个参数为0
                     if (!flge)
                     {
                         MessageBox.Show(name + ":修改设置失败！");

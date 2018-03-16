@@ -644,6 +644,9 @@ namespace ClinetPrints.CreatContorl
                         MessageBox.Show("现在所设计的尺寸大小与实际设备的尺寸要大，不能打印！");
                         return;
                     }
+                    //赋值实际打印纸张大小
+                    _prinerObject.pParams.printWidth = nwidth;
+                    _prinerObject.pParams.printHeight = nheight;
                     printBtn(sender, e);
                 }
             }

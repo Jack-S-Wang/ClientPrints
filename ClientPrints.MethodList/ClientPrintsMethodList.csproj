@@ -51,6 +51,7 @@
     <Compile Include="ClientPrints.Method.DevBmpDll\DevBmpDllMethod.cs" />
     <Compile Include="ClientPrints.Method.DevBmpDll\structBmpClass.cs" />
     <Compile Include="ClientPrints.Method.GeneralPrintersMethod\ClientPrints.Method.GeneralPrintersMethod.USBPrinters\PrinterDC1300.cs" />
+    <Compile Include="ClientPrints.Method.GeneralPrintersMethod\ClientPrints.Method.GeneralPrintersMethod.USBPrinters\PrinterDL210.cs" />
     <Compile Include="ClientPrints.Method.GeneralPrintersMethod\ClientPrints.Method.GeneralPrintersMethod.USBPrinters\PrintersGeneralFunction.cs" />
     <Compile Include="ClientPrints.Method.Interfaces\IUSBPrinterOnlyMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\errorToMail.cs" />

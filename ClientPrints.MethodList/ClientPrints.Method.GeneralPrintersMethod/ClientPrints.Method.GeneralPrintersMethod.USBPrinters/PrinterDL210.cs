@@ -2,33 +2,36 @@
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters
 {
-    public class PrinterDC1300 : IUSBPrinterOnlyMethod
+    public class PrinterDL210 : IUSBPrinterOnlyMethod
     {
         public string getDevInfo(byte[] data)
         {
             string jsonstr = "";
             if (data[1] == 1)
             {
-                jsonstr = Encoding.UTF8.GetString(data, 3, data.Length - 3).Replace('\0',' ').Trim();
-            }else if (data[1] == 2)
+                jsonstr = Encoding.UTF8.GetString(data, 3, data.Length - 3).Replace('\0', ' ').Trim();
+            }
+            else if (data[1] == 2)//11个字节
             {
                 int InCache = (data[2] << 24) + (data[3] << 16) + (data[4] << 8) + data[5];
                 int maxFrames = (data[6] << 24) + (data[7] << 16) + (data[8] << 8) + data[9];
                 byte compressType = data[10];
-                var info = new PrinterJson.PrinterDC1300DataInfo()
+                var info = new PrinterDL210Json.PrinterDL210DataInfo()
                 {
-                    InCache=InCache,
-                    maxFrames=maxFrames,
-                    compressType=compressType
+                    InCache = InCache,
+                    maxFrames = maxFrames,
+                    compressType = compressType
                 };
                 jsonstr = JsonConvert.SerializeObject(info);
-            }else if (data[1] == 3)
+            }
+            else if (data[1] == 3)
             {
                 int maxWidth = (data[2] << 8) + data[3];
                 int maxHeight = (data[4] << 8) + data[5];
@@ -38,16 +41,16 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 int colorDepth = data[12];
                 byte pixelformat = data[13];
                 byte isSupport = data[14];
-                var info = new PrinterJson.PrinterDC1300PageInfo()
+                var info = new PrinterDL210Json.PrinterDL210PageInfo()
                 {
-                    maxWidth=maxWidth,
-                    maxHeight=maxHeight,
-                    colorDepth=colorDepth,
-                    confin=confin,
-                    isSupport=isSupport,
-                    pixelformat=pixelformat,
-                    xDPL=xDPL,
-                    yDPL=yDOPL
+                    maxWidth = maxWidth,
+                    maxHeight = maxHeight,
+                    colorDepth = colorDepth,
+                    confin = confin,
+                    isSupport = isSupport,
+                    pixelformat = pixelformat,
+                    xDPL = xDPL,
+                    yDPL = yDOPL
                 };
                 jsonstr = JsonConvert.SerializeObject(info);
             }
@@ -90,49 +93,94 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         majorState = "异常";
                         break;
                 }
-                switch (data[4])
+                byte[] mebyte = new byte[4];
+                Array.Copy(data, 3, mebyte, 0, 4);
+                BitArray arr = new BitArray(mebyte);
+                if (arr[24])
                 {
-                    case 0:
-                        stateMessage = "无错误";
-                        break;
-                    case 1:
-                        stateMessage = "缺卡";
-                        break;
-                    case 2:
-                        stateMessage = "卡堵";
-                        break;
-                    case 3:
-                        stateMessage = "归位错误";
-                        break;
-                    case 4:
-                        stateMessage = "编码错误";
-                        break;
-                    case 5:
-                        stateMessage = "卡片延误";
-                        break;
-                    case 6:
-                        stateMessage = "面盖被打开";
-                        break;
-                    case 7:
-                        stateMessage = "出卡异常";
-                        break;
-                    case 8:
-                        stateMessage = "高温";
-                        break;
-                    case 9:
-                        stateMessage = "低温";
-                        break;
-                    case 10:
-                        stateMessage = "温度异常";
-                        break;
-                    case 11:
-                        stateMessage = "传感器异常";
-                        break;
-                    case 12:
-                        stateMessage = "存储访问异常";
-                        break;
+                    stateMessage += "纸出错误";
                 }
-                PrinterJson.PrinterDC1300State Pstate = new PrinterJson.PrinterDC1300State()
+                if (arr[25])
+                {
+                    stateMessage += "卡纸错误";
+                }
+                if (arr[26])
+                {
+                    stateMessage += "缎带出错误";
+                }
+                if (arr[27])
+                {
+                    stateMessage += "前出头错误";
+                }
+                if (arr[28])
+                {
+                    stateMessage += "封面打开(在空转中抬头)";
+                }
+                if (arr[29])
+                {
+                    stateMessage += "纸卡在刀口处错误";
+                }
+                if (arr[30])
+                {
+                    stateMessage += "闸刀在运行";
+                }
+                if (arr[31])
+                {
+                    stateMessage += "头热关闭错误(ATEM信号)";
+                }
+                if (arr[16])
+                {
+                    stateMessage += "纸加载错误";
+                }
+                if (arr[17])
+                {
+                    stateMessage += "内部检查错误";
+                }
+                if (arr[18])
+                {
+                    stateMessage += "USB配置错误";
+                }
+                if (arr[19])
+                {
+                    stateMessage += "任务堆栈上的错误";
+                }
+                if (arr[20])
+                {
+                    stateMessage += "闪速存储器写错误";
+                }
+                if (arr[21])
+                {
+                    stateMessage += "闪速存储器验证错误";
+                }
+                if (arr[22])
+                {
+                    stateMessage += "电源错误";
+                }
+                if (arr[23])
+                {
+                    stateMessage += "检查堵塞的错误";
+                }
+
+                mebyte = new byte[4];
+                Array.Copy(data, 7, mebyte, 0, 4);
+                arr = new BitArray(mebyte);
+                if (arr[27])
+                {
+                    stateMessage += "头热警报";
+                }
+                if (arr[28])
+                {
+                    stateMessage += "皮等";
+                }
+                if (arr[29])
+                {
+                    stateMessage += "USB配置错误";
+                }
+                if (arr[30])
+                {
+                    stateMessage += "标定误差";
+                }
+                PrinterDL210Json.PrinterDL210State Pstate = new PrinterDL210Json.PrinterDL210State()
                 {
                     stateCode = stateCode,
                     majorState = majorState,
@@ -199,7 +247,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         stateMessage = "位图格式错误";
                         break;
                 }
-                var dState = new PrinterJson.PrinterDC1300DataState()
+                var dState = new PrinterDL210Json.PrinterDL210DataState()
                 {
                     stateCode = stateCode,
                     majorState = majorState,
@@ -215,11 +263,15 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 {
                     case 0:
                         stateCode = 0;
-                        majorState = "无";
+                        majorState = "空闲";
                         break;
                     case 1:
                         stateCode = 1;
-                        majorState = "输出任务正在工作";
+                        majorState = "打印中";
+                        break;
+                    case 2:
+                        stateCode = 2;
+                        majorState = "走纸中";
                         break;
                 }
                 int taskNumber = data[3];
@@ -227,15 +279,21 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 int dataFrames = (data[6] << 8) + data[7];
                 int tempertaure = data[8];
                 string sensor = "";
-                if (data[10] == 1)
+                BitArray arr = new BitArray(data[9]);
+                if (arr[0])
                 {
-                    sensor = "风扇开启";
+                    sensor = "饲料关键";
                 }
-                else
+                if (arr[1])
                 {
-                    sensor = "" + data[10];
+                    sensor = "头抬起";
                 }
-                var ppState = new PrinterJson.PrinterDC1300PrintState()
+                if (arr[2])
+                {
+                    sensor = "皮纸提出";
+                }
+
+                var ppState = new PrinterDL210Json.PrinterDL210PrintState()
                 {
                     stateCode = stateCode,
                     sensor = sensor,
@@ -251,7 +309,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             {
                 int InCache = (data[3] << 8) + data[4];
                 int residueCache = (data[5] << 24) + (data[6] << 16) + (data[7] << 8) + data[8];
-                var dpState = new PrinterJson.PrinterDC1300DataPortState()
+                var dpState = new PrinterDL210Json.PrinterDL210DataPortState()
                 {
                     InCache = InCache,
                     residueCache = residueCache
@@ -263,19 +321,18 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
         public string getDevParmInfo(byte[] data)
         {
-            string jsonstr="";
+            string jsonstr = "";
             if (data[1] == 0x81)
             {
-                byte[] parmData = new byte[data.Length-2];
+                byte[] parmData = new byte[data.Length - 2];
                 Array.Copy(data, 2, parmData, 0, data.Length - 2);
-                var pData = new PrinterJson.PrinterParmInfo()
+                var pData = new PrinterDL210Json.PrinterParmInfo()
                 {
-                    parmData=parmData
+                    parmData = parmData
                 };
                 jsonstr = JsonConvert.SerializeObject(pData);
             }
             return jsonstr;
         }
-
     }
 }

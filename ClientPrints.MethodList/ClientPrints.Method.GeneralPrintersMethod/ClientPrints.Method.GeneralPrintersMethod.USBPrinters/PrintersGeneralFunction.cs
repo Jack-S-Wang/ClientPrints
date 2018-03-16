@@ -57,7 +57,27 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             //标识
             string onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0x00, 0x00 });
             string DevInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 1 });
-            if (!DevInfo.Contains("01.01.00.03"))
+            bool bType = false;
+            int dip = 0;
+            switch (model)
+            {
+                case "DC-1300":
+                    if (!DevInfo.Contains("01.01.00.03"))
+                    {
+                        bType = true;
+                    }
+                    dip = 203;
+                    break;
+                case "DL-210":
+                    if (!DevInfo.Contains("00.20.01.41."))
+                    {
+                        bType = true;
+                    }
+                    dip = 203;
+                    break;
+
+            }
+            if (bType)
             {
                 WDevDllMethod.dllFunc_CloseDev(pHandle);
                 throw (new Exception("设备：" + onlyAlias + ":版本不一致,需要固件更新！"));
@@ -65,18 +85,34 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
             //系统状态
             string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, new byte[] { 0x30 });
-            var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
-            stateType = keyState.stateCode;
-            stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-            state = keyState.majorState;
+            switch (model)
+            {
+                case "DC-1300":
+                    var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
+                    stateType = keyState.stateCode;
+                    stateMessage = keyState.majorState + ":" + keyState.StateMessage;
+                    state = keyState.majorState;
+                    break;
+                case "DL-210":
+                    var key210State = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210State>(jsonState);
+                    stateType = key210State.stateCode;
+                    stateMessage = key210State.majorState + ":" + key210State.StateMessage;
+                    state = key210State.majorState;
+                    break;
+            }
+
+
             if (onlyAlias == "")
             {
-                Guid gu = new Guid();
+                Guid gu = Guid.NewGuid();
                 byte[] data = Encoding.UTF8.GetBytes(gu.ToString("N"));
                 byte[] data1 = new byte[data.Length + 2];
                 Array.Copy(data, 0, data1, 2, data.Length);
                 //设置标识
-                reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, data1);
+                if (reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, data1) != "false")
+                {
+                    reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, new byte[] { 0xff, 0xff });
+                }
                 onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0, 0 });
             }
             string alias = onlyAlias;
@@ -85,35 +121,104 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
             //设备数据信息
             string dataInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 2 });
-            var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
+            int InCache = 0;
+            int maxFrames = 0;
+            byte compressType = 0;
+            switch (model)
+            {
+                case "DC-1300":
+                    var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
+                    InCache = Datajson.InCache;
+                    maxFrames = Datajson.maxFrames;
+                    compressType = Datajson.compressType;
+                    break;
+                case "DL-210":
+                    var Data210json = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataInfo>(dataInfo);
+                    InCache = Data210json.InCache;
+                    maxFrames = Data210json.maxFrames;
+                    compressType = Data210json.compressType;
+                    break;
+
+            }
             //设备页面信息
+            int colorDepth = 0;
+            int confin = 0;
+            byte isSupport = 0;
+            int maxHeight = 0;
+            int maxWidth = 0;
+            byte pixelformat = 0;
+            int xDPL = 0;
+            int yDPL = 0;
             string pageInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 3 });
-            var Pagejson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PageInfo>(pageInfo);
+            switch (model)
+            {
+                case "DC-1300":
+                    var Pagejson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PageInfo>(pageInfo);
+                    colorDepth = Pagejson.colorDepth;
+                    confin = Pagejson.confin;
+                    isSupport = Pagejson.isSupport;
+                    maxHeight = Pagejson.maxHeight;
+                    maxWidth = Pagejson.maxWidth;
+                    pixelformat = Pagejson.pixelformat;
+                    xDPL = Pagejson.xDPL;
+                    yDPL = Pagejson.yDPL;
+                    break;
+                case "DL-210":
+                    var Page210json = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PageInfo>(pageInfo);
+                    colorDepth = Page210json.colorDepth;
+                    confin = Page210json.confin;
+                    isSupport = Page210json.isSupport;
+                    maxHeight = Page210json.maxHeight;
+                    maxWidth = Page210json.maxWidth;
+                    pixelformat = Page210json.pixelformat;
+                    xDPL = Page210json.xDPL;
+                    yDPL = Page210json.yDPL;
+                    break;
+            }
             //设备系统参数信息
+            PrinterJson.PrinterParmInfo infoParm = new PrinterJson.PrinterParmInfo();
+            bool isInfoParm = false;
             string DevParmInfo = reInformation(WDevCmdObjects.DEV_GET_SYSPARAM, pHandle, new byte[] { 0x81 });
-            var devParmInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
+            if (DevParmInfo != "false")
+            {
+                isInfoParm = true;
+                infoParm = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
+            }
             //输出作业
+            int workIndex =0;
             var printOutPut = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, new byte[] { 0x33 });
-            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+            switch (model)
+            {
+                case "DC-1300":
+                    var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+                    workIndex = printOut.workIndex;
+                    break;
+                case "DL-210":
+                    var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
+                    workIndex = print210Out.workIndex;
+                    break;
+            }
 
             var printerParams = new PrinterParams()
             {
+                DIP = dip,
                 devInfo = DevInfo,
-                InCache = Datajson.InCache,
-                maxFrames = Datajson.maxFrames,
-                compressType = Datajson.compressType,
-                colorDepth = Pagejson.colorDepth,
-                confin = Pagejson.confin,
-                isSupport = Pagejson.isSupport,
-                maxHeight = Pagejson.maxHeight,
-                maxWidth = Pagejson.maxWidth,
-                pixelformat = Pagejson.pixelformat,
-                xDPL = Pagejson.xDPL,
-                yDPL = Pagejson.yDPL,
-                DevParm = devParmInfoJson.parmData,
-                outJobNum = printOut.workIndex
+                InCache = InCache,
+                maxFrames = maxFrames,
+                compressType = compressType,
+                colorDepth = colorDepth,
+                confin = confin,
+                isSupport = isSupport,
+                maxHeight = maxHeight,
+                maxWidth = maxWidth,
+                pixelformat = pixelformat,
+                xDPL = xDPL,
+                yDPL = yDPL,
+                DevParm = infoParm.parmData,
+                outJobNum = workIndex,
+                IsdevInfoParm = isInfoParm
             };
-            if (printOut.workIndex == 65535)
+            if (workIndex == 65535)
             {
                 printerParams.outJobNum = 0;
             }
@@ -133,10 +238,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 stateCode = stateType,
                 pParams = printerParams
             };
-            if (model.Contains("DC-1300"))
-            {
-                printers.pParams.page = (((double)Pagejson.maxWidth / 300) * 25.4).ToString("0.00") + "*" + (((double)Pagejson.maxHeight / 300) * 25.4).ToString("0.00");
-            }
+            printers.pParams.page = (((double)maxWidth / 300) * 25.4).ToString("0.00") + "*" + (((double)maxHeight / 300) * 25.4).ToString("0.00");
             SharMethod.dicPrinterUSB.Add(pathAddress, printers);
         }
 
@@ -161,7 +263,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             {
                 if ((outDats.datLen > 0) || (outDats.datLen == 0 && outDats.ackCode == 0))
                 {
-                    byte[] reData = new byte[1000];
+                    byte[] reData = new byte[outDats.datLen];
                     Marshal.Copy(outDats.lpBuf, reData, 0, outDats.datLen);
                     if (outDats.datLen > 0)
                     {
@@ -228,15 +330,16 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         private string getDifferentString(string codeid, int length, byte[] reData)
         {
             string strCode = "";
+            IUSBPrinterOnlyMethod onlyMethod;
             switch (codeid)
             {
                 case WDevCmdObjects.DEV_GET_MODEL:
-                    strCode = Encoding.GetEncoding("GBK").GetString(reData, 1, length - 1).Replace('\0', ' ').TrimEnd();//第一个字节是1，表示打印机
+                    strCode = Encoding.GetEncoding("GBK").GetString(reData, 1, length - 1).Replace('\0', ' ').Trim();//第一个字节是1，表示打印机
                     break;
                 case WDevCmdObjects.DEV_GET_DEVNO:
                     if (reData[0] == 1)
                     {
-                        strCode = Encoding.GetEncoding("GBK").GetString(reData, 1, length - 1).Replace('\0', ' ').TrimEnd();
+                        strCode = Encoding.GetEncoding("GBK").GetString(reData, 1, length - 1).Replace('\0', ' ').Trim();
                     }
                     else
                     {
@@ -257,37 +360,68 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     strCode = strCode.Substring(0, strCode.Length - 1);
                     break;
                 case WDevCmdObjects.DEV_GET_DEVSTAT://设备状态
-                    if (printerModel.Contains("DC-1300"))
+                    switch (printerModel)
                     {
-                        IUSBPrinterOnlyMethod onlyMethod = new PrinterDC1300();
-                        strCode = onlyMethod.getPrinterState(reData);
+                        case "DC-1300":
+                            onlyMethod = new PrinterDC1300();
+                            strCode = onlyMethod.getPrinterState(reData);
+                            break;
+                        case "DL-210":
+                            onlyMethod = new PrinterDL210();
+                            strCode = onlyMethod.getPrinterState(reData);
+                            break;
+
                     }
                     break;
                 case WDevCmdObjects.DEV_GET_PWSSTAT://加密状态
                     strCode = "" + Convert.ToInt32(reData[0]);
                     break;
                 case WDevCmdObjects.DEV_GET_DEVINFO://设备信息
-                    if (printerModel.Contains("DC-1300"))
+                    switch (printerModel)
                     {
-                        IUSBPrinterOnlyMethod onlyMethod = new PrinterDC1300();
-                        strCode = onlyMethod.getDevInfo(reData);
+                        case "DC-1300":
+                            onlyMethod = new PrinterDC1300();
+                            strCode = onlyMethod.getDevInfo(reData);
+                            break;
+                        case "DL-210":
+                            onlyMethod = new PrinterDL210();
+                            strCode = onlyMethod.getDevInfo(reData);
+                            break;
                     }
                     break;
                 case WDevCmdObjects.DEV_GET_WORKMODE://工作模式
                     strCode = "" + Convert.ToInt32(reData[0]);
                     break;
                 case WDevCmdObjects.DEV_GET_USERDAT://用户自定义标识
-                    string str = Encoding.GetEncoding("GBK").GetString(reData, 0, length).Replace('\0', ' ').TrimEnd();
-                    for (int i = 0; i < str.Length; i++)//因为获取到的标识值时不干净的值，值后面的\0后面还有值
+                    int index = 0;
+                    for (int i = 0; i < length; i++)
                     {
-                        if (str[i] == ' ')
+                        if (reData[i] > 0x7f)
                         {
+                            index = i;
                             break;
                         }
-                        else
+                    }
+                    if (index > 0)
+                    {
+                        byte[] data = new byte[index];
+                        Array.Copy(reData, data, index);
+                        string str = Encoding.GetEncoding("GBK").GetString(data, 0, index).Replace('\0', ' ').Trim();
+                        for (int i = 0; i < str.Length; i++)//因为获取到的标识值时不干净的值，值后面的\0后面还有值
                         {
-                            strCode += str[i];
+                            if (str[i] == ' ')
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                strCode += str[i];
+                            }
                         }
+                    }
+                    else
+                    {
+                        return "";
                     }
                     break;
                 case WDevCmdObjects.DEV_GET_STATISINFO://数据统计
@@ -315,10 +449,17 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     }
                     break;
                 case WDevCmdObjects.DEV_GET_SYSPARAM://设备参数
-                    if (printerModel.Contains("DC-1300"))
+                    switch (printerModel)
                     {
-                        IUSBPrinterOnlyMethod onlyMethod = new PrinterDC1300();
-                        strCode = onlyMethod.getDevParmInfo(reData);
+                        case "DC-1300":
+                            onlyMethod = new PrinterDC1300();
+                            strCode = onlyMethod.getDevParmInfo(reData);
+                            break;
+                        case "DL-210":
+                            onlyMethod = new PrinterDL210();
+                            strCode = onlyMethod.getDevParmInfo(reData);
+                            break;
+
                     }
                     break;
                 case WDevCmdObjects.DEV_SET_SYSPARAM://设置设备参数
@@ -354,8 +495,9 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 var devProt = new structBmpClass.DeviceProterty()
                 {
                     dmThicken = (short)po.pParams.colorDepth,//01指2位数，就是2色的意思
-                    nWidth = (short)(po.pParams.maxWidth + 1),
-                    nHeight = (short)(po.pParams.maxHeight + 1),
+                    //加大一个像素是因为有些图片大小相等时无法打印出来                               
+                    nWidth = (short)(po.pParams.printWidth + 1),
+                    nHeight = (short)(po.pParams.printHeight + 1),
                     dmPrintQuality = 0,
                     dmYResolution = 0,
                     dmTag = 0x01
@@ -372,40 +514,44 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     IntPtr bites = DevBmpDllMethod.GetBits();
                     int len = DevBmpDllMethod.GetLength();
 
-                    var devprop = new structClassDll.DEVPROP_PRNOUT()
-                    {
-                        bkBmpID = po.pParams.bkBmpID,
-                        cardInputMode = po.pParams.DevParm[2],
-                        cardOutputMode = po.pParams.DevParm[3],
-                        cardType = po.pParams.DevParm[1],
-                        devType = (byte)WDevCmdObjects.BMP_DEVPROP_PRN,
-                        eraseTemp = po.pParams.DevParm[9],
-                        wipeSpeed = po.pParams.DevParm[8],
-                        grayTemp = po.pParams.DevParm[7],
-                        printContrast = po.pParams.DevParm[5],
-                        printMode = po.pParams.DevParm[10],
-                        printSpeed = po.pParams.DevParm[6],
-                        printTemp = po.pParams.DevParm[4],
-                        revs = new byte[3],
-                        propSize = (byte)Marshal.SizeOf(typeof(structClassDll.DEVPROP_PRNOUT))
-                    };
-
                     var devinfo = new structClassDll.DEVPROP_INFO()
                     {
                         revs = new byte[2],
-                        size = (ushort)(4 + devprop.propSize),
-                        prnProp = devprop
-
+                        size = (ushort)4
                     };
+
+                    if (po.pParams.IsdevInfoParm)
+                    {
+                        var devprop = new structClassDll.DEVPROP_PRNOUT()
+                        {
+                            bkBmpID = po.pParams.bkBmpID,
+                            cardInputMode = po.pParams.DevParm[2],
+                            cardOutputMode = po.pParams.DevParm[3],
+                            cardType = po.pParams.DevParm[1],
+                            devType = (byte)WDevCmdObjects.BMP_DEVPROP_PRN,
+                            eraseTemp = po.pParams.DevParm[9],
+                            wipeSpeed = po.pParams.DevParm[8],
+                            grayTemp = po.pParams.DevParm[7],
+                            printContrast = po.pParams.DevParm[5],
+                            printMode = po.pParams.DevParm[10],
+                            printSpeed = po.pParams.DevParm[6],
+                            printTemp = po.pParams.DevParm[4],
+                            revs = new byte[3],
+                            propSize = (byte)Marshal.SizeOf(typeof(structClassDll.DEVPROP_PRNOUT))
+                        };
+                        devinfo.prnProp = devprop;
+                        devinfo.size = (ushort)(4 + devprop.propSize);
+                    }
+
                     var devbm = new structClassDll.DEV_BMP()
                     {
                         bkPixelH = 0,
-                        txPixelH = (ushort)po.pParams.maxHeight,
+                        txPixelH = (ushort)po.pParams.printHeight,
                         bmpType = po.pParams.pixelformat,
                         bpps = (byte)po.pParams.colorDepth,
                         dpi = (ushort)po.pParams.DIP,
                         ID = (ushort)WDevCmdObjects.DEVBMP_ID,
-                        pixelW = (ushort)po.pParams.maxWidth,
+                        pixelW = (ushort)po.pParams.printWidth,
                         posX = po.pParams.posX,
                         posY = po.pParams.posY,
                         ret = new byte[4],

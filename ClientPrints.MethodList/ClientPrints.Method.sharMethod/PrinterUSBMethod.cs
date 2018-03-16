@@ -17,7 +17,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             char[] path=new char[1000];
             uint size=1000;
             string address = "";
-            uint count=WDevDllMethod.dllFunc_EnumDevPath((ushort)WDevCmdObjects.USBPRN_PORT, path, ref size, 0x2867, 0x1802);
+            uint count=WDevDllMethod.dllFunc_EnumDevPath((ushort)WDevCmdObjects.USBPRN_PORT, path, ref size, 0, 0);//0x2867, 0x1802
             if (count > 0)
             {
                 List<string> result = new List<string>();

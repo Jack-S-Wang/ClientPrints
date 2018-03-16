@@ -65,100 +65,188 @@ namespace ClinetPrints.SettingWindows
             {
                 return;
             }
-            if (printerObject.model.Contains("DC-1300"))
+            var method = printerObject.MethodsObject as IMethodObjects;
+            //系统状态
+            var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
+            if (stateStr == "false" || stateStr == "")
             {
-                var method = printerObject.MethodsObject as IMethodObjects;
-                //系统状态
-                var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
-                if (stateStr == "false" || stateStr == "")
-                {
-                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    return;
-                }
-                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
-                if (stateType != keyState.stateCode)
-                {
-                    stateType = keyState.stateCode;
-                    txb_runState.Text = keyState.majorState;
-                }
-                if (!txb_error.Text.Contains(keyState.StateMessage))
-                {
-                    txb_error.Text = keyState.StateMessage;
-                }
-                //数据处理
-                var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x32 });
-                if (dataPorcessStr == "false")
-                {
-                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    return;
-                }
-                var dataPor = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataState>(dataPorcessStr);
-                if (dataStateType != dataPor.stateCode)
-                {
-                    dataStateType = dataPor.stateCode;
-                    txb_dataPorcess.Text = dataPor.majorState;
-                }
-                if (!txb_porcessError.Text.Contains(dataPor.StateMessage))
-                {
-                    txb_porcessError.Text = dataPor.StateMessage;
-                }
-                if (!txb_jobIndex.Text.Contains(dataPor.workIndex.ToString()))
-                {
-                    txb_jobIndex.Text = dataPor.workIndex.ToString();
-                }
-                if (!txb_frame.Text.Contains(dataPor.dataFrames.ToString()))
-                {
-                    txb_frame.Text = dataPor.dataFrames.ToString();
-                }
-                //打印输出
-                var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x33 });
-                if (printOutPut == "false")
-                {
-                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    return;
-                }
-                var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-                if (printStateType != printOut.stateCode)
-                {
-                    printStateType = printOut.stateCode;
-                    txb_printPorcess.Text = printOut.majorState;
-                }
-                if (!txb_workNum.Text.Contains(printOut.taskNumber.ToString()))
-                {
-                    txb_workNum.Text = printOut.taskNumber.ToString();
-                }
-                if (!txb_outPutJobnum.Text.Contains(printOut.workIndex.ToString()))
-                {
-                    txb_outPutJobnum.Text = printOut.workIndex.ToString();
-                }
-                if (!txb_outFarme.Text.Contains(printOut.dataFrames.ToString()))
-                {
-                    txb_outFarme.Text = printOut.dataFrames.ToString();
-                }
-                if (!txb_tempertaure.Text.Contains(printOut.temperature.ToString()))
-                {
-                    txb_tempertaure.Text = printOut.temperature.ToString();
-                }
-                if (!txb_sensor.Text.Contains(printOut.sensor))
-                {
-                    txb_sensor.Text = printOut.sensor;
-                }
-                var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x34 });
-                if (printInfo == "false")
-                {
-                    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                    return;
-                }
-                var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
-                if (!txb_cache.Text.Contains(printInfoJson.InCache.ToString()))
-                {
-                    txb_cache.Text = printInfoJson.InCache.ToString();
-                }
-                if (!txb_acceptSpace.Text.Contains(printInfoJson.residueCache.ToString()))
-                {
-                    txb_acceptSpace.Text = printInfoJson.residueCache.ToString();
-                }
+                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                return;
             }
+            int stateCode = 0;
+            string majorState = "";
+            string StateMessage = "";
+            switch (printerObject.model)
+            {
+                case "DC-1300":
+                    var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
+                    stateCode = keyState.stateCode;
+                    majorState = keyState.majorState;
+                    StateMessage = keyState.StateMessage;
+                    break;
+                case "DL-210":
+                    var key210State = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210State>(stateStr);
+                    stateCode = key210State.stateCode;
+                    majorState = key210State.majorState;
+                    StateMessage = key210State.StateMessage;
+                    break;
+
+            }
+            if (stateType != stateCode)
+            {
+                stateType = stateCode;
+                txb_runState.Text = majorState;
+            }
+            if (!txb_error.Text.Contains(StateMessage))
+            {
+                txb_error.Text = StateMessage;
+            }
+            //数据处理
+            var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x32 });
+            if (dataPorcessStr == "false")
+            {
+                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                return;
+            }
+            int datastateCode = 0;
+            string datamajorState = "";
+            string dataStateMessage = "";
+            int dataworkIndex = 0;
+            int dataFrames = 0;
+            switch (printerObject.model)
+            {
+                case "DC-1300":
+                    var dataPor = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataState>(dataPorcessStr);
+                    datastateCode = dataPor.stateCode;
+                    datamajorState = dataPor.majorState;
+                    dataStateMessage = dataPor.StateMessage;
+                    dataworkIndex = dataPor.workIndex;
+                    dataFrames = dataPor.dataFrames;
+                    break;
+                case "DL-210":
+                    var data210Por = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataState>(dataPorcessStr);
+                    datastateCode = data210Por.stateCode;
+                    datamajorState = data210Por.majorState;
+                    dataStateMessage = data210Por.StateMessage;
+                    dataworkIndex = data210Por.workIndex;
+                    dataFrames = data210Por.dataFrames;
+                    break;
+
+            }
+
+            if (dataStateType != datastateCode)
+            {
+                dataStateType = datastateCode;
+                txb_dataPorcess.Text = datamajorState;
+            }
+            if (!txb_porcessError.Text.Contains(dataStateMessage))
+            {
+                txb_porcessError.Text = dataStateMessage;
+            }
+            if (!txb_jobIndex.Text.Contains(dataworkIndex.ToString()))
+            {
+                txb_jobIndex.Text = dataworkIndex.ToString();
+            }
+            if (!txb_frame.Text.Contains(dataFrames.ToString()))
+            {
+                txb_frame.Text = dataFrames.ToString();
+            }
+            //打印输出
+
+            var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x33 });
+            if (printOutPut == "false")
+            {
+                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                return;
+            }
+            int OutstateCode = 0;
+            string OutmajorState = "";
+            int taskNumber = 0;
+            int OutworkIndex = 0;
+            int OutdataFrames = 0;
+            int temperature = 0;
+            string sensor = "";
+            switch (printerObject.model)
+            {
+                case "DC-1300":
+                    var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+                    OutstateCode = printOut.stateCode;
+                    OutmajorState = printOut.majorState;
+                    OutworkIndex = printOut.workIndex;
+                    OutdataFrames = printOut.dataFrames;
+                    taskNumber = printOut.taskNumber;
+                    temperature = printOut.temperature;
+                    sensor = printOut.sensor;
+                    break;
+                case "DL-210":
+                    var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
+                    OutstateCode = print210Out.stateCode;
+                    OutmajorState = print210Out.majorState;
+                    OutworkIndex = print210Out.workIndex;
+                    OutdataFrames = print210Out.dataFrames;
+                    taskNumber = print210Out.taskNumber;
+                    temperature = print210Out.temperature;
+                    sensor = print210Out.sensor;
+                    break;
+
+            }
+
+            if (printStateType != OutstateCode)
+            {
+                printStateType = OutstateCode;
+                txb_printPorcess.Text = OutmajorState;
+            }
+            if (!txb_workNum.Text.Contains(taskNumber.ToString()))
+            {
+                txb_workNum.Text = taskNumber.ToString();
+            }
+            if (!txb_outPutJobnum.Text.Contains(OutworkIndex.ToString()))
+            {
+                txb_outPutJobnum.Text = OutworkIndex.ToString();
+            }
+            if (!txb_outFarme.Text.Contains(OutdataFrames.ToString()))
+            {
+                txb_outFarme.Text = OutdataFrames.ToString();
+            }
+            if (!txb_tempertaure.Text.Contains(temperature.ToString()))
+            {
+                txb_tempertaure.Text = temperature.ToString();
+            }
+            if (!txb_sensor.Text.Contains(sensor))
+            {
+                txb_sensor.Text = sensor;
+            }
+            var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x34 });
+            if (printInfo == "false")
+            {
+                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+                return;
+            }
+            int InCache = 0;
+            int residueCache = 0;
+            switch (printerObject.model)
+            {
+                case "DC-1300":
+                    var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
+                    InCache = printInfoJson.InCache;
+                    residueCache = printInfoJson.residueCache;
+                    break;
+                case "DL-210":
+                    var print210InfoJson = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataPortState>(printInfo);
+                    InCache = print210InfoJson.InCache;
+                    residueCache = print210InfoJson.residueCache;
+                    break;
+            }
+
+            if (!txb_cache.Text.Contains(InCache.ToString()))
+            {
+                txb_cache.Text = InCache.ToString();
+            }
+            if (!txb_acceptSpace.Text.Contains(residueCache.ToString()))
+            {
+                txb_acceptSpace.Text = residueCache.ToString();
+            }
+
         }
 
         private void btn_sure_Click(object sender, EventArgs e)

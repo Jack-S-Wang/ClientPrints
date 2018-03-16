@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(printPiewControl));
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panControlWheel1 = new ClinetPrints.CreatContorl.PanControlWheel();
+            this.ptb_page = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,23 +50,22 @@
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolCob_Intgaiting = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolBtn_reMap = new System.Windows.Forms.ToolStripButton();
-            this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
             this.toolStBtn_rotate = new System.Windows.Forms.ToolStripDropDownButton();
             this.向左旋转90ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.向右旋转90ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.旋转180ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.垂直旋转ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.水平旋转ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panControlWheel1 = new ClinetPrints.CreatContorl.PanControlWheel();
-            this.ptb_page = new System.Windows.Forms.PictureBox();
+            this.toolBtn_reMap = new System.Windows.Forms.ToolStripButton();
+            this.toolBtn_close = new System.Windows.Forms.ToolStripButton();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panControlWheel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.panControlWheel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -89,6 +90,29 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "打印预览设置界面";
             // 
+            // panControlWheel1
+            // 
+            this.panControlWheel1.AutoScroll = true;
+            this.panControlWheel1.Controls.Add(this.ptb_page);
+            this.panControlWheel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panControlWheel1.Location = new System.Drawing.Point(277, 67);
+            this.panControlWheel1.Name = "panControlWheel1";
+            this.panControlWheel1.Size = new System.Drawing.Size(875, 587);
+            this.panControlWheel1.TabIndex = 2;
+            // 
+            // ptb_page
+            // 
+            this.ptb_page.BackColor = System.Drawing.SystemColors.Window;
+            this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ptb_page.Location = new System.Drawing.Point(4, 2);
+            this.ptb_page.Name = "ptb_page";
+            this.ptb_page.Size = new System.Drawing.Size(858, 577);
+            this.ptb_page.TabIndex = 1;
+            this.ptb_page.TabStop = false;
+            this.ptb_page.WaitOnLoad = true;
+            this.ptb_page.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseDown);
+            this.ptb_page.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseUp);
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.groupBox2);
@@ -100,6 +124,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.btn_custom);
             this.groupBox2.Controls.Add(this.txb_customPage);
@@ -264,26 +289,6 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 50);
             // 
-            // toolBtn_reMap
-            // 
-            this.toolBtn_reMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_reMap.Image = global::ClinetPrints.Properties.Resources.ooopic_1502413412;
-            this.toolBtn_reMap.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtn_reMap.Name = "toolBtn_reMap";
-            this.toolBtn_reMap.Size = new System.Drawing.Size(23, 47);
-            this.toolBtn_reMap.Text = "复位";
-            this.toolBtn_reMap.Click += new System.EventHandler(this.toolBtn_reMap_Click);
-            // 
-            // toolBtn_close
-            // 
-            this.toolBtn_close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolBtn_close.Image = global::ClinetPrints.Properties.Resources.Exit;
-            this.toolBtn_close.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolBtn_close.Name = "toolBtn_close";
-            this.toolBtn_close.Size = new System.Drawing.Size(23, 47);
-            this.toolBtn_close.Text = "退出";
-            this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
-            // 
             // toolStBtn_rotate
             // 
             this.toolStBtn_rotate.BackColor = System.Drawing.Color.DarkGray;
@@ -304,60 +309,66 @@
             // 向左旋转90ToolStripMenuItem
             // 
             this.向左旋转90ToolStripMenuItem.Name = "向左旋转90ToolStripMenuItem";
-            this.向左旋转90ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.向左旋转90ToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.向左旋转90ToolStripMenuItem.Text = "向左旋转90°";
             this.向左旋转90ToolStripMenuItem.Click += new System.EventHandler(this.向左旋转90ToolStripMenuItem_Click);
             // 
             // 向右旋转90ToolStripMenuItem
             // 
             this.向右旋转90ToolStripMenuItem.Name = "向右旋转90ToolStripMenuItem";
-            this.向右旋转90ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.向右旋转90ToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.向右旋转90ToolStripMenuItem.Text = "向右旋转90°";
             this.向右旋转90ToolStripMenuItem.Click += new System.EventHandler(this.向右旋转90ToolStripMenuItem_Click);
             // 
             // 旋转180ToolStripMenuItem
             // 
             this.旋转180ToolStripMenuItem.Name = "旋转180ToolStripMenuItem";
-            this.旋转180ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.旋转180ToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.旋转180ToolStripMenuItem.Text = "旋转180°";
             this.旋转180ToolStripMenuItem.Click += new System.EventHandler(this.旋转180ToolStripMenuItem_Click);
             // 
             // 垂直旋转ToolStripMenuItem
             // 
             this.垂直旋转ToolStripMenuItem.Name = "垂直旋转ToolStripMenuItem";
-            this.垂直旋转ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.垂直旋转ToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.垂直旋转ToolStripMenuItem.Text = "垂直旋转";
             this.垂直旋转ToolStripMenuItem.Click += new System.EventHandler(this.垂直旋转ToolStripMenuItem_Click);
             // 
             // 水平旋转ToolStripMenuItem
             // 
             this.水平旋转ToolStripMenuItem.Name = "水平旋转ToolStripMenuItem";
-            this.水平旋转ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.水平旋转ToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.水平旋转ToolStripMenuItem.Text = "水平旋转";
             this.水平旋转ToolStripMenuItem.Click += new System.EventHandler(this.水平旋转ToolStripMenuItem_Click);
             // 
-            // panControlWheel1
+            // toolBtn_reMap
             // 
-            this.panControlWheel1.AutoScroll = true;
-            this.panControlWheel1.Controls.Add(this.ptb_page);
-            this.panControlWheel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panControlWheel1.Location = new System.Drawing.Point(277, 67);
-            this.panControlWheel1.Name = "panControlWheel1";
-            this.panControlWheel1.Size = new System.Drawing.Size(875, 587);
-            this.panControlWheel1.TabIndex = 2;
+            this.toolBtn_reMap.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtn_reMap.Image = global::ClinetPrints.Properties.Resources.ooopic_1502413412;
+            this.toolBtn_reMap.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtn_reMap.Name = "toolBtn_reMap";
+            this.toolBtn_reMap.Size = new System.Drawing.Size(23, 47);
+            this.toolBtn_reMap.Text = "复位";
+            this.toolBtn_reMap.Click += new System.EventHandler(this.toolBtn_reMap_Click);
             // 
-            // ptb_page
+            // toolBtn_close
             // 
-            this.ptb_page.BackColor = System.Drawing.SystemColors.Window;
-            this.ptb_page.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ptb_page.Location = new System.Drawing.Point(4, 2);
-            this.ptb_page.Name = "ptb_page";
-            this.ptb_page.Size = new System.Drawing.Size(858, 577);
-            this.ptb_page.TabIndex = 1;
-            this.ptb_page.TabStop = false;
-            this.ptb_page.WaitOnLoad = true;
-            this.ptb_page.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseDown);
-            this.ptb_page.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ptb_page_MouseUp);
+            this.toolBtn_close.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolBtn_close.Image = global::ClinetPrints.Properties.Resources.Exit;
+            this.toolBtn_close.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtn_close.Name = "toolBtn_close";
+            this.toolBtn_close.Size = new System.Drawing.Size(23, 47);
+            this.toolBtn_close.Text = "退出";
+            this.toolBtn_close.Click += new System.EventHandler(this.toolBtn_close_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(164, 104);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "毫米";
             // 
             // printPiewControl
             // 
@@ -369,13 +380,13 @@
             this.Load += new System.EventHandler(this.printPiewControl_Load);
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.panControlWheel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).EndInit();
             this.panel2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.panControlWheel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ptb_page)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -411,5 +422,6 @@
         private System.Windows.Forms.ToolStripMenuItem 旋转180ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 垂直旋转ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 水平旋转ToolStripMenuItem;
+        private System.Windows.Forms.Label label3;
     }
 }

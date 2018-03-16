@@ -144,9 +144,9 @@ namespace ClinetPrints
                 AddFlockPrinterMap();
                 //获取在某段时间所执行的定时查询
                 getMonTime();
-                tiState.Interval = 5000;
-                tiState.Enabled = true;
-                tiState.Elapsed += TiState_Elapsed;
+                //tiState.Interval = 5000;
+                //tiState.Enabled = true;
+                //tiState.Elapsed += TiState_Elapsed;
             }
             catch (Exception ex)
             {
@@ -250,7 +250,7 @@ namespace ClinetPrints
                                         sp.Rate = 2;
                                         sp.Volume = 20;
                                         sp.SpeakAsync("设备异常");
-                                        errorToMail mail = new errorToMail(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")+" 设备" + po.alias+":"+ po.stateMessage);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                        //errorToMail mail = new errorToMail(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")+" 设备" + po.alias+":"+ po.stateMessage);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
                                         ThreadPool.QueueUserWorkItem((o) =>
                                         {
                                             PrinterInformation pInfo = new PrinterInformation();
@@ -1489,6 +1489,9 @@ namespace ClinetPrints
                                         GraphicsUnit.Pixel);
                                     g.Dispose();
                                     bmap.Save(filePath);
+                                    //赋值实际打印纸张大小
+                                    printer.pParams.printWidth = printer.pParams.maxWidth;
+                                    printer.pParams.printHeight = printer.pParams.maxHeight;
                                     List<string> succese = method.writeDataToDev(filePath, printer, liItems[i][0], Int32.Parse(LiItems[i][2]));
                                     count += Int32.Parse(LiItems[i][2]);
                                     if (succese[0].Equals("error"))
