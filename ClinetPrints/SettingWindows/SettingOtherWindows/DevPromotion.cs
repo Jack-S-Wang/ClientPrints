@@ -1,6 +1,7 @@
-﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
-using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+﻿using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using System;
 using System.Collections.Generic;
@@ -120,90 +121,80 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             string[] path = pu.EnumPath();
             foreach (string pathAddress in path)
             {
-                IntPtr pHandle = new IntPtr(-1);
-                structClassDll.LPPORTINFO lpInfo = new structClassDll.LPPORTINFO()
+                if (SharMethod.banError.Contains(pathAddress))
                 {
-                    path = pathAddress,
-                    readTimeout = 0,
-                    writeTimeout = 0,
-                    portType = (ushort)WDevCmdObjects.USBPRN_PORT,
-                    portMode = (ushort)WDevCmdObjects.PORTINFO_PMODE_ALL
-                };
-                //用指针模式可以执行成功
-                //unsafe{
-                //    fixed (char* pathd = path)
-                //    {
-                //        lpInfo.path = pathd;
-                //    }
-                //}
-                do
-                {
-                    Thread.Sleep(200);
-                    pHandle = WDevDllMethod.dllFunc_OpenDev(ref lpInfo);
-                }
-                while (pHandle == new IntPtr(-1));
-                byte[] data = new byte[0];
-                structClassDll.DEVACK_INFO outDats = new structClassDll.DEVACK_INFO()
-                {
-                    lpBuf = Marshal.AllocHGlobal(512),
-                    datLen = 0,
-                    bufLen = 512,
-                    ackCode = 0
-                };
-
-                //打开设备连接默认没有密码
-                if (WDevDllMethod.dllFunc_DevIoCtrl(pHandle, WDevCmdObjects.DEV_CMD_CONNT, data, (uint)data.Length, ref outDats))
-                {
-                    data = new byte[] { 0x00, 0x00 };
-                    string strCode = "";
-                    WDevDllMethod.dllFunc_DevIoCtrl(pHandle, WDevCmdObjects.DEV_GET_USERDAT, data, (uint)data.Length, ref outDats);
-                    if ((outDats.datLen > 0) || (outDats.datLen == 0 && outDats.ackCode == 0))
+                    IntPtr pHandle = new IntPtr(-1);
+                    structClassDll.LPPORTINFO lpInfo = new structClassDll.LPPORTINFO()
                     {
-                        byte[] reData = new byte[1000];
-                        Marshal.Copy(outDats.lpBuf, reData, 0, outDats.datLen);
-                        if (outDats.datLen > 0)
-                        {
-                            string str = Encoding.GetEncoding("GBK").GetString(reData, 0, reData.Length).Replace('\0', ' ').TrimEnd();
-                            for (int i = 0; i < str.Length; i++)//因为获取到的标识值时不干净的值，值后面的\0后面还有值
-                            {
-                                if (str[i] == ' ')
-                                {
-                                    break;
-                                }
-                                else
-                                {
-                                    strCode += str[i];
-                                }
-                            }
-                        }
+                        path = pathAddress,
+                        readTimeout = 0,
+                        writeTimeout = 0,
+                        portType = (ushort)WDevCmdObjects.USBPRN_PORT,
+                        portMode = (ushort)WDevCmdObjects.PORTINFO_PMODE_ALL
+                    };
+                    //用指针模式可以执行成功
+                    //unsafe{
+                    //    fixed (char* pathd = path)
+                    //    {
+                    //        lpInfo.path = pathd;
+                    //    }
+                    //}
+                    do
+                    {
+                        Thread.Sleep(200);
+                        pHandle = WDevDllMethod.dllFunc_OpenDev(ref lpInfo);
+                    }
+                    while (pHandle == new IntPtr(-1));
+                    byte[] data = new byte[0];
+                    structClassDll.DEVACK_INFO outDats = new structClassDll.DEVACK_INFO()
+                    {
+                        lpBuf = Marshal.AllocHGlobal(512),
+                        datLen = 0,
+                        bufLen = 512,
+                        ackCode = 0
+                    };
+                    var pGf = new PrintersGeneralFunction();
+                    //打开设备连接默认没有密码
+                    if (WDevDllMethod.dllFunc_DevIoCtrl(pHandle, WDevCmdObjects.DEV_CMD_CONNT, data, (uint)data.Length, ref outDats))
+                    {
+                        //设备型号           
+                        string model = pGf.reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, new byte[0]);
+                        //序列号
+                        string sn = pGf.reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, new byte[0]);
+                        data = new byte[] { 0x00, 0x00 };
+                        string strCode = pGf.reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, data);
                         ListViewItem item = new ListViewItem();
-                        if (strCode == "")
+                        if (strCode.Contains("false") || strCode == "")
                         {
                             strCode = pathAddress;
                         }
                         item.SubItems[0].Text = strCode;
                         item.SubItems.Add(pHandle.ToString());
+                        item.SubItems.Add(model);
+                        item.SubItems.Add(sn);
                         listView1.Items.Add(item);
                     }
                 }
-
             }
+
         }
 
-        private void txb_commandText_TextChanged(object sender, EventArgs e)
+       
+
+    private void txb_commandText_TextChanged(object sender, EventArgs e)
+    {
+        try
         {
-            try
+            if (txb_commandText.TextLength >= 5000)
             {
-                if (txb_commandText.TextLength >= 5000)
-                {
-                    txb_commandText.Clear();
-                }
+                txb_commandText.Clear();
             }
-            catch (Exception ex)
-            {
-                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
-                SharMethod.writeErrorLog(str);
-            }
+        }
+        catch (Exception ex)
+        {
+            string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+            SharMethod.writeErrorLog(str);
         }
     }
+}
 }

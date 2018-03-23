@@ -76,9 +76,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// </summary>
         public byte isSupport { get; set; }
         /// <summary>
-        /// 记录设备的参数数组，每个字节表示一个选项值，具体值根据文档进行显示在界面中，便于保存比较和修改
-        /// 0-擦除位图类型,1-卡片类型,2-进卡方式,3-出卡方式,4-打印温度,
-        /// 5-打印对比度,6-打印速度,7-灰度温度,8-擦除速度,9-设置擦除温度,10-打印模式
+        /// 记录设备的参数数组，每个字节表示一个选项值，具体值根据文档进行显示在界面中，不同类型值不一样
         /// </summary>
         public byte[] DevParm { get; set; }
         /// <summary>

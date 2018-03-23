@@ -5,8 +5,9 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
+using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 
-namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
+namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
 {
     public class structClassDll
     {
@@ -33,16 +34,16 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 用于指定path代表的设备类型
             /// </summary>
-            public ushort portType;	
+            public ushort portType;
             /// <summary>
             /// 指定需要打开设备的端口，包括数据口和控制口。
             /// </summary>
-            public ushort portMode;	
+            public ushort portMode;
         }
         /// <summary>
         /// 设备端口信息结构体
         /// </summary>
-        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct DEVACK_INFO
         {
             /// <summary>
@@ -66,7 +67,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <summary>
         /// windows自带的构造体，吴工已经编写了，因此使用时直接new对象就行
         /// </summary>
-        public class OVERLAPPED:IDisposable
+        public class OVERLAPPED : IDisposable
         {
             [StructLayout(LayoutKind.Sequential, Pack = 1)]
             private struct _OVERLAPPED
@@ -230,9 +231,9 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             {
                 new _DFU_FWINFO()
                 {
-                    dfuID=new byte[5],
-                    ver=new byte[4],
-                    fwDesc=new byte[WDevCmdObjects.DFU_FWTAG_LEN + 1]
+                    dfuID = new byte[5],
+                    ver = new byte[4],
+                    fwDesc = new byte[WDevCmdObjects.DFU_FWTAG_LEN + 1]
                 };
             }
         }
@@ -263,9 +264,9 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// 设备数据包,设置长度512
             /// </summary>
             public IntPtr devPktBuf;
-	        /// <summary>
+            /// <summary>
             /// 设备数据包长度
-	        /// </summary>
+            /// </summary>
             public ushort pktDatLen;
         }
 
@@ -283,11 +284,11 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 缓冲大小
             /// </summary>
-            public uint bufLen;	
+            public uint bufLen;
             /// <summary>
             /// 数据长度
             /// </summary>
-            public uint datIdx;	
+            public uint datIdx;
             /// <summary>
             /// 设备返回 长度为512
             /// </summary>
@@ -302,7 +303,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             public byte ackCode;
         }
 
-        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct UNCMPR_INFO
         {
             /// <summary>
@@ -342,8 +343,8 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <summary>
         /// 数据发送中需要的全部设备参数信息
         /// </summary>
-       [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
-       public struct DEV_BMP
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct DEV_BMP
         {
             /// <summary>
             /// 
@@ -409,14 +410,16 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// </summary>
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
             public byte[] revs;
-            public DEVPROP_PRNOUT prnProp;
+            //public byte[] Devprop;
+            public DEVPROP_DL210 devprop;
         }
 
+
         /// <summary>
-        /// 设备打印机的参数
+        /// 指DC-1300的结构体
         /// </summary>
-        [StructLayout(LayoutKind.Sequential,CharSet=CharSet.Unicode)]
-        public struct DEVPROP_PRNOUT
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct DEVPROP_D300
         {
             /// <summary>
             /// 结构体的大小
@@ -475,6 +478,70 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
             /// </summary>
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public byte[] revs;//3
+        }
+        /// <summary>
+        /// 指DL210
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct DEVPROP_DL210
+        {   //基类 ： DSEMUL_DEVINFO_ITEM
+            /// <summary>
+            /// 结构体的大小
+            /// </summary>
+            public Byte propSize;
+            /// <summary>
+            /// BMP_DEVPROP_PRN
+            /// </summary>
+            public Byte propType;
+            /// <summary>
+            /// Page Length(dot)	Page_Length
+            /// </summary>
+            public ushort PageLength;
+            /// <summary>
+            /// Continuesly paper page length.	(^LL)
+            /// </summary>
+            public ushort ContPaperLength;
+            /// <summary>
+            /// Max label length (^ML)
+            /// </summary>
+            public ushort MaxMediaLength;
+            /// <summary>
+            /// Vertical position adjustment	(^LT)
+            /// </summary>
+            public short VerticalPosition;
+            /// <summary>
+            /// Tear off position adjustment	(^TA)
+            /// </summary>
+            public short TearOffAdjustPosition;
+            /// <summary>
+            /// 0:Transfer thermal(TT) 1:Direct thermal(DT)
+            /// </summary>
+            public Byte PrintMethod;
+            /// <summary>
+            /// Print paper type	0:Label sheet 1:Continuous paper
+            /// </summary>
+            public Byte PrintPaperType;
+            /// <summary>
+            /// GAP Length
+            /// </summary>
+            public Byte Gap_Length;
+            /// <summary>
+            /// Print speed.	(Prn_SpeedValue)
+            /// </summary>
+            public Byte PrintSpeed;
+            /// <summary>
+            /// ZPL Darkness (^MD, ^SD)
+            /// </summary>
+            public Byte ZPL_PrintDarkness;
+            /// <summary>
+            /// (Cutter)
+            /// </summary>
+            public Byte CutterOption;
+            /// <summary>
+            /// Peel option.	(PrnPeelOption)
+            /// </summary>
+            public Byte PeelOption;
+            public Byte resv;
         }
     }
 }

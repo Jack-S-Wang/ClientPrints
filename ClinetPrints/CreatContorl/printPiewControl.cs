@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 
 namespace ClinetPrints.CreatContorl
 {
@@ -681,7 +681,7 @@ namespace ClinetPrints.CreatContorl
                   DateTime.Now.ToString("yyyyMMdd HH.mm.ss") + ".bmp");
                     var method = PrinterObject.MethodsObject as IMethodObjects;
                     //PrinterObject.pParams.bkBmpID = (byte)this.cmb_printWipe.SelectedIndex;
-                    Bitmap bmap = new Bitmap((int)(_prinerObject.pParams.maxWidth), (int)(_prinerObject.pParams.maxHeight));
+                    Bitmap bmap = new Bitmap((int)(_prinerObject.pParams.printWidth), (int)(_prinerObject.pParams.printHeight));
                     Graphics g = Graphics.FromImage(bmap);
                     g.SmoothingMode = SmoothingMode.HighQuality;
                     g.CompositingQuality = CompositingQuality.HighQuality;

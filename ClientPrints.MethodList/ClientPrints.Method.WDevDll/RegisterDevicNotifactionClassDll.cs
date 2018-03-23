@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 
 
-namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
+namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
 
 {
     //是吴工写的方法构造体

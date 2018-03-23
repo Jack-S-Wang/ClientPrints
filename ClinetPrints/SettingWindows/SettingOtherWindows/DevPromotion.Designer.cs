@@ -37,6 +37,8 @@
             this.btn_up = new System.Windows.Forms.Button();
             this.btn_getFile = new System.Windows.Forms.Button();
             this.txb_getFile = new System.Windows.Forms.TextBox();
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +61,9 @@
             // 
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
-            this.columnHeader2});
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4});
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.Location = new System.Drawing.Point(12, 27);
@@ -123,6 +127,16 @@
             this.txb_getFile.Size = new System.Drawing.Size(311, 21);
             this.txb_getFile.TabIndex = 1;
             // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "型号";
+            this.columnHeader3.Width = 73;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "序列号";
+            this.columnHeader4.Width = 89;
+            // 
             // DevPromotion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -150,5 +164,7 @@
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
     }
 }

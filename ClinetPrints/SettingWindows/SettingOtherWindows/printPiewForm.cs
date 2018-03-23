@@ -1,5 +1,5 @@
 ﻿using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.CreatContorl;
 using System;
 using System.Collections.Generic;

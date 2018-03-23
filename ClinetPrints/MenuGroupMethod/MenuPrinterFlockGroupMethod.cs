@@ -1,6 +1,6 @@
 ﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using System;
 using System.Windows.Forms;
 

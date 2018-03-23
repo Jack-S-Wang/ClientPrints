@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.MenuGroupMethod;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using static System.Windows.Forms.ListView;
 using System.Runtime.InteropServices;
-using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 using ClinetPrints.SettingWindows.SettingOtherWindows;
@@ -144,9 +144,12 @@ namespace ClinetPrints
                 AddFlockPrinterMap();
                 //获取在某段时间所执行的定时查询
                 getMonTime();
-                //tiState.Interval = 5000;
-                //tiState.Enabled = true;
-                //tiState.Elapsed += TiState_Elapsed;
+                //定时查询状态进行更新
+                tiState.Interval = 5000;
+                tiState.Enabled = true;
+                tiState.Elapsed += TiState_Elapsed;
+                //查询是否登录中有需要密码的还是需要更新版本的
+                checkPrinter();
             }
             catch (Exception ex)
             {
@@ -156,6 +159,20 @@ namespace ClinetPrints
             }
         }
 
+        /// <summary>
+        /// 提示有需要密码的或是版本不一致的设备
+        /// </summary>
+        private void checkPrinter()
+        {
+            if (SharMethod.banError.Count > 0)
+            {
+                MessageBox.Show("有设备版本不一致, 需要固件更新！");
+            }
+            if (SharMethod.passwordError.Count > 0)
+            {
+                MessageBox.Show("有设备需要密码才能登录，请到登录界面登录!");
+            }
+        }
 
 
         /// <summary>
@@ -230,7 +247,7 @@ namespace ClinetPrints
                             var method = key.MethodsObject as IMethodObjects;
                             var po = key;
                             string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, key.pHandle, new byte[] { 0x30 });
-                            if (str != "false")
+                            if (!str.Contains("false"))
                             {
                                 var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
                                 if (key.stateCode != keyState.stateCode)
@@ -310,19 +327,15 @@ namespace ClinetPrints
                             string path = dbd.devicePath.ToLower();
                             SetTiming = false;
                             Thread.Sleep(1000);
-                            new PrintersGeneralFunction(path);
+                            new PrintersGeneralFunction(path, new byte[0]);
                             if (!SharMethod.dicPrinterUSB.ContainsKey(path))
                             {
-                                MessageBox.Show("设备没有正常获取信息！请断电或重新插拔设备！");
+                                MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
+                                checkPrinter();
                                 return;
                             }
                             SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
                             string dev;
-                            if (!SharMethod.dicPrinterUSB.ContainsKey(path))
-                            {
-                                MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
-                                return;
-                            }
                             new addCommend(SharMethod.user, "usbs上线", "");
                             if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明该设备正处于离线状态
                             {
@@ -466,7 +479,6 @@ namespace ClinetPrints
                                             liNameS = "";
                                         }
                                     }
-
                                     SharMethod.liAllPrinter.Remove(n.PrinterObject);
                                     n.SetOffline();
                                     if (this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)
@@ -674,6 +686,7 @@ namespace ClinetPrints
             MenuItem menuItem1 = new MenuItem("显示窗体");
             MenuItem menuItem2 = new MenuItem("隐藏窗体");
             MenuItem promotionDev = new MenuItem("不一致版本固件更新");
+            MenuItem passwordLogin = new MenuItem("设备密码登录界面");
             MenuItem menSet = new MenuItem("设置");
             MenuItem menuItem3 = new MenuItem("退出程序");//这个需要保留的按钮程序
             menuItem1.Click += (o, e) =>
@@ -710,15 +723,40 @@ namespace ClinetPrints
                     set.ShowDialog();
                 })).Start();
             };
+            passwordLogin.Click += (o, e) =>
+            {
+                new addCommend(SharMethod.user, passwordLogin.Name, passwordLogin.Text);
+                (new Thread(() =>
+                {
+                    LoginPassword lp = new LoginPassword();
+                    lp.client = this;
+                    lp.StartPosition = FormStartPosition.CenterScreen;
+                    lp.ShowDialog();
+                })).Start();
+            };
             menuItem3.Click += (o, e) =>
             {
                 new addCommend(SharMethod.user, menuItem3.Name, menuItem3.Text);
+                byte[] data = new byte[0];
+                structClassDll.DEVACK_INFO outDats;
+                foreach (var ky in SharMethod.dicPrinterUSB)
+                {
+                    outDats = new structClassDll.DEVACK_INFO()
+                    {
+                        lpBuf = Marshal.AllocHGlobal(512),
+                        datLen = 0,
+                        bufLen = 512,
+                        ackCode = 0
+                    };
+                    WDevDllMethod.dllFunc_DevIoCtrl(ky.Value.pHandle, WDevCmdObjects.DEV_CMD_UNCONNT, data, (uint)data.Length, ref outDats);
+                    WDevDllMethod.dllFunc_CloseDev(ky.Value.pHandle);
+                }
                 timer1.Enabled = false;
                 this.Dispose();
                 printerClose.closeWindow = true;
                 Application.Exit();
             };
-            notifyIcon.ContextMenu = new ContextMenu(new MenuItem[] { menuItem1, menuItem2, promotionDev, menSet, menuItem3 });
+            notifyIcon.ContextMenu = new ContextMenu(new MenuItem[] { menuItem1, menuItem2, promotionDev, passwordLogin, menSet, menuItem3 });
         }
         /// <summary>
         /// 添加图片
@@ -901,6 +939,7 @@ namespace ClinetPrints
                 printerViewFlock.Visible = false;
                 printerViewSingle.Focus();
                 toolStBtn_printPerview.Enabled = true;
+                toolStBtn_otherControl.Enabled = true;
                 if (fToS)
                 {
                     if (liVewS != null)
@@ -964,6 +1003,7 @@ namespace ClinetPrints
                 printerViewFlock.Visible = true;
                 printerViewFlock.Focus();
                 toolStBtn_printPerview.Enabled = false;
+                toolStBtn_otherControl.Enabled = false;
                 if (sToF)//说明是群转换为单打印过来的
                 {
                     if (liVewF != null)
@@ -1547,9 +1587,9 @@ namespace ClinetPrints
                         {
                             break;
                         }
-                    //输出作业
-                    var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
-                        if (printOutPut == "false")
+                        //输出作业
+                        var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
+                        if (printOutPut.Contains("false"))
                         {
                             MessageBox.Show("打印机已离线或无法获取！");
                             break;
@@ -1912,17 +1952,94 @@ namespace ClinetPrints
 
         private void 退出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            byte[] data = new byte[0];
+            structClassDll.DEVACK_INFO outDats;
+            foreach (var ky in SharMethod.dicPrinterUSB)
+            {
+                outDats = new structClassDll.DEVACK_INFO()
+                {
+                    lpBuf = Marshal.AllocHGlobal(512),
+                    datLen = 0,
+                    bufLen = 512,
+                    ackCode = 0
+                };
+                WDevDllMethod.dllFunc_DevIoCtrl(ky.Value.pHandle, WDevCmdObjects.DEV_CMD_UNCONNT, data, (uint)data.Length, ref outDats);
+                WDevDllMethod.dllFunc_CloseDev(ky.Value.pHandle);
+            }
             timer1.Enabled = false;
             this.Dispose();
             printerClose.closeWindow = true;
             Application.Exit();
         }
 
-        //private void toolStripButton1_Click(object sender, EventArgs e)
-        //{
-        //    var cm=listView1.Columns[colmunObject] as listViewColumnTNode;
-        //    var method=cm.liPrinter[0].MethodsObject as IMethodObjects;
-        //    method.getRa(cm.liPrinter[0]);
-        //}
+        private void 不同版本ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new addCommend(SharMethod.user, 不同版本ToolStripMenuItem.Name, 不同版本ToolStripMenuItem.Text);
+                Thread thread = new Thread(() =>
+                {
+                    DevPromotion dp = new DevPromotion();
+                    dp.StartPosition = FormStartPosition.CenterScreen;
+                    dp.ShowDialog();
+                });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+            }catch(Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
+        }
+
+        private void 设备密码登录界面ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new addCommend(SharMethod.user, 设备密码登录界面ToolStripMenuItem.Name, 设备密码登录界面ToolStripMenuItem.Text);
+                var thread = new Thread(() =>
+                  {
+                      LoginPassword lp = new LoginPassword();
+                      lp.client = this;
+                      lp.StartPosition = FormStartPosition.CenterScreen;
+                      lp.ShowDialog();
+                  });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+            }
+            catch(Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
+        }
+
+        private void toolStBtn_otherControl_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new addCommend(SharMethod.user, toolStBtn_otherControl.Name, toolStBtn_otherControl.Text);
+                if (this.toolStTxb_printer.Text != "")
+                {
+                    var col = listView1.Columns[colmunObject] as listViewColumnTNode;
+                    IntPtr handle = col.liPrinter[0].pHandle;
+                    string path = col.liPrinter[0].addressMessage;
+                    Thread thread=new Thread(() =>
+                    {
+                        otherControlSet oc = new otherControlSet();
+                        oc.pHandle = handle;
+                        oc.pathAddress = path;
+                        oc.StartPosition = FormStartPosition.CenterScreen;
+                        oc.ShowDialog();
+                    });
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
+                }
+            }catch(Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
+        }
     }
 }

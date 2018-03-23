@@ -30,6 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ckb_monitor = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.btn_up = new System.Windows.Forms.Button();
@@ -71,7 +72,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.ckb_monitor = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -103,6 +103,17 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "控制";
+            // 
+            // ckb_monitor
+            // 
+            this.ckb_monitor.AutoSize = true;
+            this.ckb_monitor.Location = new System.Drawing.Point(138, 93);
+            this.ckb_monitor.Name = "ckb_monitor";
+            this.ckb_monitor.Size = new System.Drawing.Size(96, 16);
+            this.ckb_monitor.TabIndex = 30;
+            this.ckb_monitor.Text = "是否停止监控";
+            this.ckb_monitor.UseVisualStyleBackColor = true;
+            this.ckb_monitor.CheckedChanged += new System.EventHandler(this.ckb_monitor_CheckedChanged);
             // 
             // groupBox3
             // 
@@ -174,17 +185,6 @@
             // cmb_command
             // 
             this.cmb_command.FormattingEnabled = true;
-            this.cmb_command.Items.AddRange(new object[] {
-            "暂停",
-            "恢复",
-            "清洁打印头",
-            "进卡",
-            "退卡",
-            "测试卡1",
-            "测试卡2",
-            "卡擦除",
-            "清除打印作业",
-            "重启设备"});
             this.cmb_command.Location = new System.Drawing.Point(92, 30);
             this.cmb_command.Name = "cmb_command";
             this.cmb_command.Size = new System.Drawing.Size(142, 20);
@@ -499,17 +499,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // ckb_monitor
-            // 
-            this.ckb_monitor.AutoSize = true;
-            this.ckb_monitor.Location = new System.Drawing.Point(138, 93);
-            this.ckb_monitor.Name = "ckb_monitor";
-            this.ckb_monitor.Size = new System.Drawing.Size(96, 16);
-            this.ckb_monitor.TabIndex = 30;
-            this.ckb_monitor.Text = "是否停止监控";
-            this.ckb_monitor.UseVisualStyleBackColor = true;
-            this.ckb_monitor.CheckedChanged += new System.EventHandler(this.ckb_monitor_CheckedChanged);
             // 
             // monitorForm
             // 

@@ -24,6 +24,9 @@ namespace ClientPrintsMethodList.ClientPrints.Method.DevBmpDll
         [DllImport("ds_dev_bmp.dll",CharSet=CharSet.Unicode,CallingConvention=CallingConvention.StdCall)]
         public static extern bool LoadBitmapFilePara(string imageFile,ref structBmpClass.DS_PARAMETER para);
 
+        [DllImport("ds_dev_bmp.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        public static extern bool LoadBitmapFile(string imageFile);
+
         /// <summary>
         /// 生成位图数据
         /// </summary>
@@ -50,5 +53,9 @@ namespace ClientPrintsMethodList.ClientPrints.Method.DevBmpDll
         /// <returns></returns>
         [DllImport("ds_dev_data.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         public static extern Int32 DS_Compress(byte SupportedCompressMth, IntPtr indata, int inSize, [Out] IntPtr Outdata,out int Outsize);
+
+        [DllImport("ds_dev_bmp.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        public static extern bool Save(string path, long x, long y);
+
     }
 }

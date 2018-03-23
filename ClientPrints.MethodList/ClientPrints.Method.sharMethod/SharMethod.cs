@@ -5,10 +5,10 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
-using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using System.Text;
 
-namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
+namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
 {
     public class SharMethod
     {
@@ -30,6 +30,16 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
         public static monitorTime monTime { get; set; }
 
         public static UserCommend user;
+
+        /// <summary>
+        /// 记录密码错误的设备
+        /// </summary>
+        public static List<string> passwordError = new List<string>();
+
+        /// <summary>
+        /// 记录版本号不一致的设备
+        /// </summary>
+        public static List<string> banError = new List<string>();
         /// <summary>
         /// 获取所有打印机的信息
         /// </summary>

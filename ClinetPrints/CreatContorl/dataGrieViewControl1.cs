@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.ListViewItem;
 using System.Collections;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 
 namespace ClinetPrints.CreatContorl
 {

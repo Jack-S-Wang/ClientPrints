@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using System.IO;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 

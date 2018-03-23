@@ -279,16 +279,18 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 int dataFrames = (data[6] << 8) + data[7];
                 int tempertaure = data[8];
                 string sensor = "";
-                BitArray arr = new BitArray(data[9]);
-                if (arr[0])
+                byte[] bita = new byte[4];
+                Array.Copy(data, 9, bita, 0, 4);
+                BitArray arr = new BitArray(bita);
+                if (arr[7])
                 {
                     sensor = "饲料关键";
                 }
-                if (arr[1])
+                if (arr[6])
                 {
                     sensor = "头抬起";
                 }
-                if (arr[2])
+                if (arr[5])
                 {
                     sensor = "皮纸提出";
                 }
@@ -324,8 +326,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string jsonstr = "";
             if (data[1] == 0x81)
             {
-                byte[] parmData = new byte[data.Length - 2];
-                Array.Copy(data, 2, parmData, 0, data.Length - 2);
+                byte[] parmData = new byte[data.Length];
+                Array.Copy(data, 0, parmData, 0, data.Length);
                 var pData = new PrinterDL210Json.PrinterParmInfo()
                 {
                     parmData = parmData

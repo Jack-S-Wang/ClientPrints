@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 
-namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
+namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
 {
     public class PrinterUSBMethod
     {
@@ -53,7 +53,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.sharMethod
             WDevDllMethod.dllFunc_OpenLog(@"./DevLog.log");
             foreach (string pathAddress in path)
             {
-                new PrintersGeneralFunction(pathAddress);
+                new PrintersGeneralFunction(pathAddress,new byte[0]);
             }
         }
     }

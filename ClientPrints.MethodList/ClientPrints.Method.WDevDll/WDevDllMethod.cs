@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
+namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
 {
     public class WDevDllMethod
     {
@@ -213,7 +213,7 @@ namespace ClientPrsintsMethodList.ClientPrints.Method.WDevDll
         /// <param name="name">配置项名称</param>
         /// <param name="val">数据值，以字符串形式表示</param>
         /// <param name="cnts">无效</param>
-        /// <param name="saveToDev">将配置数据发送到设备，非零是设置到设备中</param>
+        /// <param name="saveToDev">将配置数据发送到设备，非零是设置到设备中</param>数据发送0先存入非设备中，存完之后最后一次发送为null值的数据和1到设备中
         /// <returns>成功则TRUE,否则FALSE</returns>
         [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
         public static extern bool dllFunc_SetDevCfgInfo(IntPtr pHandle, string name, string val, ushort cnts, ushort saveToDev);

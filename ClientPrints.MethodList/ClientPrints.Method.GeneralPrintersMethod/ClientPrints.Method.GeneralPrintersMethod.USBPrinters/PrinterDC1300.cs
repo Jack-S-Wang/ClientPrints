@@ -266,8 +266,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string jsonstr="";
             if (data[1] == 0x81)
             {
-                byte[] parmData = new byte[data.Length-2];
-                Array.Copy(data, 2, parmData, 0, data.Length - 2);
+                byte[] parmData = new byte[data.Length];
+                Array.Copy(data, 0, parmData, 0, data.Length);
                 var pData = new PrinterJson.PrinterParmInfo()
                 {
                     parmData=parmData

@@ -54,6 +54,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -156,6 +157,24 @@
     <Compile Include="SettingWindows\SettingOtherWindows\errorText.Designer.cs">
       <DependentUpon>errorText.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\importPassWord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\importPassWord.Designer.cs">
+      <DependentUpon>importPassWord.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\LoginPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\LoginPassword.Designer.cs">
+      <DependentUpon>LoginPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\otherControlSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\otherControlSet.Designer.cs">
+      <DependentUpon>otherControlSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingWindows\SettingOtherWindows\parmSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,6 +234,15 @@
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\errorText.resx">
       <DependentUpon>errorText.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\importPassWord.resx">
+      <DependentUpon>importPassWord.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\LoginPassword.resx">
+      <DependentUpon>LoginPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\otherControlSet.resx">
+      <DependentUpon>otherControlSet.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\parmSetting.resx">
       <DependentUpon>parmSetting.cs</DependentUpon>
     </EmbeddedResource>
@@ -251,6 +279,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ds_dev_bmp.dll" />
     <Content Include="ooopic_1502413321.ico" />
     <None Include="Resources\Add.png" />
     <None Include="Resources\Back.png" />
@@ -274,14 +303,10 @@
     <None Include="Resources\ooopic_1502413436.ico" />
     <None Include="Resources\ooopic_1502413453.ico" />
     <None Include="Resources\ooopic_1502413456.ico" />
-    <Content Include="ds_dev_bmp.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ds_dev_data.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\ooopic_1502413321.ico" />
     <None Include="Resources\旋转.png" />
+    <None Include="Resources\16r.ico" />
+    <None Include="Resources\16r - 副本.png" />
     <Content Include="WDevObj.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

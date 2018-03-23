@@ -2,8 +2,8 @@
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
-using ClientPrsintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClinetPrints.CreatContorl;
 using System;
@@ -25,95 +25,33 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             InitializeComponent();
         }
         public PrinterObjects printerObject;
-        private void cmb_wipeType_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_cardType_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_inCardWay_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_outCardWay_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_printTemperature_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_printContrast_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_printSheep_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_grayTemperature_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_wipeSheep_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_wipeTemperatuer_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void cmb_printModel_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = true;
-        }
-
+        
         private void btn_sureParm_Click(object sender, EventArgs e)
         {
             new addCommend(SharMethod.user, btn_sureParm.Name, "");
             try
             {
-                byte[] data = new byte[20];
-                data[0] = 0;
-                data[1] = 1;
-                data[2] = 11;
-                data[3] = 0;
-                data[4] = 16;
-                data[5] = 0x81;
-                data[6] = (byte)cmb_wipeType.SelectedIndex;
-                data[7] = (byte)cmb_cardType.SelectedIndex;
-                data[8] = (byte)cmb_inCardWay.SelectedIndex;
-                data[9] = (byte)cmb_outCardWay.SelectedIndex;
-                data[10] = (byte)cmb_printTemperature.SelectedIndex;
-                data[11] = (byte)cmb_printContrast.SelectedIndex;
-                data[12] = (byte)cmb_printSheep.SelectedIndex;
-                data[13] = (byte)cmb_grayTemperature.SelectedIndex;
-                data[14] = (byte)cmb_wipeSheep.SelectedIndex;
-                data[15] = (byte)cmb_wipeTemperatuer.SelectedIndex;
-                data[16] = (byte)cmb_printModel.SelectedIndex;
+                byte[] alldata = new byte[4 + printerObject.pParams.DevParm.Length];
+                switch (printerObject.model)
+                {
+                    case "DC-1300":
+                        alldata[1] = 1;
+                        alldata[2] = 1;
+                        break;
+                    case "DL-210":
+                        alldata[1] = 2;
+                        alldata[2] = 1;
+                        break;
+                }
+                Array.Copy(printerObject.pParams.DevParm, 0, alldata, 4, printerObject.pParams.DevParm.Length);
                 var method = printerObject.MethodsObject as IMethodObjects;
-                string str = method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle, data);
-                if (str != "false")
+                string str = method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle,alldata);
+                if (!str.Contains("false"))
                 {
                     if (Int32.Parse(str) == 1)
                     {
                         MessageBox.Show("保存成功！");
                     }
-                    byte[] setData = new byte[11];
-                    Array.Copy(data, 6, setData, 0, 11);
-                    printerObject.pParams.DevParm = setData;
                 }
                 else
                 {
@@ -135,25 +73,25 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             {
                 if (printerObject != null)
                 {
+
                     if (printerObject.pParams.IsdevInfoParm)
                     {
                         byte[] data = printerObject.pParams.DevParm;
-                        cmb_wipeType.SelectedIndex = data[0];
-                        cmb_cardType.SelectedIndex = data[1];
-                        cmb_inCardWay.SelectedIndex = data[2];
-                        cmb_outCardWay.SelectedIndex = data[3];
-                        cmb_printTemperature.SelectedIndex = data[4];
-                        cmb_printContrast.SelectedIndex = data[5];
-                        cmb_printSheep.SelectedIndex = data[6];
-                        cmb_grayTemperature.SelectedIndex = data[7];
-                        cmb_wipeSheep.SelectedIndex = data[8];
-                        cmb_wipeTemperatuer.SelectedIndex = data[9];
-                        cmb_printModel.SelectedIndex = data[10];
-                    }else
+                        switch (printerObject.model)
+                        {
+                            case "DL-210":
+                                addDL210(data);
+                                break;
+                            case "DC-1300":
+                                addDC1300(data);
+                                break;
+                        }
+                    }
+                    else
                     {
-                        this.groupBox5.Enabled = false;
+                        this.dataGrieViewControl12.Enabled = false;
                         btn_sureParm.Enabled = false;
-                        this.groupBox5.Text = "该设备无此数据";
+                        this.dataGrieViewControl12.Text = "该设备无此数据";
                     }
                     bool cfg = WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
                     if (cfg)
@@ -164,7 +102,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         char[] buf = new char[512];
                         ushort cnt = 512;
                         //L210最后一个参数为1
-                        for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 1); i++, cnt = 512)
+                        for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++, cnt = 512)
                         {
                             string str = new string(buf).Replace('\0', ' ').TrimEnd();
                             string name = str.Substring(5, str.Substring(0, str.IndexOf(',')).Length - 5);
@@ -239,16 +177,25 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     {
                         val = dataGrieViewControl11.items[i].Value[1].control.Text;
                     }
-                    bool flge = WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 1, 0);//L210为最后一个参数为0
+                    bool flge = WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 1, 0);
                     if (!flge)
                     {
                         MessageBox.Show(name + ":修改设置失败！");
                         return;
                     }
+                    if(i== (dataGrieViewControl11.items.Count - 1))//判断是否是最后一个数
+                    {
+                        //直接发送空数据，通知存入设备中
+                         if(!WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, null,null , 1, 1))
+                        {
+                            MessageBox.Show("修改到设备中失败！");
+                            return;
+                        }
+                    }
                 }
                 MessageBox.Show("修改成功！将重新启动该设备！");
                 string str = (printerObject.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
-                if (str != "false")
+                if (!str.Contains("false"))
                 {
                     this.Close();
                 }
@@ -261,5 +208,390 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 return;
             }
         }
+        /// <summary>
+        /// 添加210的参数信息
+        /// </summary>
+        /// <param name="data"></param>
+        private void addDL210(byte[] data)
+        {
+            //可以简化成一个集合，然后遍历所有值进行赋值添加控件，置换值就不太方便了
+            UserColumnHanderCollection headerparm = new UserColumnHanderCollection(this.dataGrieViewControl12, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
+            this.dataGrieViewControl12.handers = headerparm;
+            UserItems items = new UserItems(this.dataGrieViewControl12);
+            UserSubControl usersub = new UserSubControl("PageLength", false);
+            UserSubControl usersubVal = new UserSubControl((data[2] * 256 + data[3]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                string s = usersubVal.control.Text;
+                printerObject.pParams.DevParm[2] = (byte)(short.Parse(s)>>8);
+                printerObject.pParams.DevParm[3] = byte.Parse(s);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("ContPaperLength", false);
+            usersubVal = new UserSubControl((data[4] * 256 + data[5]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                string s = usersubVal.control.Text;
+                printerObject.pParams.DevParm[4] = (byte)(short.Parse(s) >> 8);
+                printerObject.pParams.DevParm[5] = byte.Parse(s);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("MaxMediaLength", false);
+            usersubVal = new UserSubControl((data[6] * 256 + data[7]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                string s = usersubVal.control.Text;
+                printerObject.pParams.DevParm[6] = (byte)(short.Parse(s) >> 8);
+                printerObject.pParams.DevParm[7] = byte.Parse(s);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("VerticalPosition", false);
+            usersubVal = new UserSubControl((data[8] * 256 + data[9]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                string s = usersubVal.control.Text;
+                printerObject.pParams.DevParm[8] = (byte)(short.Parse(s) >> 8);
+                printerObject.pParams.DevParm[9] = byte.Parse(s);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("TearOffAdjustPosition", false);
+            usersubVal = new UserSubControl((data[10] * 256 + data[11]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                string s = usersubVal.control.Text;
+                printerObject.pParams.DevParm[10] = (byte)(short.Parse(s) >> 8);
+                printerObject.pParams.DevParm[11] = byte.Parse(s);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("PrintMethod", false);
+            usersubVal = new UserSubControl((data[12]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[12] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("PrintPaperType", false);
+            usersubVal = new UserSubControl((data[13]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[13] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("Gap_Length", false);
+            usersubVal = new UserSubControl((data[14]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[14] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("PrintSpeed", false);
+            usersubVal = new UserSubControl((data[15]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[15] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("ZPL_PrintDarkness", false);
+            usersubVal = new UserSubControl((data[16]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[16] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("CutterOption", false);
+            usersubVal = new UserSubControl((data[17]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[17] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("PeelOption", false);
+            usersubVal = new UserSubControl((data[18]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "")
+                {
+                    return;
+                }
+                    printerObject.pParams.DevParm[18] = byte.Parse(usersubVal.control.Text);
+                
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            this.dataGrieViewControl12.items = items;
+
+        }
+
+        /// <summary>
+        /// 添加1300的参数信息
+        /// </summary>
+        /// <param name="data"></param>
+        private void addDC1300(byte[] data)
+        {
+            UserColumnHanderCollection headerparm = new UserColumnHanderCollection(this.dataGrieViewControl12, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
+            this.dataGrieViewControl12.handers = headerparm;
+            UserItems items = new UserItems(this.dataGrieViewControl12);
+            UserSubControl usersub = new UserSubControl("擦除位图类型", false);
+            UserSubControl usersubVal = new UserSubControl((data[2]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[2] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("卡片类型", false);
+            usersubVal = new UserSubControl((data[3]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[3] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("进卡方式", false);
+            usersubVal = new UserSubControl((data[4]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[4] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("出卡方式", false);
+            usersubVal = new UserSubControl((data[5]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[5] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("打印温度", false);
+            usersubVal = new UserSubControl((data[6]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[6] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("打印对比度", false);
+            usersubVal = new UserSubControl((data[7]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[7] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("打印速度", false);
+            usersubVal = new UserSubControl((data[8]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[8] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("灰度温度", false);
+            usersubVal = new UserSubControl((data[10]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[10] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("擦除速度", false);
+            usersubVal = new UserSubControl((data[11]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[11] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("设置擦除温度", false);
+            usersubVal = new UserSubControl((data[12]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[12] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            usersub = new UserSubControl("打印模式", false);
+            usersubVal = new UserSubControl((data[13]).ToString(), true);
+            usersubVal.control.TextChanged += (o, e) =>
+            {
+                if (usersubVal.control.Text == "") { return; }
+                printerObject.pParams.DevParm[13] = byte.Parse(usersubVal.control.Text);
+            };
+            usersubVal.control.KeyPress += (o, e) =>
+            {
+                if ((e.KeyChar < 48 || e.KeyChar > 57) && e.KeyChar != 8)
+                {
+                    e.Handled = true;
+                }
+            };
+            items.Add(new UserSubControl[] { usersub, usersubVal });
+            this.dataGrieViewControl12.items = items;
+        }
+
     }
 }

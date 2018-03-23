@@ -1,5 +1,5 @@
 ﻿using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
-using ClientPrsintsMethodList.ClientPrints.Method.sharMethod;
+using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
