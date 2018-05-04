@@ -74,6 +74,8 @@
             // 
             this.dataGrieViewControl12.AutoScroll = true;
             this.dataGrieViewControl12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrieViewControl12.handers = null;
+            this.dataGrieViewControl12.items = null;
             this.dataGrieViewControl12.Location = new System.Drawing.Point(3, 17);
             this.dataGrieViewControl12.Name = "dataGrieViewControl12";
             this.dataGrieViewControl12.Size = new System.Drawing.Size(247, 448);
@@ -155,6 +157,8 @@
             // 
             this.dataGrieViewControl11.AutoScroll = true;
             this.dataGrieViewControl11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGrieViewControl11.handers = null;
+            this.dataGrieViewControl11.items = null;
             this.dataGrieViewControl11.Location = new System.Drawing.Point(3, 17);
             this.dataGrieViewControl11.Name = "dataGrieViewControl11";
             this.dataGrieViewControl11.Size = new System.Drawing.Size(294, 429);
@@ -166,6 +170,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 544);
             this.Controls.Add(this.panel1);
+            this.MaximizeBox = false;
             this.Name = "parmSetting";
             this.Text = "参数设置界面";
             this.Load += new System.EventHandler(this.parmSetting_Load);

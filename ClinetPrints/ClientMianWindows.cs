@@ -330,8 +330,11 @@ namespace ClinetPrints
                             new PrintersGeneralFunction(path, new byte[0]);
                             if (!SharMethod.dicPrinterUSB.ContainsKey(path))
                             {
-                                MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
                                 checkPrinter();
+                                if (SharMethod.banError.Count == 0 && SharMethod.passwordError.Count == 0)
+                                {
+                                    MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
+                                }
                                 return;
                             }
                             SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
@@ -417,7 +420,6 @@ namespace ClinetPrints
                                             this.listView1.Columns.RemoveAt(colmunObject);
                                             this.listView1.Items.Clear();
                                             addfile = 0;
-
                                         }
                                         else//判断是否是群里的最后一台设备下线了，全下线则清理，否则就只删除下线设备的对象不清理
                                         {
@@ -2041,5 +2043,8 @@ namespace ClinetPrints
                 SharMethod.writeErrorLog(str);
             }
         }
+
+
+       
     }
 }

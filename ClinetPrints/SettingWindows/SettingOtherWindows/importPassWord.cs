@@ -52,7 +52,6 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     }
                     if (!SharMethod.dicPrinterUSB.ContainsKey(pathAddress))
                     {
-                        MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
                         if (SharMethod.banError.Count > 0)
                         {
                             MessageBox.Show("有设备版本不一致, 需要固件更新！");
@@ -61,10 +60,14 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         {
                             MessageBox.Show("有设备需要密码才能登录，请到登录界面登录!");
                         }
+                        if (SharMethod.banError.Count == 0 && SharMethod.passwordError.Count == 0)
+                        {
+                            MessageBox.Show("该上线设备不是得实设备或是暂时获取不到信息，请重新插拔设备进行连接！");
+                        }
                         return;
                     }
                     SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[pathAddress]);
-                    string dev;                   
+                    string dev;
                     new addCommend(SharMethod.user, "usbs上线", "");
                     client.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
                     {

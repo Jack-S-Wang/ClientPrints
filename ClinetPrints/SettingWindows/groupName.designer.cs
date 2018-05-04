@@ -47,6 +47,7 @@
             this.ClientSize = new System.Drawing.Size(284, 80);
             this.Controls.Add(this.txb_groupText);
             this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "groupName";
             this.Text = "添加分组名称";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.groupName_KeyDown);

@@ -66,7 +66,7 @@
             // ckb_time
             // 
             this.ckb_time.AutoSize = true;
-            this.ckb_time.Location = new System.Drawing.Point(155, 158);
+            this.ckb_time.Location = new System.Drawing.Point(156, 163);
             this.ckb_time.Name = "ckb_time";
             this.ckb_time.Size = new System.Drawing.Size(120, 16);
             this.ckb_time.TabIndex = 13;

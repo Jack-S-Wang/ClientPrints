@@ -506,6 +506,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 624);
             this.Controls.Add(this.panel1);
+            this.MaximizeBox = false;
             this.Name = "monitorForm";
             this.Text = "监控控制界面";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.monitorForm_FormClosing);

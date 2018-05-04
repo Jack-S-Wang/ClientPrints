@@ -107,21 +107,21 @@
             // 分组名称查询ToolStripMenuItem
             // 
             this.分组名称查询ToolStripMenuItem.Name = "分组名称查询ToolStripMenuItem";
-            this.分组名称查询ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.分组名称查询ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.分组名称查询ToolStripMenuItem.Text = "分组名称查询";
             this.分组名称查询ToolStripMenuItem.Click += new System.EventHandler(this.分组名称查询ToolStripMenuItem_Click);
             // 
             // 全部展开ToolStripMenuItem
             // 
             this.全部展开ToolStripMenuItem.Name = "全部展开ToolStripMenuItem";
-            this.全部展开ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.全部展开ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.全部展开ToolStripMenuItem.Text = "全部展开";
             this.全部展开ToolStripMenuItem.Click += new System.EventHandler(this.全部展开ToolStripMenuItem_Click);
             // 
             // 全部折叠ToolStripMenuItem
             // 
             this.全部折叠ToolStripMenuItem.Name = "全部折叠ToolStripMenuItem";
-            this.全部折叠ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.全部折叠ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.全部折叠ToolStripMenuItem.Text = "全部折叠";
             this.全部折叠ToolStripMenuItem.Click += new System.EventHandler(this.全部折叠ToolStripMenuItem_Click);
             // 

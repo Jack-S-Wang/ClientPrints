@@ -83,11 +83,11 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                             // TODO : 触发固件完成事件。
                             WDevDllMethod.dllFunc_CloseDfu(new IntPtr(Int32.Parse(listView1.SelectedItems[0].SubItems[1].Text)));
                             txb_commandText.AppendText("固件升级成功！将重新加载界面！");
+                            SharMethod.banError.Remove(listView1.SelectedItems[0].SubItems[0].Text);
                             this.listView1.Items.Clear();
                             getDev();
                         }
                     }
-
                 }
                 else
                 {
@@ -161,14 +161,9 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         string model = pGf.reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, new byte[0]);
                         //序列号
                         string sn = pGf.reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, new byte[0]);
-                        data = new byte[] { 0x00, 0x00 };
-                        string strCode = pGf.reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, data);
+                       
                         ListViewItem item = new ListViewItem();
-                        if (strCode.Contains("false") || strCode == "")
-                        {
-                            strCode = pathAddress;
-                        }
-                        item.SubItems[0].Text = strCode;
+                        item.SubItems[0].Text = pathAddress;
                         item.SubItems.Add(pHandle.ToString());
                         item.SubItems.Add(model);
                         item.SubItems.Add(sn);
@@ -176,7 +171,6 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     }
                 }
             }
-
         }
 
        
