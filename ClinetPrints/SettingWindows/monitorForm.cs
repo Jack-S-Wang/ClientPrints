@@ -37,6 +37,14 @@ namespace ClinetPrints.SettingWindows
         {
             try
             {
+                //switch (printerObject.model)
+                //{
+                //    case "DC-1300":
+
+                //        break;
+                //    case "DL-210":
+                //        break;
+                //}
                 this.cmb_command.Items.Add("暂停");
                 this.cmb_command.Items.Add("恢复");
                 this.cmb_command.Items.Add("清除打印作业");

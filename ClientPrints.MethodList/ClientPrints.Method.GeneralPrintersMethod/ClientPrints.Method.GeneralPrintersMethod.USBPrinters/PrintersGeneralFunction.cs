@@ -71,21 +71,22 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 string version = reInformation(WDevCmdObjects.DEV_GET_PROTVER, pHandle, new byte[0]);
 
                 //标识
-                string onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0x00, 0x00 });
+                //string onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0x00, 0x00 });
 
-                if (onlyAlias == "")
-                {
-                    Guid gu = Guid.NewGuid();
-                    byte[] data = Encoding.UTF8.GetBytes(gu.ToString("N"));
-                    byte[] data1 = new byte[data.Length + 2];
-                    Array.Copy(data, 0, data1, 2, data.Length);
-                    //设置标识
-                    if (!reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, data1).Contains("false"))
-                    {
-                        reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, new byte[] { 0xff, 0xff });
-                    }
-                    onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0, 0 });
-                }
+                //if (onlyAlias == "")
+                //{
+                //    Guid gu = Guid.NewGuid();
+                //    byte[] data = Encoding.UTF8.GetBytes(gu.ToString("N"));
+                //    byte[] data1 = new byte[data.Length + 2];
+                //    Array.Copy(data, 0, data1, 2, data.Length);
+                //    //设置标识
+                //    if (!reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, data1).Contains("false"))
+                //    {
+                //        reInformation(WDevCmdObjects.DEV_SET_USERDAT, pHandle, new byte[] { 0xff, 0xff });
+                //    }
+                //    onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0, 0 });
+                //}
+                string onlyAlias = sn;
                 string alias = onlyAlias;
 
                 string DevInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, new byte[] { 1 });

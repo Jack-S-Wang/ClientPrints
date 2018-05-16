@@ -60,6 +60,7 @@
     <Compile Include="ClientPrints.Method.WDevDll\RegisterDevicNotifactionClassDll.cs" />
     <Compile Include="ClientPrints.Method.WDevDll\structClassDll.cs" />
     <Compile Include="ClientPrints.Method.WDevDll\WDevDllMethod.cs" />
+    <Compile Include="ClientPrints.Method.Wifi\TcpClientSend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

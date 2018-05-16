@@ -70,6 +70,8 @@
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.其他设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.服务ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -86,8 +88,9 @@
             this.快速查询ToolStripMenuItem,
             this.设置查询时间ToolStripMenuItem,
             this.其他控制ToolStripMenuItem,
-            this.退出ToolStripMenuItem,
-            this.帮助ToolStripMenuItem});
+            this.其他设置ToolStripMenuItem,
+            this.帮助ToolStripMenuItem,
+            this.退出ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(843, 25);
@@ -128,8 +131,8 @@
             // 设置查询时间ToolStripMenuItem
             // 
             this.设置查询时间ToolStripMenuItem.Name = "设置查询时间ToolStripMenuItem";
-            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
-            this.设置查询时间ToolStripMenuItem.Text = "设置";
+            this.设置查询时间ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
+            this.设置查询时间ToolStripMenuItem.Text = "定时设置";
             this.设置查询时间ToolStripMenuItem.Click += new System.EventHandler(this.设置查询时间ToolStripMenuItem_Click);
             // 
             // 其他控制ToolStripMenuItem
@@ -446,6 +449,21 @@
             // 
             this.timer1.Interval = 1000;
             // 
+            // 其他设置ToolStripMenuItem
+            // 
+            this.其他设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.服务ToolStripMenuItem});
+            this.其他设置ToolStripMenuItem.Name = "其他设置ToolStripMenuItem";
+            this.其他设置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
+            this.其他设置ToolStripMenuItem.Text = "其他设置";
+            // 
+            // 服务ToolStripMenuItem
+            // 
+            this.服务ToolStripMenuItem.Name = "服务ToolStripMenuItem";
+            this.服务ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.服务ToolStripMenuItem.Text = "连接服务设置";
+            this.服务ToolStripMenuItem.Click += new System.EventHandler(this.服务ToolStripMenuItem_Click);
+            // 
             // ClientMianWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -521,6 +539,8 @@
         private System.Windows.Forms.ToolStripMenuItem 不同版本ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 设备密码登录界面ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStBtn_otherControl;
+        private System.Windows.Forms.ToolStripMenuItem 其他设置ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 服务ToolStripMenuItem;
     }
 }
 

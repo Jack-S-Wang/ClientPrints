@@ -2044,7 +2044,18 @@ namespace ClinetPrints
             }
         }
 
+        private void 服务ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                new addCommend(SharMethod.user, 服务ToolStripMenuItem.Name, 服务ToolStripMenuItem.Text);
 
-       
+            }
+            catch(Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
+        }
     }
 }
