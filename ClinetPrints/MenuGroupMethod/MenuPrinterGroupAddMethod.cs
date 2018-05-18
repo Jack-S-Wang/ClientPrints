@@ -7,6 +7,7 @@ using System.Threading;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using System.Drawing;
+using System.IO;
 
 namespace ClinetPrints.MenuGroupMethod
 {
@@ -89,6 +90,7 @@ namespace ClinetPrints.MenuGroupMethod
 
                         if (node.StateCode.ToString().Equals("0"))
                         {
+                            string onlyAlias = node.Name;
                             DialogResult dr = clientForm.showException("确认删除该设备，下次该设备启用时将需要重新分配位置", "提示警告", MessageBoxButtons.OKCancel);
                             if (dr == DialogResult.OK)
                             {
@@ -102,10 +104,16 @@ namespace ClinetPrints.MenuGroupMethod
                                         var fileflock = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                         SharMethod.SavePrinter(nodeParFlock, fileflock);
                                     }
+                                    string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + onlyAlias + ".xml";
+                                    if (File.Exists(path))
+                                    {
+                                        File.Delete(path);
+                                    }
                                 }
                                 (tnode.Parent as GroupTreeNode).Remove(node);
                                 var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                                 SharMethod.SavePrinter(nodeParSingle, file);
+
                             }
                         }
                         else

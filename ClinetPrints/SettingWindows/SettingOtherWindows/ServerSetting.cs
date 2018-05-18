@@ -58,6 +58,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     }
                     xml.Serialize(file, tcps);
                     MessageBox.Show("保存成功！");
+                    SharMethod.serverIp = txb_Ip.Text;
+                    SharMethod.serverPort = txb_port.Text;
                     this.Close();
                 }
             }

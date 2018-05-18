@@ -17,10 +17,24 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         public static readonly int FLOCK = 2;
 
         /// <summary>
-        /// 记录枚举到的地址信息和打印机对象，针对于USB插口的
+        /// 服务Ip
         /// </summary>
-        public static SortedDictionary<string, PrinterObjects> dicPrinterUSB = new SortedDictionary<string, PrinterObjects>();
+        public static string serverIp = "";
+        /// <summary>
+        /// 服务port
+        /// </summary>
+        public static string serverPort = "";
 
+        public static readonly string PRINTINSTRUCTION = "print_instruction";
+        public static readonly string UPDATEINSTRUCTION = "update_instruction";
+        public static readonly string CONTROLINSTRUCTION = "control_instruction";
+        public static readonly string FINDDEVICEMESSAGE = "find_device_message";
+
+        /// <summary>
+        /// 记录枚举到的地址信息和打印机对象
+        /// </summary>
+        public static SortedDictionary<string, PrinterObjects> dicPrinterObject = new SortedDictionary<string, PrinterObjects>();
+        
 
         /// <summary>
         /// 记录下不同方式获取到的全部打印机（在线）
@@ -55,7 +69,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
 
         private static void getWifePrinter()
         {
-
+            
         }
 
         /// <summary>
@@ -93,7 +107,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         /// </summary>
         private static void getAllPrinterList()
         {
-            foreach (var key in dicPrinterUSB)
+            foreach (var key in dicPrinterObject)
             {
                 liAllPrinter.Add(key.Value);
             }

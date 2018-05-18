@@ -29,6 +29,7 @@ using IWshRuntimeLibrary;
 using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using System.ComponentModel;
 using System.Net.Mail;
+using static ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.ServerSettingObject;
 
 namespace ClinetPrints
 {
@@ -134,6 +135,8 @@ namespace ClinetPrints
                 AddImage();
                 //主程序任务栏中右键显示的控制
                 AddMunConten();
+                //得到连接服务信息内容
+                getServerCode();
                 //添加分组的排布
                 AddGroupMap();
                 //添加群打印机分组排布
@@ -156,6 +159,23 @@ namespace ClinetPrints
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        /// <summary>
+        ///获取连接服务信息的内容
+        /// </summary>
+        public void getServerCode()
+        {
+            using (FileStream file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\SeverSetting.xml", FileMode.OpenOrCreate))
+            {
+                XmlSerializer xml = new XmlSerializer(new TcpSObject().GetType());
+                if (file.Length > 0)
+                {
+                    var result = xml.Deserialize(file) as TcpSObject;
+                    SharMethod.serverIp = result.TcpIp;
+                    SharMethod.serverPort = result.TcpPort;
+                }
             }
         }
 
@@ -328,7 +348,7 @@ namespace ClinetPrints
                             SetTiming = false;
                             Thread.Sleep(1000);
                             new PrintersGeneralFunction(path, new byte[0]);
-                            if (!SharMethod.dicPrinterUSB.ContainsKey(path))
+                            if (!SharMethod.dicPrinterObject.ContainsKey(path))
                             {
                                 checkPrinter();
                                 if (SharMethod.banError.Count == 0 && SharMethod.passwordError.Count == 0)
@@ -337,18 +357,18 @@ namespace ClinetPrints
                                 }
                                 return;
                             }
-                            SharMethod.liAllPrinter.Add(SharMethod.dicPrinterUSB[path]);
+                            SharMethod.liAllPrinter.Add(SharMethod.dicPrinterObject[path]);
                             string dev;
                             new addCommend(SharMethod.user, "usbs上线", "");
-                            if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明该设备正处于离线状态
+                            if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true).Length > 0)//说明该设备正处于离线状态
                             {
-                                var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
-                                n.PrinterObject = SharMethod.dicPrinterUSB[path];
+                                var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true)[0] as PrinterTreeNode;
+                                n.PrinterObject = SharMethod.dicPrinterObject[path];
                                 dev = n.Text;
-                                if (printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)//说明在群里也有该打印机
+                                if (printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true).Length > 0)//说明在群里也有该打印机
                                 {
-                                    var nf = printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0] as PrinterTreeNode;
-                                    nf.PrinterObject = SharMethod.dicPrinterUSB[path];
+                                    var nf = printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true)[0] as PrinterTreeNode;
+                                    nf.PrinterObject = SharMethod.dicPrinterObject[path];
                                     var filef = SharMethod.FileCreateMethod(SharMethod.FLOCK);
                                     SharMethod.SavePrinter(printerViewFlock.Nodes[0], filef);
                                     //是否是群打印设置里的其中一台设备
@@ -377,7 +397,7 @@ namespace ClinetPrints
                             }
                             else
                             {
-                                var nNode = new PrinterTreeNode(SharMethod.dicPrinterUSB[path]);
+                                var nNode = new PrinterTreeNode(SharMethod.dicPrinterObject[path]);
                                 dev = nNode.Text;
                                 (printerViewSingle.Nodes[0].Nodes["所有打印机"] as GroupTreeNode).Add(nNode);
                                 new MenuPrinterGroupAddMethod(nNode, this);
@@ -402,11 +422,11 @@ namespace ClinetPrints
                             DEV_BROADCAST_DEVICEINTERFACE dbd = new DEV_BROADCAST_DEVICEINTERFACE();
                             dbd.fromIntPtr(m.LParam);
                             string path = dbd.devicePath.ToLower();
-                            if (SharMethod.dicPrinterUSB.ContainsKey(path))
+                            if (SharMethod.dicPrinterObject.ContainsKey(path))
                             {
                                 new addCommend(SharMethod.user, "usb下线", "");
                                 SetTiming = false;
-                                var node = this.printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
+                                var node = this.printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true)[0];
                                 if (node is PrinterTreeNode)
                                 {
                                     var n = node as PrinterTreeNode;
@@ -483,9 +503,9 @@ namespace ClinetPrints
                                     }
                                     SharMethod.liAllPrinter.Remove(n.PrinterObject);
                                     n.SetOffline();
-                                    if (this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true).Length > 0)
+                                    if (this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true).Length > 0)
                                     {
-                                        node = this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterUSB[path].onlyAlias, true)[0];
+                                        node = this.printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[path].onlyAlias, true)[0];
                                         if (node is PrinterTreeNode)
                                         {
                                             var nf = node as PrinterTreeNode;
@@ -498,7 +518,7 @@ namespace ClinetPrints
                                     var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
                                     SharMethod.SavePrinter(this.printerViewSingle.Nodes[0], file);
                                     string dev = n.Text;
-                                    SharMethod.dicPrinterUSB.Remove(path);
+                                    SharMethod.dicPrinterObject.Remove(path);
                                     Thread.Sleep(100);
                                     ThreadPool.QueueUserWorkItem((o) =>
                                     {
@@ -741,7 +761,7 @@ namespace ClinetPrints
                 new addCommend(SharMethod.user, menuItem3.Name, menuItem3.Text);
                 byte[] data = new byte[0];
                 structClassDll.DEVACK_INFO outDats;
-                foreach (var ky in SharMethod.dicPrinterUSB)
+                foreach (var ky in SharMethod.dicPrinterObject)
                 {
                     outDats = new structClassDll.DEVACK_INFO()
                     {
@@ -1956,7 +1976,7 @@ namespace ClinetPrints
         {
             byte[] data = new byte[0];
             structClassDll.DEVACK_INFO outDats;
-            foreach (var ky in SharMethod.dicPrinterUSB)
+            foreach (var ky in SharMethod.dicPrinterObject)
             {
                 outDats = new structClassDll.DEVACK_INFO()
                 {
@@ -2049,6 +2069,10 @@ namespace ClinetPrints
             try
             {
                 new addCommend(SharMethod.user, 服务ToolStripMenuItem.Name, 服务ToolStripMenuItem.Text);
+                ServerSetting set = new ServerSetting();
+                set.Owner = this;
+                set.StartPosition = FormStartPosition.CenterParent;
+                set.ShowDialog();
 
             }
             catch(Exception ex)
@@ -2056,6 +2080,82 @@ namespace ClinetPrints
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
             }
+        }
+
+        private void wifi设备连接ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                wifiDevMethod wifi = new wifiDevMethod();
+                bool isConnect=wifi.getwifiDev();
+                if (!isConnect)
+                {
+                    MessageBox.Show("服务器连接失败，无法获取对应的设备！");
+                    return;
+                }
+                string dev="";
+                new addCommend(SharMethod.user, "wifi设备登录", "");
+                foreach (string number in wifi.DevList)
+                {
+                    if (printerViewSingle.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[number].onlyAlias, true).Length > 0)//说明该设备已记录过
+                    {
+                        var n = printerViewSingle.Nodes.Find(SharMethod.dicPrinterObject[number].onlyAlias, true)[0] as PrinterTreeNode;
+                        n.PrinterObject = SharMethod.dicPrinterObject[number];
+                        dev = n.Text;
+                        if (printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[number].onlyAlias, true).Length > 0)//说明在群里也有该打印机
+                        {
+                            var nf = printerViewFlock.Nodes[0].Nodes.Find(SharMethod.dicPrinterObject[number].onlyAlias, true)[0] as PrinterTreeNode;
+                            nf.PrinterObject = SharMethod.dicPrinterObject[number];
+                            var filef = SharMethod.FileCreateMethod(SharMethod.FLOCK);
+                            SharMethod.SavePrinter(printerViewFlock.Nodes[0], filef);
+                            //是否是群打印设置里的其中一台设备
+                            if (this.listView1.Columns.Count > colmunObject)//设置列表中有数据
+                            {
+                                var col = this.listView1.Columns[colmunObject] as listViewColumnTNode;
+                                if (col.ColGroupNode != null)//说明是群打印
+                                {
+                                    if (col.ColGroupNode.Nodes.ContainsKey(nf.Name))//是否是正在操作设置里的设备
+                                    {
+                                        col.liPrinter.Add(nf.PrinterObject);
+                                    }
+                                }
+                            }
+                            if (liVewF != null)//说明可能刚才将群的设置信息已经保存下来了
+                            {
+                                if (liVewF.ColGroupNode != null)//说明是群打印
+                                {
+                                    if (liVewF.ColGroupNode.Nodes.ContainsKey(nf.Name))//是否是正在操作设置里的设备
+                                    {
+                                        liVewF.liPrinter.Add(nf.PrinterObject);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var nNode = new PrinterTreeNode(SharMethod.dicPrinterObject[number]);
+                        dev = nNode.Text;
+                        (printerViewSingle.Nodes[0].Nodes["所有打印机"] as GroupTreeNode).Add(nNode);
+                        new MenuPrinterGroupAddMethod(nNode, this);
+                    }
+                    var file = SharMethod.FileCreateMethod(SharMethod.SINGLE);
+                    SharMethod.SavePrinter(printerViewSingle.Nodes[0], file);
+
+                }
+                Thread.Sleep(100);
+                ThreadPool.QueueUserWorkItem((o) =>
+                {
+                    PrinterInformation pInfo = new PrinterInformation();
+                    pInfo.lb_DevInfo.Text = "wifi设备:已登录！";
+                    pInfo.ShowDialog();
+                });
+            }catch(Exception ex)
+            {
+                string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
+                SharMethod.writeErrorLog(str);
+            }
+            
         }
     }
 }

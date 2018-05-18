@@ -98,6 +98,10 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 存储正在执行打印查询是否完成的工作线程
         /// </summary>
         public Thread threadObject { get; set; }
+        /// <summary>
+        /// 记录设备是否是wifi设备
+        /// </summary>
+        public bool isWifi { get; set; }
 
         public int CompareTo(object obj)
         {

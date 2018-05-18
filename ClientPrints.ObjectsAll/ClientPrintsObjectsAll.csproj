@@ -59,6 +59,7 @@
     <Compile Include="ClientPrints.Objects.SharObjectClass\printerError.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\printPiewControlXml.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\ServerSettingObject.cs" />
+    <Compile Include="ClientPrints.Objects.SharObjectClass\tcpJsonrcp.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\UserCommend.cs" />
     <Compile Include="ClientPrints.Objects.treeNodeObject\GroupTreeNode.cs" />
     <Compile Include="ClientPrints.Objects.treeNodeObject\PrinterTreeNode.cs" />

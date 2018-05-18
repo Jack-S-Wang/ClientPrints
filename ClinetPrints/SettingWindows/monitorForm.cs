@@ -32,7 +32,7 @@ namespace ClinetPrints.SettingWindows
         /// </summary>
         private int printStateType = -1;
         bool ative = true;
-        System.Timers.Timer demandTime = new System.Timers.Timer(5000);
+        System.Timers.Timer demandTime = new System.Timers.Timer(8000);
         private void monitorForm_Load(object sender, EventArgs e)
         {
             try
