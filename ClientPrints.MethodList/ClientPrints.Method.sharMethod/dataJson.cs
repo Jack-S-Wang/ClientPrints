@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
@@ -13,6 +14,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
     {
         public void getDataJsonInfo(byte[] data, uint devEntpy)
         {
+            IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
+            Marshal.Copy(data, 0, pt, data.Length);
             var dic=lodeFile();
             foreach(var dk in dic)
             {
@@ -26,10 +29,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                         {
                             if (jtokn.Key != "Info")
                             {
-                                foreach (var ck in jtokn.Value)
-                                {
-                                    string p = ck.Path;
-                                }
+                                showNodeVal(devEntpy, pt, jtokn.Key);
                             }
                         }
                     }else if((int)jo.First.First["DevID"] == data[1] && (int)jo.First.First["ByteUnit"] == data[2]
@@ -87,6 +87,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             return dic;
         }
 
+        /// <summary>
+        /// 通过后辍名获取完整路径
+        /// </summary>
+        /// <param name="dinfo"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
         private List<string> getFilePath(DirectoryInfo dinfo, string pattern)
         {
             List<string> li = new List<string>();
@@ -98,6 +104,30 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                 }
             }
             return li;
+        }
+
+
+        private string showNodeVal(uint entpy,IntPtr pt,string mk)
+        {
+            IntPtr npt = Marshal.AllocCoTaskMem(256);
+            structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL()
+            {
+                datLen=256,
+                lpDats=npt
+            };
+            structClassDll.JSVAL_INFO valInfo = new structClassDll.JSVAL_INFO()
+            {
+                jsEntry=entpy,
+                keyPath=mk,
+                tag=WDevCmdObjects.JSVAL_TAG_DATVAL
+            };
+            if(WDevJsonDll.dllFunc_getDevJsonVal(ref valInfo, pt, (uint)Marshal.SizeOf(pt), ref mVal))
+            {
+                return mVal.val.ToString();
+            }else
+            {
+                return "";
+            }
         }
     }
 }
