@@ -40,7 +40,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         public class printerStatus
         {
             public string main { get; set; }//主状态
-            public List<string> sub { get; set; }//子状态
+            public List<string> subs { get; set; }//子状态
             public DateTime newest { get; set; }//操作时间
         }
 

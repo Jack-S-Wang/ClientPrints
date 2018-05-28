@@ -39,6 +39,7 @@
             this.其他控制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.不同版本ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设备密码登录界面ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wifi设备连接ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.其他设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.服务ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,7 +73,7 @@
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.wifi设备连接ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.获取配置信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -160,10 +161,18 @@
             this.设备密码登录界面ToolStripMenuItem.Text = "设备密码登录界面";
             this.设备密码登录界面ToolStripMenuItem.Click += new System.EventHandler(this.设备密码登录界面ToolStripMenuItem_Click);
             // 
+            // wifi设备连接ToolStripMenuItem
+            // 
+            this.wifi设备连接ToolStripMenuItem.Name = "wifi设备连接ToolStripMenuItem";
+            this.wifi设备连接ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.wifi设备连接ToolStripMenuItem.Text = "wifi设备连接";
+            this.wifi设备连接ToolStripMenuItem.Click += new System.EventHandler(this.wifi设备连接ToolStripMenuItem_Click);
+            // 
             // 其他设置ToolStripMenuItem
             // 
             this.其他设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.服务ToolStripMenuItem});
+            this.服务ToolStripMenuItem,
+            this.获取配置信息ToolStripMenuItem});
             this.其他设置ToolStripMenuItem.Name = "其他设置ToolStripMenuItem";
             this.其他设置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.其他设置ToolStripMenuItem.Text = "其他设置";
@@ -402,6 +411,7 @@
             // toolStTxb_printer
             // 
             this.toolStTxb_printer.Name = "toolStTxb_printer";
+            this.toolStTxb_printer.ReadOnly = true;
             this.toolStTxb_printer.Size = new System.Drawing.Size(100, 25);
             this.toolStTxb_printer.ToolTipText = "选择的打印机名称";
             // 
@@ -466,12 +476,12 @@
             // 
             this.timer1.Interval = 1000;
             // 
-            // wifi设备连接ToolStripMenuItem
+            // 获取配置信息ToolStripMenuItem
             // 
-            this.wifi设备连接ToolStripMenuItem.Name = "wifi设备连接ToolStripMenuItem";
-            this.wifi设备连接ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.wifi设备连接ToolStripMenuItem.Text = "wifi设备连接";
-            this.wifi设备连接ToolStripMenuItem.Click += new System.EventHandler(this.wifi设备连接ToolStripMenuItem_Click);
+            this.获取配置信息ToolStripMenuItem.Name = "获取配置信息ToolStripMenuItem";
+            this.获取配置信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.获取配置信息ToolStripMenuItem.Text = "获取配置信息";
+            this.获取配置信息ToolStripMenuItem.Click += new System.EventHandler(this.获取配置信息ToolStripMenuItem_Click);
             // 
             // ClientMianWindows
             // 
@@ -551,6 +561,7 @@
         private System.Windows.Forms.ToolStripMenuItem 其他设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 服务ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wifi设备连接ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 获取配置信息ToolStripMenuItem;
     }
 }
 

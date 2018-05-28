@@ -21,7 +21,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
         ///pathStr : 路径字符，已多字符串的形式存放，字符串之间以0分割，以00结束
         ///sizes: 路径字符的总长度，字符单位，含结束00</remarks>
         /// <returns>0表示失败，非0表示枚举到的路径数</returns>
-        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode,CallingConvention=CallingConvention.Cdecl)]
+        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode,CallingConvention=CallingConvention.StdCall)]
         public static extern uint dllFunc_EnumDevPath(ushort portType, [Out] char[] pathStr, ref uint size, int VId, int PId);
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
         /// <returns>成功则返回端口句柄,否则返回INVLAID_PORT_HANDLE</returns>
         /// <remarks>最多可以同时打开10个设备端口，一个有效的句柄代表一个设备端口。
         /// 可以设置PORTINFO中portMode为控制端口PORTINFO_PMODE_CTRL、数据端口PORTINFO_PMODE_DATA或两者同时有效的方式打开设备。</remarks>
-        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         public static extern IntPtr dllFunc_OpenDev(ref structClassDll.LPPORTINFO lpInfo);
 
         /// <summary>

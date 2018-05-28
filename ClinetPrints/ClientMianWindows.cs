@@ -30,6 +30,7 @@ using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using System.ComponentModel;
 using System.Net.Mail;
 using static ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.ServerSettingObject;
+using System.Text;
 
 namespace ClinetPrints
 {
@@ -1598,6 +1599,7 @@ namespace ClinetPrints
             {
                 Thread threadmontior = new Thread((ob) =>
                 {
+                    DateTime dte = DateTime.Now;
                     var obj = ob as object[];
                     PrinterObjects po = obj[0] as PrinterObjects;
                     var me = po.MethodsObject as IMethodObjects;
@@ -1609,22 +1611,66 @@ namespace ClinetPrints
                         {
                             break;
                         }
-                        //输出作业
-                        var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
-                        if (printOutPut.Contains("false"))
+                        if (dte.AddMinutes(1) <= DateTime.Now)
                         {
-                            MessageBox.Show("打印机已离线或无法获取！");
+                            var edata = Encoding.GetEncoding("GBK").GetBytes("打印机一直处在无响应状态，打印失败！");
+                            int acode = 0;
+                            for (int i = 0; i < edata.Length; i++)
+                            {
+                                acode += edata[i];
+                            }
+                            byte[] data = new byte[4 + edata.Length];
+                            data[0] = 0x10;
+                            data[1] = 0x70;
+                            data[2] = (byte)edata.Length;
+                            data[3] = (byte)acode;
+                            Array.Copy(edata, 0, data, 4, edata.Length);
+                            byte[] redata = me.setWifiControl(printer.onlyAlias, data, 0);
+                            MessageBox.Show("打印机一直没有进行打印！");
                             break;
                         }
-                        var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-
-                        if (printOut.workIndex == po.pParams.outJobNum)
+                        //输出作业
+                        if (!printer.isWifi)
                         {
-                            string str = "设备:" + po.alias + ",所有打印已完成！";
-                            PrinterInformation pi = new PrinterInformation();
-                            pi.lb_DevInfo.Text = str;
-                            pi.ShowDialog();
-                            break;
+                            var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, new byte[] { 0x33 });
+                            if (printOutPut.Contains("false"))
+                            {
+                                MessageBox.Show("打印机已离线或无法获取！");
+                                break;
+                            }
+                            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+
+                            if (printOut.workIndex == po.pParams.outJobNum)
+                            {
+                                string str = "设备:" + po.alias + ",所有打印已完成！";
+                                PrinterInformation pi = new PrinterInformation();
+                                pi.lb_DevInfo.Text = str;
+                                pi.ShowDialog();
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            byte[] data = new byte[] { 0x10, 0x09, 0x01, 0x33, 0x33 };
+                            byte[] redata = me.setWifiControl(printer.onlyAlias, data, 1);
+                            byte[] ndata = new byte[redata[2]];
+                            Array.Copy(redata, 4, ndata, 0, redata[2]);
+                            string printOutPut = me.getDifferentString(WDevCmdObjects.DEV_GET_DEVSTAT, redata[2], ndata);
+                            if (printOutPut.Contains("false"))
+                            {
+                                MessageBox.Show("打印机已离线或无法获取！");
+                                break;
+                            }
+                            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+
+                            if (printOut.workIndex == po.pParams.outJobNum)
+                            {
+                                string str = "设备:" + po.alias + ",所有打印已完成！";
+                                PrinterInformation pi = new PrinterInformation();
+                                pi.lb_DevInfo.Text = str;
+                                pi.ShowDialog();
+                                break;
+                            }
                         }
                     }
                     printer.threadObject = null;
@@ -2007,7 +2053,8 @@ namespace ClinetPrints
                 });
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
@@ -2029,7 +2076,7 @@ namespace ClinetPrints
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
@@ -2046,18 +2093,20 @@ namespace ClinetPrints
                     var col = listView1.Columns[colmunObject] as listViewColumnTNode;
                     IntPtr handle = col.liPrinter[0].pHandle;
                     string path = col.liPrinter[0].addressMessage;
-                    Thread thread=new Thread(() =>
-                    {
-                        otherControlSet oc = new otherControlSet();
-                        oc.pHandle = handle;
-                        oc.pathAddress = path;
-                        oc.StartPosition = FormStartPosition.CenterScreen;
-                        oc.ShowDialog();
-                    });
+                    Thread thread = new Thread(() =>
+                      {
+                          otherControlSet oc = new otherControlSet();
+                          oc.pHandle = handle;
+                          oc.pathAddress = path;
+                          oc.po = col.liPrinter[0];
+                          oc.StartPosition = FormStartPosition.CenterScreen;
+                          oc.ShowDialog();
+                      });
                     thread.SetApartmentState(ApartmentState.STA);
                     thread.Start();
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
@@ -2075,7 +2124,7 @@ namespace ClinetPrints
                 set.ShowDialog();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
@@ -2087,13 +2136,13 @@ namespace ClinetPrints
             try
             {
                 wifiDevMethod wifi = new wifiDevMethod();
-                bool isConnect=wifi.getwifiDev();
+                bool isConnect = wifi.getwifiDev();
                 if (!isConnect)
                 {
-                    MessageBox.Show("服务器连接失败，无法获取对应的设备！");
+                    MessageBox.Show("服务器连接失败，无法获取对应的设备！或解析过程中出现异常！");
                     return;
                 }
-                string dev="";
+                string dev = "";
                 new addCommend(SharMethod.user, "wifi设备登录", "");
                 foreach (string number in wifi.DevList)
                 {
@@ -2150,12 +2199,59 @@ namespace ClinetPrints
                     pInfo.lb_DevInfo.Text = "wifi设备:已登录！";
                     pInfo.ShowDialog();
                 });
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);
             }
-            
+
         }
+
+        private void 获取配置信息ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                byte[] data = new byte[]{ 0x02,0x01,0x01,0xd8,0x01,0x36,0xff,0xff,0x44,0x52,0x31,0x30,0x45,0x44,0x53,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0xb8,0x21,0xde,0x01,0x01,0x00,0x03,
+    0x02,0x01,0x00,0x00,0x00,0x00,0x03,0x01,0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x02,0x01,0x01,0x03,0x00,0x00,
+    0x00,0x04,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x01,0x00,0x0a,0x01,0x00,0x53,0x65,0x65,0x64,0x57,0x49,0x46,0x49,0x50,0x72,0x69,
+    0x6e,0x74,0x65,0x72,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x0a,0x0a,0x0a,0x0a,0x0a,0x0a,0xc0,0xa8,0x00,0x01,0xff,0xff,0xff,
+    0x00,0xc0,0xa8,0x00,0xfe,0xc0,0xa8,0x00,0x64,0xc0,0xa8,0x00,0x0a,0x64,0x61,0x73,
+    0x63,0x6f,0x6d,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,
+    0x53,0x65,0x65,0x64,0x20,0x42,0x54,0x50,0x52,0x49,0x4e,0x54,0x45,0x52,0x00,0x00,
+    0x00,0x30,0x30,0x30,0x30,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x00,0x00,
+    0xc0,0xa8,0x00,0x01,0x17,0x00,0xc0,0xa8,0x00,0x07,0x8c,0x23,0xc0,0xa8,0x00,0x01,
+    0x03,0x00,0xc2,0x01,0x00,0x00,0x00,0xff,0xff,0xff,0x00,0x50,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x03,0x00,0x00,0x00,0x04,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,
+    0x00,0x02,0x00,0x0a,0x0a,0x0a,0x0a,0x0a,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+    0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+};
+                dataJson dj = new dataJson();
+                dj.getDataJsonInfo(data, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+     
     }
 }

@@ -27,6 +27,28 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
         /// <param name="num"></param>
         /// <returns></returns>
         List<string> writeDataToDev(string pathFile, PrinterObjects po, string jobnum, int num);
+
+        /// <summary>
+        /// 将指令转换为指令数据（当前该方法无效）
+        /// </summary>
+        /// <param name="po"></param>
         void getRa(PrinterObjects po);
+
+        /// <summary>
+        /// 发送控制指令数据到wifi上
+        /// </summary>
+        /// <param name="number">number值</param>
+        /// <param name="data">发送的指令数据</param>
+        /// <returns></returns>
+        byte[] setWifiControl(string number, byte[] data,int type);
+
+        /// <summary>
+        /// 根据不同的指令内容解析数据信息
+        /// </summary>
+        /// <param name="codeid">指令名称</param>
+        /// <param name="length">长度</param>
+        /// <param name="reData">数据</param>
+        /// <returns></returns>
+        string getDifferentString(string codeid, int length, byte[] reData);
     }
 }

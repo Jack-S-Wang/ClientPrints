@@ -543,5 +543,56 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
             public Byte PeelOption;
             public Byte resv;
         }
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct NODEITEM_VAL
+        {
+            /// <summary>
+            /// NODE_VAL_NONE...NODE_VAL_MULTISTR
+            /// </summary>
+            public byte type;
+            /// <summary>
+            /// 3个字节
+            /// </summary>
+            public byte[] resv;
+            public ushort tag;
+            public ushort datLen;
+            /// <summary>
+            /// 起始位置和长度需字节对齐,并以0结尾.
+            /// </summary>
+            public string lpStr;
+            /// <summary>
+            ///  起始位置和长度需字节对齐
+            /// </summary>
+            public IntPtr lpDats;
+            public int val;
+        }
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct UNION
+        {
+            /// <summary>
+            /// 起始位置和长度需字节对齐,并以0结尾.
+            /// </summary>
+            public string lpStr;
+            /// <summary>
+            ///  起始位置和长度需字节对齐
+            /// </summary>
+            public IntPtr lpDats;
+        }
+
+        [StructLayout(LayoutKind.Sequential,CharSet =CharSet.Unicode)]
+        public struct DEVJSON_INFO
+        {
+            public uint jsEntry;
+            public IntPtr info; //info节点的匹配信息
+            public ushort infoLen;
+            public ushort tag;
+        }
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct JSVAL_INFO
+        {
+            public uint jsEntry;  //
+            public string keyPath;
+            public uint tag;
+        };
     }
 }

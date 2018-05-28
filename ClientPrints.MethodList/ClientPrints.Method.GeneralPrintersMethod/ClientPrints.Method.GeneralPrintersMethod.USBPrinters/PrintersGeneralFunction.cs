@@ -14,7 +14,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Newtonsoft.Json.Linq;
-using ClientPrintsMethodList.ClientPrints.Method.Wifi;
 
 namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters
 {
@@ -63,7 +62,18 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             string alias = (string)printerWifi["alias"];
             bool alive = (bool)printerWifi["alive"];
             string main = (string)printerWifi["status"]["main"];
-            string sub = (string)printerWifi["status"]["sub"];
+            string sub = "";
+            try
+            {
+                JToken arr = printerWifi["status"]["subs"];
+                foreach(JToken jk in arr)
+                {
+                    sub = (string)jk;
+                }
+            }catch
+            {
+                sub = "";
+            }
             string sn = (string)printerWifi["info"]["sn"];
             string vendor = (string)printerWifi["info"]["vendor"];
             string model = (string)printerWifi["info"]["model"];
@@ -111,134 +121,166 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             }
             else
             {
-                try
+                if (sub != "noConnectDevice")
                 {
-                    byte[] redata = new byte[0];
-                    //设备数据信息
-                    byte[] data = new byte[] { 0x10, 0x0C, 0x01, 0x02, 0x02 };
-                    redata = setWifiControl(number, data);
-                    byte[] ndata = new byte[redata[2]];
-                    Array.Copy(redata, 4, ndata, 0, redata[2]);
-                    string dataInfo = getDifferentString(WDevCmdObjects.DEV_GET_DEVINFO, redata[2], ndata);
-                    int InCache = 0;
-                    int maxFrames = 0;
-                    byte compressType = 0;
-                    switch (model)
+                    try
                     {
-                        case "DC-1300":
-                            var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
-                            InCache = Datajson.InCache;
-                            maxFrames = Datajson.maxFrames;
-                            compressType = Datajson.compressType;
-                            break;
-                        case "DL-210":
-                            var Data210json = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataInfo>(dataInfo);
-                            InCache = Data210json.InCache;
-                            maxFrames = Data210json.maxFrames;
-                            compressType = Data210json.compressType;
-                            break;
+                        byte[] redata = new byte[0];
 
-                    }
-                    //设备页面信息
-                    data = new byte[] { 0x10, 0x0C, 0x01, 0x03, 0x03 };
-                    redata = setWifiControl(number, data);
-                    ndata = new byte[redata[2]];
-                    Array.Copy(redata, 4, ndata, 0, redata[2]);
-                    string pageInfo = getDifferentString(WDevCmdObjects.DEV_GET_DEVINFO, redata[2], ndata);
-                    int colorDepth = 0;
-                    int confin = 0;
-                    byte isSupport = 0;
-                    int maxHeight = 0;
-                    int maxWidth = 0;
-                    byte pixelformat = 0;
-                    int xDPL = 0;
-                    int yDPL = 0;
-                    switch (model)
-                    {
-                        case "DC-1300":
-                            var Pagejson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PageInfo>(pageInfo);
-                            colorDepth = Pagejson.colorDepth;
-                            confin = Pagejson.confin;
-                            isSupport = Pagejson.isSupport;
-                            maxHeight = Pagejson.maxHeight;
-                            maxWidth = Pagejson.maxWidth;
-                            pixelformat = Pagejson.pixelformat;
-                            xDPL = Pagejson.xDPL;
-                            yDPL = Pagejson.yDPL;
-                            break;
-                        case "DL-210":
-                            var Page210json = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PageInfo>(pageInfo);
-                            colorDepth = Page210json.colorDepth;
-                            confin = Page210json.confin;
-                            isSupport = Page210json.isSupport;
-                            maxHeight = Page210json.maxHeight;
-                            maxWidth = Page210json.maxWidth;
-                            pixelformat = Page210json.pixelformat;
-                            xDPL = Page210json.xDPL;
-                            yDPL = Page210json.yDPL;
-                            break;
-                    }
-                    getmaxWidth = maxWidth;
-                    getmaxHeight = maxHeight;
-                    //设备系统参数信息
-                    PrinterJson.PrinterParmInfo infoParm = new PrinterJson.PrinterParmInfo();
-                    bool isInfoParm = false;
-                    data = new byte[] { 0x10, 0x1B, 0x01, 0x81, 0x81 };
-                    redata = setWifiControl(number, data);
-                    ndata = new byte[redata[2]];
-                    Array.Copy(redata, 4, ndata, 0, redata[2]);
-                    string DevParmInfo = getDifferentString(WDevCmdObjects.DEV_GET_SYSPARAM, redata[2], ndata);
-                    if (!DevParmInfo.Contains("false"))
-                    {
-                        isInfoParm = true;
-                        infoParm = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
-                    }
-                    //输出作业
-                    data = new byte[] { 0x10, 0x09, 0x01, 0x33, 0x33 };
-                    redata = setWifiControl(number, data);
-                    ndata = new byte[redata[2]];
-                    Array.Copy(redata, 4, ndata, 0, redata[2]);
-                    string printOutPut = getDifferentString(WDevCmdObjects.DEV_GET_DEVSTAT, redata[2], ndata);
-                    int workIndex = 0;
-                    switch (model)
-                    {
-                        case "DC-1300":
-                            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-                            workIndex = printOut.workIndex;
-                            break;
-                        case "DL-210":
-                            var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
-                            workIndex = print210Out.workIndex;
-                            break;
-                    }
 
-                    printerParams = new PrinterParams()
-                    {
-                        DIP = xDPL,
-                        devInfo = "",
-                        InCache = InCache,
-                        maxFrames = maxFrames,
-                        compressType = compressType,
-                        colorDepth = colorDepth,
-                        confin = confin,
-                        isSupport = isSupport,
-                        maxHeight = maxHeight,
-                        maxWidth = maxWidth,
-                        pixelformat = pixelformat,
-                        xDPL = xDPL,
-                        yDPL = yDPL,
-                        DevParm = infoParm.parmData,
-                        outJobNum = workIndex,
-                        IsdevInfoParm = isInfoParm
-                    };
-                    if (workIndex == 65535)
-                    {
-                        printerParams.outJobNum = 0;
+                        //设备model
+                        byte[] data = new byte[] { 0x10, 0x01, 0x00, 0 };
+                        redata = setWifiControl(number, data,1);
+                        byte[] rdata = new byte[redata[2]];
+                        Array.Copy(redata, 4, rdata, 0, redata[2]);
+                        string modelInfo = getDifferentString(WDevCmdObjects.DEV_GET_MODEL, redata[2], rdata);
+
+                        printerModel = modelInfo;
+                        model = modelInfo;
+
+
+
+
+                        //设备数据信息
+                        data = new byte[] { 0x10, 0x0C, 0x01, 0x02, 0x02 };
+                        redata = setWifiControl(number, data,1);
+                        byte[] ndata = new byte[redata[2]];
+                        Array.Copy(redata, 4, ndata, 0, redata[2]);
+                        string dataInfo = getDifferentString(WDevCmdObjects.DEV_GET_DEVINFO, redata[2], ndata);
+                        int InCache = 0;
+                        int maxFrames = 0;
+                        byte compressType = 0;
+                        switch (model)
+                        {
+                            case "DC-1300":
+                                var Datajson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataInfo>(dataInfo);
+                                InCache = Datajson.InCache;
+                                maxFrames = Datajson.maxFrames;
+                                compressType = Datajson.compressType;
+                                break;
+                            case "DL-210":
+                                var Data210json = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataInfo>(dataInfo);
+                                InCache = Data210json.InCache;
+                                maxFrames = Data210json.maxFrames;
+                                compressType = Data210json.compressType;
+                                break;
+
+                        }
+                        //设备页面信息
+                        data = new byte[] { 0x10, 0x0C, 0x01, 0x03, 0x03 };
+                        redata = setWifiControl(number, data,1);
+                        ndata = new byte[redata[2]];
+                        Array.Copy(redata, 4, ndata, 0, redata[2]);
+                        string pageInfo = getDifferentString(WDevCmdObjects.DEV_GET_DEVINFO, redata[2], ndata);
+                        int colorDepth = 0;
+                        int confin = 0;
+                        byte isSupport = 0;
+                        int maxHeight = 0;
+                        int maxWidth = 0;
+                        byte pixelformat = 0;
+                        int xDPL = 0;
+                        int yDPL = 0;
+                        switch (model)
+                        {
+                            case "DC-1300":
+                                var Pagejson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PageInfo>(pageInfo);
+                                colorDepth = Pagejson.colorDepth;
+                                confin = Pagejson.confin;
+                                isSupport = Pagejson.isSupport;
+                                maxHeight = Pagejson.maxHeight;
+                                maxWidth = Pagejson.maxWidth;
+                                pixelformat = Pagejson.pixelformat;
+                                xDPL = Pagejson.xDPL;
+                                yDPL = Pagejson.yDPL;
+                                break;
+                            case "DL-210":
+                                var Page210json = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PageInfo>(pageInfo);
+                                colorDepth = Page210json.colorDepth;
+                                confin = Page210json.confin;
+                                isSupport = Page210json.isSupport;
+                                maxHeight = Page210json.maxHeight;
+                                maxWidth = Page210json.maxWidth;
+                                pixelformat = Page210json.pixelformat;
+                                xDPL = Page210json.xDPL;
+                                yDPL = Page210json.yDPL;
+                                break;
+                        }
+                        getmaxWidth = maxWidth;
+                        getmaxHeight = maxHeight;
+                        //设备系统参数信息
+                        PrinterJson.PrinterParmInfo infoParm = new PrinterJson.PrinterParmInfo();
+                        bool isInfoParm = false;
+                        data = new byte[] { 0x10, 0x1B, 0x01, 0x81, 0x81 };
+                        redata = setWifiControl(number, data,1);
+                        ndata = new byte[redata[2]];
+                        Array.Copy(redata, 4, ndata, 0, redata[2]);
+                        string DevParmInfo = getDifferentString(WDevCmdObjects.DEV_GET_SYSPARAM, redata[2], ndata);
+                        if (!DevParmInfo.Contains("false"))
+                        {
+                            isInfoParm = true;
+                            infoParm = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
+                        }
+                        //输出作业
+                        data = new byte[] { 0x10, 0x09, 0x01, 0x33, 0x33 };
+                        redata = setWifiControl(number, data,1);
+                        ndata = new byte[redata[2]];
+                        Array.Copy(redata, 4, ndata, 0, redata[2]);
+                        string printOutPut = getDifferentString(WDevCmdObjects.DEV_GET_DEVSTAT, redata[2], ndata);
+                        int workIndex = 0;
+                        switch (model)
+                        {
+                            case "DC-1300":
+                                var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+                                workIndex = printOut.workIndex;
+                                break;
+                            case "DL-210":
+                                var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
+                                workIndex = print210Out.workIndex;
+                                break;
+                        }
+
+                        printerParams = new PrinterParams()
+                        {
+                            DIP = xDPL,
+                            devInfo = "",
+                            InCache = InCache,
+                            maxFrames = maxFrames,
+                            compressType = compressType,
+                            colorDepth = colorDepth,
+                            confin = confin,
+                            isSupport = isSupport,
+                            maxHeight = maxHeight,
+                            maxWidth = maxWidth,
+                            pixelformat = pixelformat,
+                            xDPL = xDPL,
+                            yDPL = yDPL,
+                            DevParm = infoParm.parmData,
+                            outJobNum = workIndex,
+                            IsdevInfoParm = isInfoParm
+                        };
+                        if (workIndex == 65535)
+                        {
+                            printerParams.outJobNum = 0;
+                        }
+                        var edata = Encoding.GetEncoding("GBK").GetBytes("登录设备"+number+"成功!");
+                        int acode = 0;
+                        for (int i = 0; i < edata.Length; i++)
+                        {
+                            acode += edata[i];
+                        }
+                        byte[] dataYu = new byte[4 + edata.Length];
+                        dataYu[0] = 0x10;
+                        dataYu[1] = 0x70;
+                        dataYu[2] = (byte)edata.Length;
+                        dataYu[3] = (byte)acode;
+                        Array.Copy(edata, 0, dataYu, 4, edata.Length);
+                        setWifiControl(number, dataYu, 0);
                     }
-                }catch(Exception ex)
-                {
-                    string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0},wifi数据返回无法正确解析，追踪位置信息：{1}", ex, ex.StackTrace);
-                    SharMethod.writeErrorLog(str);
+                    catch (Exception ex)
+                    {
+                        string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0},wifi数据返回无法正确解析，追踪位置信息：{1}", ex, ex.StackTrace);
+                        SharMethod.writeErrorLog(str);
+                    }
                 }
             }
             var printers = new PrinterObjects()
@@ -269,20 +311,20 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="number"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        private static byte[] setWifiControl(string number, byte[] data)
+        public byte[] setWifiControl(string number, byte[] data,int type)
         {
-            TcpClientSend SendInfo = new TcpClientSend(SharMethod.serverIp, SharMethod.serverPort);
-            var getInfo = SendInfo.getWifiData("", number, SharMethod.CONTROLINSTRUCTION, data, 0, 0);
-            if (((string)getInfo["result"]).Equals("ok"))
-            {
-                string dataStr = (string)getInfo["data"];
-                byte[] redata = Convert.FromBase64String(dataStr);
-                return redata;
-            }
-            else
-            {
+            //TcpClientSend SendInfo = new TcpClientSend(SharMethod.serverIp, SharMethod.serverPort);
+            //var getInfo = SendInfo.getWifiData("", number, SharMethod.CONTROLINSTRUCTION, data, 0, 0,type);
+            //if (((string)getInfo["result"]).Equals("ok"))
+            //{
+                //string dataStr = (string)getInfo["data"];
+                //byte[] redata = Convert.FromBase64String(dataStr);
+                //return redata;
+            //}
+            //else
+            //{
                 return new byte[0];
-            }
+            //}
         }
 
         /// <summary>
@@ -597,7 +639,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="length">返回的事迹长度</param>
         /// <param name="reData">返回的实际数组</param>
         /// <returns></returns>
-        private string getDifferentString(string codeid, int length, byte[] reData)
+        public string getDifferentString(string codeid, int length, byte[] reData)
         {
             string strCode = "";
             IUSBPrinterOnlyMethod onlyMethod;
@@ -932,10 +974,11 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                                         success = WDevDllMethod.dllFunc_WriteEx(po.pHandle, memblock, (uint)memblockSize, (uint)3, ref lope);
                                         break;
                                     }
-                                }else
+                                }
+                                else
                                 {
                                     byte[] data = new byte[] { 0x10, 0x09, 0x01, 0x30, 0x30 };
-                                    byte[] redata = setWifiControl(po.onlyAlias, data);
+                                    byte[] redata = setWifiControl(po.onlyAlias, data,1);
                                     byte[] ndata = new byte[redata[2]];
                                     Array.Copy(redata, 4, ndata, 0, redata[2]);
                                     string jsonState = getDifferentString(WDevCmdObjects.DEV_GET_DEVSTAT, redata[2], ndata);
@@ -945,6 +988,20 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                                         byte[] printData = new byte[memblockSize];
                                         Marshal.Copy(memblock, printData, 0, memblockSize);
                                         success = setWifiPrintData(po.onlyAlias, printData, 1, 1);
+                                        //using (System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "printData.bin", System.IO.FileMode.OpenOrCreate))
+                                        //{
+                                        //    var tmp1 = new byte[memblockSize];
+                                        //    Marshal.Copy(memblock, tmp1, 0, memblockSize);
+                                        //    file.Write(tmp1, 0, memblockSize);
+                                        //}
+                                        //using (System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "printData.txt", System.IO.FileMode.OpenOrCreate))
+                                        //{
+                                        //    var tmp1 = new byte[memblockSize];
+                                        //    Marshal.Copy(memblock, tmp1, 0, memblockSize);
+                                        //    string str = Convert.ToBase64String(tmp1);
+                                        //    byte[] datastr = Encoding.UTF8.GetBytes(str);
+                                        //    file.Write(datastr, 0, datastr.Length);
+                                        //}
                                         break;
                                     }
                                 }
@@ -993,6 +1050,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             }
 
         }
+
+
         public void getRa(PrinterObjects po)
         {
             var info = new structClassDll.DEVREQ_INFO2()
@@ -1020,20 +1079,22 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="page">打印当前页</param>
         /// <param name="total">打印总页数</param>
         /// <returns></returns>
-        public bool setWifiPrintData(string number,byte[] data,int page,int total)
+        public bool setWifiPrintData(string number, byte[] data, int page, int total)
         {
             try
             {
-                TcpClientSend sendPrint = new TcpClientSend(SharMethod.serverIp, SharMethod.serverPort);
-                var result = sendPrint.getWifiData("", number, SharMethod.PRINTINSTRUCTION, data, page, total);
-                if (((string)result["result"]).Equals("ok"))
-                {
-                    return true;
-                }else
-                {
+                //TcpClientSend sendPrint = new TcpClientSend(SharMethod.serverIp, SharMethod.serverPort);
+                //var result = sendPrint.getWifiData("", number, SharMethod.PRINTINSTRUCTION, data, page, total,1);
+                //if (((string)result["result"]).Equals("ok"))
+                //{
+                //    return true;
+                //}
+                //else
+                //{
                     return false;
-                }
-            }catch(Exception ex)
+                //}
+            }
+            catch (Exception ex)
             {
                 string str = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ":" + string.Format("错误：{0}，追踪位置信息：{1}", ex, ex.StackTrace);
                 SharMethod.writeErrorLog(str);

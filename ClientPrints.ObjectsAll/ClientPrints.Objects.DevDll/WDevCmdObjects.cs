@@ -8,8 +8,8 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
     public class WDevCmdObjects
     {
         #region...//通许协议对照字符串码
-      
-            //---通用协议------------
+
+        //---通用协议------------
         /// <summary>
         /// 获取设备型号 1
         /// </summary>
@@ -123,8 +123,8 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         /// <summary>
         /// 设备专用命令码 80-9f规范命令码
         /// </summary>
-        public const string DEV_CMD_CUSTOMIZE = "CTRL_DEVCMD_ST";	//
-    
+        public const string DEV_CMD_CUSTOMIZE = "CTRL_DEVCMD_ST";   //
+
         #endregion
         #region
         //---------------------------------
@@ -262,6 +262,29 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
         public const int MSG_WDFU_ERRCODE = (WM_USER + 0x100);
         public const int MSG_WDFU_PROGRESS_BEGIN = 0x20000;
         public const int MSG_WDFU_PROGRESS_END = 0x20064;
+        #endregion
+
+
+        #region....//json转化数据值
+        public const byte NODE_VAL_NONE = 0;
+        public const byte NODE_VAL_LONG = 1;
+        public const byte NODE_VAL_STR = 2;
+        public const byte NODE_VAL_LIST = 3;
+        public const byte NODE_VAL_DATA = 4;
+        public const byte NODE_VAL_MULTISTR = 5;
+
+        /// <summary>
+        /// json配置confing
+        /// </summary>
+        public const ulong DEVJSON_CFG_ENTRY = 0x01UL;
+        /// <summary>
+        /// json配置info
+        /// </summary>
+        public const ulong DEVJSON_INFO_ENTRY = 0x02UL;
+        public const int DEVJSON_ALL_ENTRY =  - 1;
+
+        public const uint JSVAL_TAG_DATVAL = 0x01;  //获取用户数据中获取数据值
+        public const uint JSVAL_TAG_KEYVAL = 0x02;	//获取节点的键值数据
         #endregion
     }
 }
