@@ -76,12 +76,14 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         ackCode = 0
                     };
 
-                    //设备型号           
-                    string model = pGf.reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, new byte[0]);
+                    //设备型号
+                    byte[] redata = new byte[0];           
+                    string model = pGf.reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, ref redata );
                     //序列号
-                    string sn = pGf.reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, new byte[0]);
-                    data = new byte[] { 0x00, 0x00 };
-                    string strCode = pGf.reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, data);
+                    redata = new byte[0];
+                    string sn = pGf.reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle,ref redata);
+                    redata = new byte[] { 0x00, 0x00 };
+                    string strCode = pGf.reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, ref redata);
                     ListViewItem item = new ListViewItem();
                     if (strCode.Contains("false") || strCode == "")
                     {

@@ -86,7 +86,8 @@ namespace ClinetPrints.SettingWindows
             }
             var method = printerObject.MethodsObject as IMethodObjects;
             //系统状态
-            var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x30 });
+            byte[] redata = new byte[] { 0x30 };
+            var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, ref redata);
             if (stateStr.Contains("false") || stateStr == "")
             {
                 MessageBox.Show("设备可能已经离线，将主动关闭监控！");
@@ -121,7 +122,8 @@ namespace ClinetPrints.SettingWindows
                 txb_error.Text = StateMessage;
             }
             //数据处理
-            var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x32 });
+            redata = new byte[] { 0x32 };
+            var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle,ref redata );
             if (dataPorcessStr.Contains("false"))
             {
                 MessageBox.Show("设备可能已经离线，将主动关闭监控！");
@@ -171,8 +173,8 @@ namespace ClinetPrints.SettingWindows
                 txb_frame.Text = dataFrames.ToString();
             }
             //打印输出
-
-            var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x33 });
+            redata = new byte[] { 0x33 };
+            var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle,ref redata );
             if (printOutPut.Contains("false"))
             {
                 MessageBox.Show("设备可能已经离线，将主动关闭监控！");
@@ -235,7 +237,8 @@ namespace ClinetPrints.SettingWindows
             {
                 txb_sensor.Text = sensor;
             }
-            var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, new byte[] { 0x34 });
+            redata = new byte[] { 0x34 };
+            var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, ref redata);
             if (printInfo.Contains("false"))
             {
                 MessageBox.Show("设备可能已经离线，将主动关闭监控！");
@@ -278,7 +281,8 @@ namespace ClinetPrints.SettingWindows
                 string str = "";
                 if (cmb_command.SelectedIndex < 9)
                 {
-                    str = method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, new byte[] { (byte)(cmb_command.SelectedIndex + 1) });
+                    byte[] redata = new byte[] { (byte)(cmb_command.SelectedIndex + 1) };
+                    str = method.reInformation(WDevCmdObjects.DEV_SET_OPER, printerObject.pHandle, ref redata);
                     if (!str.Contains("false"))
                     {
                         txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "已执行！");
@@ -291,7 +295,8 @@ namespace ClinetPrints.SettingWindows
                 else
                 {
                     MessageBox.Show("重启之后监控界面将自动关闭！");
-                    str = method.reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
+                    byte[] redata = new byte[0];
+                    str = method.reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, ref redata);
                     if (!str.Contains("false"))
                     {
                         txb_commandText.AppendText(DateTime.Now.ToString() + ":设备已进行重启！");

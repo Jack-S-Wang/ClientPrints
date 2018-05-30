@@ -30,6 +30,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
             IntPtr dBuf, uint dLen, ref structClassDll.NODEITEM_VAL val);
 
         [DllImport("wDevJson.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        public static extern bool dllFunc_setDevJsonVal(ref structClassDll.JSVAL_INFO valInfo,
+            IntPtr dBuf, uint dLen, ref structClassDll.NODEITEM_VAL val);
+
+        
+
+        [DllImport("wDevJson.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         public static extern bool dllFunc_fflushLog();
 
         [DllImport("wDevJson.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]

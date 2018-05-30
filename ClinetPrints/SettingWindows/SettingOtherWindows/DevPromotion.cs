@@ -157,10 +157,12 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                     //打开设备连接默认没有密码
                     if (WDevDllMethod.dllFunc_DevIoCtrl(pHandle, WDevCmdObjects.DEV_CMD_CONNT, data, (uint)data.Length, ref outDats))
                     {
-                        //设备型号           
-                        string model = pGf.reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, new byte[0]);
+                        //设备型号 
+                        byte[] redata = new byte[0];          
+                        string model = pGf.reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, ref redata);
                         //序列号
-                        string sn = pGf.reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, new byte[0]);
+                        redata = new byte[0];
+                        string sn = pGf.reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle,ref redata);
                        
                         ListViewItem item = new ListViewItem();
                         item.SubItems[0].Text = pathAddress;

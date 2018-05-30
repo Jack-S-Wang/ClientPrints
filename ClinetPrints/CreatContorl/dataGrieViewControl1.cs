@@ -288,6 +288,11 @@ namespace ClinetPrints.CreatContorl
         public class UserSubControl
         {
             public Control control { get; set; }
+
+            /// <summary>
+            /// 表示该控件的键值是否需要执行其他操作，对控件的循环判断选择，默认false
+            /// </summary>
+            public bool isUse { get; set; }
             /// <summary>
             /// 添加不同的控件信息
             /// </summary>

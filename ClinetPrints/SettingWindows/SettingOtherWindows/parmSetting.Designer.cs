@@ -74,8 +74,6 @@
             // 
             this.dataGrieViewControl12.AutoScroll = true;
             this.dataGrieViewControl12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGrieViewControl12.handers = null;
-            this.dataGrieViewControl12.items = null;
             this.dataGrieViewControl12.Location = new System.Drawing.Point(3, 17);
             this.dataGrieViewControl12.Name = "dataGrieViewControl12";
             this.dataGrieViewControl12.Size = new System.Drawing.Size(247, 448);
@@ -93,6 +91,7 @@
             // 
             // btn_sureParm
             // 
+            this.btn_sureParm.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btn_sureParm.Location = new System.Drawing.Point(71, 22);
             this.btn_sureParm.Name = "btn_sureParm";
             this.btn_sureParm.Size = new System.Drawing.Size(75, 23);
@@ -157,8 +156,6 @@
             // 
             this.dataGrieViewControl11.AutoScroll = true;
             this.dataGrieViewControl11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGrieViewControl11.handers = null;
-            this.dataGrieViewControl11.items = null;
             this.dataGrieViewControl11.Location = new System.Drawing.Point(3, 17);
             this.dataGrieViewControl11.Name = "dataGrieViewControl11";
             this.dataGrieViewControl11.Size = new System.Drawing.Size(294, 429);

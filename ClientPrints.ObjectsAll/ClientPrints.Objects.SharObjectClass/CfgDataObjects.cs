@@ -13,13 +13,14 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// 父类名称
+        /// </summary>
+        public string ParentName { get; set; }
+        /// <summary>
         /// 类型
         /// </summary>
-        public int type { get; set; }
-        /// <summary>
-        /// 该类型所包含值的数
-        /// </summary>
-        public int typeCount = 0;
+        public int Type { get; set; }
+       
         /// <summary>
         /// 类型所有值的集合
         /// </summary>
@@ -34,65 +35,38 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         /// </summary>
         /// <param name="cfgInfo">遍历获取到的配置信息内容</param>
         /// <param name="val">获取的值</param>
-        public CfgDataObjects(string cfgInfo, string val)
+        public CfgDataObjects(string key, string val, string listVal, int type)
         {
-            Name = cfgInfo.Substring(5, cfgInfo.Substring(0, cfgInfo.IndexOf(',')).Length - 5);
+            if (key.Contains("."))
+            {
+                int index = key.IndexOf('.');
+                Name = key.Substring(index + 1);
+                ParentName = key.Substring(0, index);
+            }
+            else
+            {
+                Name = key;
+                ParentName = "";
+            }
             value = val;
+            this.Type = type;
             int count = 0;
-            int count1 = 0;
-            int count2 = 0;
-            int count3 = 0;
             string valDatas = "";
             //获取所需要的值进行赋值
-            for (int n = 0; n < cfgInfo.Length; n++)//循环获取名称内容和最后的状态内容模式
+            for (int n = 0; n < listVal.Length; n++)//循环获取名称内容和最后的状态内容模式
             {
-                if (cfgInfo[n] == ',')
+                if (listVal[n] == ';')
                 {
                     count++;
+                    liValues.Add(valDatas);
+                    valDatas = "";
                 }
-                else if (count == 1)
+                else
                 {
-                    if (cfgInfo[n] == '=')
+                    valDatas+=listVal[n];
+                    if (n == listVal.Length - 1)//说明最后一个了
                     {
-                        count1++;
-                    }
-                    else if (count1 == 1)
-                    {
-                        type = Int32.Parse(cfgInfo[n].ToString());//类型
-                    }
-                }
-                else if (count == 2)
-                {
-                    if (cfgInfo[n] == '=')
-                    {
-                        count2++;
-                    }
-                    else if (count2 == 1)
-                    {
-                        typeCount = Int32.Parse(cfgInfo[n].ToString());//获取状态类型的总数
-                    }
-                }
-                else if (count == 4)
-                {
-                    if (cfgInfo[n] == '=')
-                    {
-                        count3++;
-                    }
-                    else if (count3 == 1)
-                    {
-                        if (cfgInfo[n] == ';')
-                        {
-                            liValues.Add(valDatas);
-                            valDatas = "";
-                        }
-                        else
-                        {
-                            valDatas = valDatas + cfgInfo[n];//获取状态名称内容
-                        }
-                        if (n == cfgInfo.Length - 1)//最后一个值存进去
-                        {
-                            liValues.Add(valDatas);
-                        }
+                        liValues.Add(valDatas);
                     }
                 }
             }

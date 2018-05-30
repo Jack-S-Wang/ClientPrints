@@ -285,6 +285,8 @@ namespace ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll
 
         public const uint JSVAL_TAG_DATVAL = 0x01;  //获取用户数据中获取数据值
         public const uint JSVAL_TAG_KEYVAL = 0x02;	//获取节点的键值数据
+
+        public const uint ITEMFMT_TAG_IP=0x0004;//ip类型值
         #endregion
     }
 }

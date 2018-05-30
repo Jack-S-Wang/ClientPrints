@@ -73,7 +73,6 @@
             this.pan_mainWin1 = new System.Windows.Forms.Panel();
             this.imageSubItems = new System.Windows.Forms.ImageList(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.获取配置信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.pan_mainWin1_tree.SuspendLayout();
             this.menuStrip2.SuspendLayout();
@@ -171,8 +170,7 @@
             // 其他设置ToolStripMenuItem
             // 
             this.其他设置ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.服务ToolStripMenuItem,
-            this.获取配置信息ToolStripMenuItem});
+            this.服务ToolStripMenuItem});
             this.其他设置ToolStripMenuItem.Name = "其他设置ToolStripMenuItem";
             this.其他设置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.其他设置ToolStripMenuItem.Text = "其他设置";
@@ -476,13 +474,6 @@
             // 
             this.timer1.Interval = 1000;
             // 
-            // 获取配置信息ToolStripMenuItem
-            // 
-            this.获取配置信息ToolStripMenuItem.Name = "获取配置信息ToolStripMenuItem";
-            this.获取配置信息ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.获取配置信息ToolStripMenuItem.Text = "获取配置信息";
-            this.获取配置信息ToolStripMenuItem.Click += new System.EventHandler(this.获取配置信息ToolStripMenuItem_Click);
-            // 
             // ClientMianWindows
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -561,7 +552,6 @@
         private System.Windows.Forms.ToolStripMenuItem 其他设置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 服务ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wifi设备连接ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 获取配置信息ToolStripMenuItem;
     }
 }
 

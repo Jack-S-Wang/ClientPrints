@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using static ClinetPrints.CreatContorl.dataGrieViewControl1;
+using System.Runtime.InteropServices;
 
 namespace ClinetPrints.SettingWindows.SettingOtherWindows
 {
@@ -25,7 +26,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             InitializeComponent();
         }
         public PrinterObjects printerObject;
-        
+        byte[] cfgData = new byte[0];
         private void btn_sureParm_Click(object sender, EventArgs e)
         {
             new addCommend(SharMethod.user, btn_sureParm.Name, "");
@@ -45,7 +46,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 }
                 Array.Copy(printerObject.pParams.DevParm, 0, alldata, 4, printerObject.pParams.DevParm.Length);
                 var method = printerObject.MethodsObject as IMethodObjects;
-                string str = method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle,alldata);
+                string str = method.reInformation(WDevCmdObjects.DEV_SET_SYSPARAM, printerObject.pHandle, ref alldata);
                 if (!str.Contains("false"))
                 {
                     if (Int32.Parse(str) == 1)
@@ -93,37 +94,68 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         btn_sureParm.Enabled = false;
                         this.dataGrieViewControl12.Text = "该设备无此数据";
                     }
-                    bool cfg = WDevDllMethod.dllFunc_LoadDevCfg(printerObject.pHandle, "");
-                    if (cfg)
+                    var method = printerObject.MethodsObject;
+                    byte[] redata = new byte[] { 0, 0 };
+                    string reStr = method.reInformation(WDevCmdObjects.DEV_GET_CFGINFOS, printerObject.pHandle, ref redata);
+                    if (reStr != "false")
                     {
+                        cfgData = redata;
                         UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
                         this.dataGrieViewControl11.handers = headerColls;
                         List<CfgDataObjects> liob = new List<CfgDataObjects>();
-                        char[] buf = new char[512];
-                        ushort cnt = 512;
-                        //L210最后一个参数为1
-                        for (int i = 0; WDevDllMethod.dllFunc_GetName(printerObject.pHandle, ref i, buf, ref cnt, WDevCmdObjects.DEVCFG_FMT_INFO, 0); i++, cnt = 512)
+                        jsonKeyDic jk = new jsonKeyDic();
+                        if (redata[0] == 1 && redata[1] == 1)//210
                         {
-                            string str = new string(buf).Replace('\0', ' ').TrimEnd();
-                            string name = str.Substring(5, str.Substring(0, str.IndexOf(',')).Length - 5);
-                            buf = new char[512];
-                            cnt = 512;
-                            bool fg = WDevDllMethod.dllFunc_GetVal(printerObject.pHandle, name, buf, ref cnt, WDevCmdObjects.DEVCFG_VAL_INFO, 1);
-                            if (fg)
-                            {
-                                string val = new string(buf).Replace('\0', ' ').TrimEnd();
-                                var dataCfg = new CfgDataObjects(str, val);
-                                liob.Add(dataCfg);
-                            }
+                            dataJson dj = new dataJson();
+                            dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, jk.cfgL210Key, true);
+                            liob = dj.listCfg;
+                        }
+                        else if (redata[0] == 2 && redata[1] == 1)//D300
+                        {
+
                         }
                         UserItems items = new UserItems(this.dataGrieViewControl11);
+                        List<string> parentLi = new List<string>();
                         foreach (var keyco in liob)
                         {
-                            if (keyco.type == 3)
+                            if (keyco.ParentName != "")
+                            {
+                                if (!parentLi.Contains(keyco.ParentName))
+                                {
+                                    TextBox tb_p = new TextBox();
+                                    tb_p.Name = tb_p.Text = keyco.ParentName;
+                                    tb_p.BackColor = Color.YellowGreen;
+                                    tb_p.ForeColor = Color.White;
+                                    UserSubControl ParentSub = new UserSubControl(tb_p, false);
+                                    ParentSub.isUse = false;
+                                    TextBox tb_v = new TextBox();
+                                    tb_v.Name = keyco.ParentName + "_Value";
+                                    tb_v.BackColor = Color.YellowGreen;
+                                    tb_v.ForeColor = Color.White;
+                                    UserSubControl ParentVal = new UserSubControl(tb_v, false);
+                                    items.Add(new UserSubControl[] { ParentSub, ParentVal });
+                                    parentLi.Add(keyco.ParentName);
+                                }
+                            }
+                            else
+                            {
+                                parentLi.Clear();
+                            }
+                            if (keyco.Type == 3)
                             {
                                 UserSubControl usersub = new UserSubControl(keyco.Name, false);
+                                if (keyco.ParentName == "")
+                                {
+                                    usersub.control.BackColor = Color.YellowGreen;
+                                    usersub.control.ForeColor = Color.White;
+                                }
+                                else
+                                {
+                                    usersub.control.Name = keyco.ParentName + "." + keyco.Name;
+                                }
+                                usersub.isUse = true;
                                 ComboBox box = new ComboBox();
-                                for (int i = 0; i < keyco.typeCount; i++)
+                                for (int i = 0; i < keyco.liValues.Count; i++)
                                 {
                                     box.Items.Add(keyco.liValues[i]);
                                 }
@@ -135,6 +167,16 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                             else
                             {
                                 UserSubControl usersub = new UserSubControl(keyco.Name, false);
+                                if (keyco.ParentName == "")
+                                {
+                                    usersub.control.BackColor = Color.YellowGreen;
+                                    usersub.control.ForeColor = Color.White;
+                                }
+                                else
+                                {
+                                    usersub.control.Name = keyco.ParentName + "." + keyco.Name;
+                                }
+                                usersub.isUse = true;
                                 UserSubControl usersubVal = new UserSubControl(keyco.value, true);
                                 items.Add(new UserSubControl[] { usersub, usersubVal });
                             }
@@ -163,38 +205,50 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             new addCommend(SharMethod.user, btn_sureCfg.Name, "");
             try
             {
+                if (cfgData.Length == 0)
+                {
+                    return;
+                }
                 string name = "";
+                int selectIndex = 0;
                 string val = "";
+                dataJson dj = new dataJson();
                 for (int i = 0; i < dataGrieViewControl11.items.Count; i++)
                 {
-                    name = dataGrieViewControl11.items[i].Value[0].control.Text;
-                    if (dataGrieViewControl11.items[i].Value[1].control is ComboBox)
+                    //获取有效的控件Name值
+                    if (dataGrieViewControl11.items[i].Value[0].isUse)
                     {
-                        var com = dataGrieViewControl11.items[i].Value[1].control as ComboBox;
-                        val = com.SelectedIndex.ToString();
-                    }
-                    else
-                    {
-                        val = dataGrieViewControl11.items[i].Value[1].control.Text;
-                    }
-                    bool flge = WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, name, val, 1, 0);
-                    if (!flge)
-                    {
-                        MessageBox.Show(name + ":修改设置失败！");
-                        return;
-                    }
-                    if(i== (dataGrieViewControl11.items.Count - 1))//判断是否是最后一个数
-                    {
-                        //直接发送空数据，通知存入设备中
-                         if(!WDevDllMethod.dllFunc_SetDevCfgInfo(printerObject.pHandle, null,null , 1, 1))
+                        name = dataGrieViewControl11.items[i].Value[0].control.Name;
+                        if (dataGrieViewControl11.items[i].Value[1].control is ComboBox)
                         {
-                            MessageBox.Show("修改到设备中失败！");
-                            return;
+                            var com = dataGrieViewControl11.items[i].Value[1].control as ComboBox;
+                            selectIndex = com.SelectedIndex;
+                            val = com.Text;
+                        }
+                        else
+                        {
+                            val = dataGrieViewControl11.items[i].Value[1].control.Text;
+                        }
+                        dj.setDataJsonInfo(ref cfgData, 1, name, val, selectIndex);
+                        if (i == (dataGrieViewControl11.items.Count - 1))//判断是否是最后一个数
+                        {
+                            //直接发送空数据，通知存入设备中
+                            byte[] setData = new byte[cfgData.Length + 2];
+                            Array.Copy(cfgData, setData, cfgData.Length);
+                            var method = printerObject.MethodsObject;
+                            if (!method.reInformation(WDevCmdObjects.DEV_SET_CFGINFOS, printerObject.pHandle, ref setData).Equals("false"))
+                            {
+                                byte[] dd = new byte[] { 0xFF, 0xFF };
+                                if (!method.reInformation(WDevCmdObjects.DEV_SET_CFGINFOS, printerObject.pHandle, ref dd).Equals("false"))
+                                {
+                                    MessageBox.Show("修改成功！将重新启动该设备！");
+                                }
+                            }
                         }
                     }
                 }
-                MessageBox.Show("修改成功！将重新启动该设备！");
-                string str = (printerObject.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, new byte[0]);
+                byte[] redata = new byte[0];
+                string str = (printerObject.MethodsObject as IMethodObjects).reInformation(WDevCmdObjects.DEV_CMD_RESTART, printerObject.pHandle, ref redata);
                 if (!str.Contains("false"))
                 {
                     this.Close();
@@ -224,7 +278,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             {
                 if (usersubVal.control.Text == "") { return; }
                 string s = usersubVal.control.Text;
-                printerObject.pParams.DevParm[2] = (byte)(short.Parse(s)>>8);
+                printerObject.pParams.DevParm[2] = (byte)(short.Parse(s) >> 8);
                 printerObject.pParams.DevParm[3] = byte.Parse(s);
             };
             usersubVal.control.KeyPress += (o, e) =>
@@ -401,8 +455,8 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 {
                     return;
                 }
-                    printerObject.pParams.DevParm[18] = byte.Parse(usersubVal.control.Text);
-                
+                printerObject.pParams.DevParm[18] = byte.Parse(usersubVal.control.Text);
+
             };
             usersubVal.control.KeyPress += (o, e) =>
             {

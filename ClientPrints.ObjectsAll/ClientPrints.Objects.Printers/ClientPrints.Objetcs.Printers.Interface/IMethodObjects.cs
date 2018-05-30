@@ -17,7 +17,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
         /// <param name="pHandle"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        string reInformation(string ctrlCodeStr, IntPtr pHandle, byte[] data);
+        string reInformation(string ctrlCodeStr, IntPtr pHandle,ref byte[] data);
         /// <summary>
         /// 打印数据
         /// </summary>
