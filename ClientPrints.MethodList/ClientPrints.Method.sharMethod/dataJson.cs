@@ -1,4 +1,5 @@
 ﻿using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using Newtonsoft.Json.Linq;
 using System;
@@ -16,37 +17,22 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         {
             IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
-            var dic=lodeFile();
-            foreach(var dk in dic)
+            lodeFile();
+            jsonKeyDic jk = new jsonKeyDic();
+            if (devEntpy == 1)
             {
-                if (dk.Value == devEntpy)
+                foreach (var mk in jk.cfgKey)
                 {
-                    JObject jo = JObject.Parse(dk.Key);
-                    if ((int)jo.First.First["DevID"] == data[0] && (int)jo.First.First["CfgID"] ==data[1] 
-                        && (int)jo.First.First["CfgVer"] ==data[2] && devEntpy==1)
-                    {
-                        foreach (var jtokn in jo)
-                        {
-                            if (jtokn.Key != "Info")
-                            {
-                                showNodeVal(devEntpy, pt, jtokn.Key);
-                            }
-                        }
-                    }else if((int)jo.First.First["DevID"] == data[1] && (int)jo.First.First["ByteUnit"] == data[2]
-                        && devEntpy == 2)
-                    {
-
-                    }
+                    showNodeVal(devEntpy, pt, (uint)data.Length, mk);
                 }
             }
         }
         /// <summary>
-        /// 导入文件内容并返回
+        /// 导入文件内容
         /// </summary>
         /// <returns></returns>
-        public Dictionary<string, uint> lodeFile()
+        public void lodeFile()
         {
-            Dictionary<string, uint> dic = new Dictionary<string, uint>();
             string path = "C:\\Project\\wDevJsonLib\\json";
             string[] filestr = new string[]
             {
@@ -57,7 +43,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                 (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY,
                 (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY
             };
-            for (int i=0;i<filestr.Length;i++)
+            for (int i = 0; i < filestr.Length; i++)
             {
                 string loadP = path + filestr[i];
                 var li = getFilePath(new DirectoryInfo(loadP), "*.json");
@@ -80,11 +66,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                         }
                     }
                     WDevJsonDll.dllFunc_loadDevJson(code.ToArray(), entpystr[i]);
-                    string str = Encoding.UTF8.GetString(code.ToArray());
-                    dic.Add(str, entpystr[i]);
                 }
             }
-            return dic;
         }
 
         /// <summary>
@@ -107,27 +90,44 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         }
 
 
-        private string showNodeVal(uint entpy,IntPtr pt,string mk)
+        private void showNodeVal(uint entpy, IntPtr pt, uint len, string mk)
         {
             IntPtr npt = Marshal.AllocCoTaskMem(256);
+            structClassDll.UNION union = new structClassDll.UNION()
+            {
+                lpDats = npt
+            };
             structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL()
             {
-                datLen=256,
-                lpDats=npt
+                datLen = 256,
+                union = union
             };
             structClassDll.JSVAL_INFO valInfo = new structClassDll.JSVAL_INFO()
             {
-                jsEntry=entpy,
-                keyPath=mk,
-                tag=WDevCmdObjects.JSVAL_TAG_DATVAL
+                jsEntry = entpy,
+                keyPath = mk,
+                tag = WDevCmdObjects.JSVAL_TAG_DATVAL
             };
-            if(WDevJsonDll.dllFunc_getDevJsonVal(ref valInfo, pt, (uint)Marshal.SizeOf(pt), ref mVal))
+            if (WDevJsonDll.dllFunc_getDevJsonVal(ref valInfo, pt, len, ref mVal))
             {
-                return mVal.val.ToString();
-            }else
-            {
-                return "";
+                switch (mVal.type)
+                {
+                    case WDevCmdObjects.NODE_VAL_NONE:
+                        break;
+                    case WDevCmdObjects.NODE_VAL_LONG:
+                        break;
+                    case WDevCmdObjects.NODE_VAL_STR:
+                        break;
+                    case WDevCmdObjects.NODE_VAL_LIST:
+                        break;
+                    case WDevCmdObjects.NODE_VAL_DATA:
+                        break;
+                    case WDevCmdObjects.NODE_VAL_MULTISTR:
+                        break;
+                }
+                
             }
+            
         }
     }
 }

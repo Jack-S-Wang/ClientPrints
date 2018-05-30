@@ -553,30 +553,30 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
             /// <summary>
             /// 3个字节
             /// </summary>
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public byte[] resv;
+            //public byte resv0;
+            //public byte resv1;
+            //public byte resv2;
             public ushort tag;
             public ushort datLen;
-            /// <summary>
-            /// 起始位置和长度需字节对齐,并以0结尾.
-            /// </summary>
-            public string lpStr;
-            /// <summary>
-            ///  起始位置和长度需字节对齐
-            /// </summary>
-            public IntPtr lpDats;
+            public UNION union;
             public int val;
         }
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Explicit,Size =4)]
         public struct UNION
         {
+            [FieldOffset(0)]
             /// <summary>
             /// 起始位置和长度需字节对齐,并以0结尾.
             /// </summary>
-            public string lpStr;
+            public  IntPtr lpStr;
+
+            [FieldOffset(0)]
             /// <summary>
             ///  起始位置和长度需字节对齐
             /// </summary>
-            public IntPtr lpDats;
+            public  IntPtr lpDats;
         }
 
         [StructLayout(LayoutKind.Sequential,CharSet =CharSet.Unicode)]
@@ -587,7 +587,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
             public ushort infoLen;
             public ushort tag;
         }
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         public struct JSVAL_INFO
         {
             public uint jsEntry;  //

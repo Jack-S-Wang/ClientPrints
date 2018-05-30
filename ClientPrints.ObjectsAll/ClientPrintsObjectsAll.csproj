@@ -70,6 +70,7 @@
     <Compile Include="ClientPrints.Objects.Printers\PrinterParams.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\CfgDataObjects.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\DevPassword.cs" />
+    <Compile Include="ClientPrints.Objects.SharObjectClass\jsonKeyDic.cs" />
     <Compile Include="ClientPrints.Objects.SharObjectClass\listViewColumnTNode.cs">
       <SubType>Component</SubType>
     </Compile>

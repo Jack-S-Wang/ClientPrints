@@ -87,7 +87,6 @@
   <ItemGroup>
     <Content Include="ClientPrints.Method.DLL\ds_dev_bmp.dll" />
     <Content Include="ClientPrints.Method.DLL\Newtonsoft.Json.dll" />
-    <Content Include="ClientPrints.Method.DLL\wDevJson.dll" />
     <Content Include="ClientPrints.Method.DLL\WDevObj.dll" />
   </ItemGroup>
   <ItemGroup>

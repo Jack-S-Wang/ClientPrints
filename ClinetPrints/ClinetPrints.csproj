@@ -309,6 +309,9 @@
   <ItemGroup>
     <Content Include="ds_dev_bmp.dll" />
     <Content Include="ooopic_1502413321.ico" />
+    <Content Include="wDevJson.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="WDevObj.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -338,9 +341,6 @@
     <None Include="Resources\旋转.png" />
     <None Include="Resources\16r.ico" />
     <None Include="Resources\16r - 副本.png" />
-    <Content Include="wDevJson.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="SansDLL\x86WDevdll\WDevObj.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
