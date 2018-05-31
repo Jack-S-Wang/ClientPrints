@@ -9,6 +9,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
     {
         public List<string> cfgD300Key = new List<string>();
         public List<string> cfgL210Key = new List<string>();
+        public List<string> infoL210Key = new List<string>();
         public jsonKeyDic()
         {
 

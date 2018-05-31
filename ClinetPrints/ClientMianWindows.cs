@@ -95,7 +95,7 @@ namespace ClinetPrints
                 this.Hide();
                 //注册系统检测USB插拔功能
                 registerForHandle();
-                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints";
+                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml";
                 if (!System.IO.File.Exists(flod))
                     Directory.CreateDirectory(flod);
                 printerViewSingle.Enabled = true;
@@ -2210,5 +2210,12 @@ namespace ClinetPrints
 
         }
 
+        private void json键值处理界面ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            setJsonKey set = new setJsonKey();
+            set.Owner = this;
+            set.StartPosition = FormStartPosition.CenterParent;
+            set.ShowDialog();
+        }
     }
 }

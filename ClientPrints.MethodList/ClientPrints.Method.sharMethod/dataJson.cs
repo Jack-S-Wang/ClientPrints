@@ -14,32 +14,50 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
     public class dataJson
     {
         public List<CfgDataObjects> listCfg = new List<CfgDataObjects>();
+        public dataJson()
+        {
+            lodeFile();
+        }
 
+        /// <summary>
+        /// 循环获取所有对应key值的value值
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="devEntpy"></param>
+        /// <param name="keyList"></param>
+        /// <param name="isCfgObject"></param>
         public void getDataJsonInfo(byte[] data, uint devEntpy, List<string> keyList, bool isCfgObject)
         {
             IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
-            bool flag = lodeFile();
-            if (flag)
+            foreach (var mk in keyList)
             {
-                foreach (var mk in keyList)
-                {
-                    string name = mk;
-                    showNodeVal(devEntpy, pt, (uint)data.Length, ref name, true);
-                }
+                string name = mk;
+                showNodeVal(devEntpy, pt, (uint)data.Length, ref name, true);
             }
         }
 
-        public void setDataJsonInfo( ref byte[] data, uint devEntpy, string mk, string value, int selectIndex)
+        public string getDataJsonInfo(byte[] data, uint devEntpy, string key)
         {
             IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
-            bool flag = lodeFile();
-            if (flag)
-            {
-                
-                data=setNodeVal(devEntpy, pt, (uint)data.Length, mk, value, selectIndex);
-            }
+            showNodeVal(devEntpy, pt, (uint)data.Length, ref key, false);
+            return key;
+        }
+
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="devEntpy"></param>
+        /// <param name="mk"></param>
+        /// <param name="value"></param>
+        /// <param name="selectIndex"></param>
+        public void setDataJsonInfo(ref byte[] data, uint devEntpy, string mk, string value, int selectIndex)
+        {
+            IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
+            Marshal.Copy(data, 0, pt, data.Length);
+            data = setNodeVal(devEntpy, pt, (uint)data.Length, mk, value, selectIndex);
         }
         /// <summary>
         /// 导入文件内容
@@ -147,6 +165,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                             CfgDataObjects cdo = new CfgDataObjects(mk, mVal.val.ToString(), "", mVal.type);
                             listCfg.Add(cdo);
                         }
+                        reVal = mVal.val.ToString();
                         break;
                     case WDevCmdObjects.NODE_VAL_STR:
                         byte[] datastr = new byte[mVal.datLen];
@@ -177,11 +196,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                             CfgDataObjects cdo = new CfgDataObjects(mk, mVal.val.ToString(), mmk, mVal.type);
                             listCfg.Add(cdo);
                         }
+                        reVal = mVal.val.ToString();
                         break;
                     case WDevCmdObjects.NODE_VAL_DATA:
                         byte[] dataS = new byte[mVal.datLen];
                         Marshal.Copy(mVal.union.lpDats, dataS, 0, dataS.Length);
-                        if ((mVal.tag & WDevCmdObjects.ITEMFMT_TAG_IP) == 0)
+                        if (mVal.tag == WDevCmdObjects.ITEMFMT_TAG_IP)
                         {
                             reVal = dataS[0] + "." + dataS[1] + "." + dataS[2] + "." + dataS[3];
                         }
@@ -217,7 +237,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             }
         }
 
-        private byte[] setNodeVal(uint entpy, IntPtr pt, uint len,  string mk, string value, int selectIndex)
+        private byte[] setNodeVal(uint entpy, IntPtr pt, uint len, string mk, string value, int selectIndex)
         {
             IntPtr npt = Marshal.AllocCoTaskMem(256);
             structClassDll.UNION union = new structClassDll.UNION()
@@ -237,9 +257,48 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             };
             if (WDevJsonDll.dllFunc_getDevJsonVal(ref valInfo, pt, len, ref mVal))
             {
-                mVal.val = selectIndex;
-                mVal.union.lpDats = Marshal.StringToBSTR(value);
-                
+                if (mVal.type == 1)
+                {
+                    mVal.val = Int32.Parse(value);
+                    mVal.union.lpDats = Marshal.StringToBSTR(value);
+                }
+                else if (mVal.type == 3 || mVal.type == 2)
+                {
+                    mVal.val = selectIndex;
+                    mVal.union.lpDats = Marshal.StringToBSTR(value);
+                }
+                else if (mVal.type == 4)
+                {
+                    mVal.val = selectIndex;
+                    int count = 0;
+                    if (mVal.tag == 4)
+                    {
+                        byte[] dt=new byte[4];
+                        string v = "";
+                        for (int i = 0; i < value.Length; i++)
+                        {
+                            if (value[i] == '.')
+                            {
+                                dt[count] = (byte)Int32.Parse(v);
+                                v = "";
+                                count++;
+                            }else
+                            {
+                                v += value[i];
+                                if (i == value.Length - 1)
+                                {
+                                    dt[count] = Byte.Parse(v);
+                                }
+                            }
+                        }
+                        Marshal.Copy(dt, 0, mVal.union.lpDats, 4);
+                    }else
+                    {
+
+                    }
+                   
+                }
+
                 if (WDevJsonDll.dllFunc_setDevJsonVal(ref valInfo, pt, len, ref mVal))
                 {
                     byte[] redata = new byte[len];

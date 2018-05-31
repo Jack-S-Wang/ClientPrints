@@ -218,6 +218,12 @@
     <Compile Include="SettingWindows\SettingOtherWindows\ServerSetting.Designer.cs">
       <DependentUpon>ServerSetting.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\setJsonKey.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingWindows\SettingOtherWindows\setJsonKey.Designer.cs">
+      <DependentUpon>setJsonKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingWindows\SettingOtherWindows\timeSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,10 +286,15 @@
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\ServerSetting.resx">
       <DependentUpon>ServerSetting.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingWindows\SettingOtherWindows\setJsonKey.resx">
+      <DependentUpon>setJsonKey.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingWindows\SettingOtherWindows\timeSetting.resx">
       <DependentUpon>timeSetting.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClinetPrints_TemporaryKey.pfx" />
+    <None Include="Properties\DataSources\ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.jsonKeySave+DataItem.datasource" />
+    <None Include="Properties\DataSources\ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.jsonKeySave.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -307,7 +318,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ds_dev_bmp.dll" />
+    <Content Include="ds_dev_bmp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ooopic_1502413321.ico" />
     <Content Include="wDevJson.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

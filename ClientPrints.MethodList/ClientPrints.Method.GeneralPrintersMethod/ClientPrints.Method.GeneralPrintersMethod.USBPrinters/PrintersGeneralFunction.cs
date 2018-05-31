@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 
 namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters
 {
@@ -66,11 +67,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             try
             {
                 JToken arr = printerWifi["status"]["subs"];
-                foreach(JToken jk in arr)
+                foreach (JToken jk in arr)
                 {
                     sub = (string)jk;
                 }
-            }catch
+            }
+            catch
             {
                 sub = "";
             }
@@ -130,7 +132,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                         //设备model
                         byte[] data = new byte[] { 0x10, 0x01, 0x00, 0 };
-                        redata = setWifiControl(number, data,1);
+                        redata = setWifiControl(number, data, 1);
                         byte[] rdata = new byte[redata[2]];
                         Array.Copy(redata, 4, rdata, 0, redata[2]);
                         string modelInfo = getDifferentString(WDevCmdObjects.DEV_GET_MODEL, redata[2], rdata);
@@ -143,7 +145,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                         //设备数据信息
                         data = new byte[] { 0x10, 0x0C, 0x01, 0x02, 0x02 };
-                        redata = setWifiControl(number, data,1);
+                        redata = setWifiControl(number, data, 1);
                         byte[] ndata = new byte[redata[2]];
                         Array.Copy(redata, 4, ndata, 0, redata[2]);
                         string dataInfo = getDifferentString(WDevCmdObjects.DEV_GET_DEVINFO, redata[2], ndata);
@@ -168,7 +170,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         }
                         //设备页面信息
                         data = new byte[] { 0x10, 0x0C, 0x01, 0x03, 0x03 };
-                        redata = setWifiControl(number, data,1);
+                        redata = setWifiControl(number, data, 1);
                         ndata = new byte[redata[2]];
                         Array.Copy(redata, 4, ndata, 0, redata[2]);
                         string pageInfo = getDifferentString(WDevCmdObjects.DEV_GET_DEVINFO, redata[2], ndata);
@@ -211,7 +213,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         PrinterJson.PrinterParmInfo infoParm = new PrinterJson.PrinterParmInfo();
                         bool isInfoParm = false;
                         data = new byte[] { 0x10, 0x1B, 0x01, 0x81, 0x81 };
-                        redata = setWifiControl(number, data,1);
+                        redata = setWifiControl(number, data, 1);
                         ndata = new byte[redata[2]];
                         Array.Copy(redata, 4, ndata, 0, redata[2]);
                         string DevParmInfo = getDifferentString(WDevCmdObjects.DEV_GET_SYSPARAM, redata[2], ndata);
@@ -222,7 +224,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         }
                         //输出作业
                         data = new byte[] { 0x10, 0x09, 0x01, 0x33, 0x33 };
-                        redata = setWifiControl(number, data,1);
+                        redata = setWifiControl(number, data, 1);
                         ndata = new byte[redata[2]];
                         Array.Copy(redata, 4, ndata, 0, redata[2]);
                         string printOutPut = getDifferentString(WDevCmdObjects.DEV_GET_DEVSTAT, redata[2], ndata);
@@ -262,7 +264,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         {
                             printerParams.outJobNum = 0;
                         }
-                        var edata = Encoding.GetEncoding("GBK").GetBytes("登录设备"+number+"成功!");
+                        var edata = Encoding.GetEncoding("GBK").GetBytes("登录设备" + number + "成功!");
                         int acode = 0;
                         for (int i = 0; i < edata.Length; i++)
                         {
@@ -311,19 +313,19 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="number"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public byte[] setWifiControl(string number, byte[] data,int type)
+        public byte[] setWifiControl(string number, byte[] data, int type)
         {
             //TcpClientSend SendInfo = new TcpClientSend(SharMethod.serverIp, SharMethod.serverPort);
             //var getInfo = SendInfo.getWifiData("", number, SharMethod.CONTROLINSTRUCTION, data, 0, 0,type);
             //if (((string)getInfo["result"]).Equals("ok"))
             //{
-                //string dataStr = (string)getInfo["data"];
-                //byte[] redata = Convert.FromBase64String(dataStr);
-                //return redata;
+            //string dataStr = (string)getInfo["data"];
+            //byte[] redata = Convert.FromBase64String(dataStr);
+            //return redata;
             //}
             //else
             //{
-                return new byte[0];
+            return new byte[0];
             //}
         }
 
@@ -351,8 +353,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             else
             {
                 //设备型号
-                redata = new byte[0];    
-                string model = reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle,ref redata);
+                redata = new byte[0];
+                string model = reInformation(WDevCmdObjects.DEV_GET_MODEL, pHandle, ref redata);
                 printerModel = model;
                 if (model.Contains("false"))
                 {
@@ -361,10 +363,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 //设备通用信息
                 //序列号
                 redata = new byte[0];
-                string sn = reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle,ref redata);
+                string sn = reInformation(WDevCmdObjects.DEV_GET_DEVNO, pHandle, ref redata);
                 //版本号
                 redata = new byte[0];
-                string version = reInformation(WDevCmdObjects.DEV_GET_PROTVER, pHandle,ref redata);
+                string version = reInformation(WDevCmdObjects.DEV_GET_PROTVER, pHandle, ref redata);
 
                 //标识
                 //string onlyAlias = reInformation(WDevCmdObjects.DEV_GET_USERDAT, pHandle, new byte[] { 0x00, 0x00 });
@@ -412,7 +414,24 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
 
                 //系统状态
                 redata = new byte[] { 0x30 };
-                string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle,ref redata);
+                string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, ref redata);
+                //using (System.IO.FileStream file = new System.IO.FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\" + DateTime.Now.ToString("HH.mm.ss") + "state.bin", System.IO.FileMode.OpenOrCreate))
+                //{
+                   
+                //    file.Write(redata,0,redata.Length);
+                //}
+                //dataJson dj = new dataJson();
+                //if (redata[0] == 0 && redata[1] == 2)//210
+                //{
+                //    string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State");
+                //    string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error");
+
+                //}
+                //else if (redata[0] == 0 && redata[1] == 1)//300
+                //{
+
+                //}
+               
                 switch (model)
                 {
                     case "DC-1300":
@@ -429,14 +448,28 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                         break;
                 }
 
-
+                //输出作业
+                int workIndex = 0;
+                redata = new byte[] { 0x33 };
+                var printOutPut = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, ref redata);
+                switch (model)
+                {
+                    case "DC-1300":
+                        var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+                        workIndex = printOut.workIndex;
+                        break;
+                    case "DL-210":
+                        var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
+                        workIndex = print210Out.workIndex;
+                        break;
+                }
 
                 //厂商
                 string vendor = "DASCOM";
 
                 //设备数据信息
                 redata = new byte[] { 2 };
-                string dataInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle,ref redata);
+                string dataInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, ref redata);
                 int InCache = 0;
                 int maxFrames = 0;
                 byte compressType = 0;
@@ -466,7 +499,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 int xDPL = 0;
                 int yDPL = 0;
                 redata = new byte[] { 3 };
-                string pageInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle,ref redata);
+                string pageInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, ref redata);
                 switch (model)
                 {
                     case "DC-1300":
@@ -496,27 +529,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 PrinterJson.PrinterParmInfo infoParm = new PrinterJson.PrinterParmInfo();
                 bool isInfoParm = false;
                 redata = new byte[] { 0x81 };
-                string DevParmInfo = reInformation(WDevCmdObjects.DEV_GET_SYSPARAM, pHandle,ref redata );
+                string DevParmInfo = reInformation(WDevCmdObjects.DEV_GET_SYSPARAM, pHandle, ref redata);
                 if (!DevParmInfo.Contains("false"))
                 {
                     isInfoParm = true;
                     infoParm = JsonConvert.DeserializeObject<PrinterJson.PrinterParmInfo>(DevParmInfo);
                 }
-                //输出作业
-                int workIndex = 0;
-                redata = new byte[] { 0x33 };
-                var printOutPut = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, pHandle, ref redata);
-                switch (model)
-                {
-                    case "DC-1300":
-                        var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-                        workIndex = printOut.workIndex;
-                        break;
-                    case "DL-210":
-                        var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
-                        workIndex = print210Out.workIndex;
-                        break;
-                }
+
 
                 var printerParams = new PrinterParams()
                 {
@@ -570,7 +589,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         /// <param name="pHandle">句柄值</param>
         /// <param name="data">指令M0--Mn个数据,并返回已经获取的数据</param>
         /// <returns></returns>
-        public string reInformation(string ctrlCodeStr, IntPtr pHandle,ref byte[] data)
+        public string reInformation(string ctrlCodeStr, IntPtr pHandle, ref byte[] data)
         {
             string LogText = "";
             structClassDll.DEVACK_INFO outDats = new structClassDll.DEVACK_INFO()
@@ -978,7 +997,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                                 if (!po.isWifi)
                                 {
                                     byte[] redata = new byte[] { 0x30 };
-                                    string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle,ref redata);
+                                    string jsonState = reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, ref redata);
                                     var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(jsonState);
                                     if (keyState.stateCode != 4)
                                     {
@@ -989,7 +1008,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                                 else
                                 {
                                     byte[] data = new byte[] { 0x10, 0x09, 0x01, 0x30, 0x30 };
-                                    byte[] redata = setWifiControl(po.onlyAlias, data,1);
+                                    byte[] redata = setWifiControl(po.onlyAlias, data, 1);
                                     byte[] ndata = new byte[redata[2]];
                                     Array.Copy(redata, 4, ndata, 0, redata[2]);
                                     string jsonState = getDifferentString(WDevCmdObjects.DEV_GET_DEVSTAT, redata[2], ndata);
@@ -1102,7 +1121,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 //}
                 //else
                 //{
-                    return false;
+                return false;
                 //}
             }
             catch (Exception ex)
