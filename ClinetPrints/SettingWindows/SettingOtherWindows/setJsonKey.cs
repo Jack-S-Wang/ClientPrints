@@ -38,7 +38,7 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         jks.add(item as jsonKeySave.DataItem);
                     }
                     using (FileStream file = new FileStream(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml\\"
-                    + name + "-" + fileV + ".xml", FileMode.OpenOrCreate))
+                    +fileV+"\\"+ name  + ".xml", FileMode.OpenOrCreate))
                     {
                         XmlSerializer xml = new XmlSerializer(typeof(jsonKeySave));
                         if (file.Length > 0)
@@ -66,27 +66,34 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
 
         private void btn_Load_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fileo = new OpenFileDialog();
-            fileo.ShowDialog();
-            string fileName = fileo.FileName;
-            if (fileName != "")
+            try
             {
-                using (FileStream file = new FileStream(fileName, FileMode.Open))
+                OpenFileDialog fileo = new OpenFileDialog();
+                fileo.ShowDialog();
+                string fileName = fileo.FileName;
+                if (fileName != "")
                 {
-                    txb_fileName.Text=fileo.SafeFileName;
-                    if (file.Length > 0)
+                    using (FileStream file = new FileStream(fileName, FileMode.Open))
                     {
-                        XmlSerializer xml = new XmlSerializer(typeof(jsonKeySave));
-                        var result = xml.Deserialize(file) as jsonKeySave;
 
-                        BindingSource dbs=new BindingSource();
-                        foreach (var item in result.list)
+                        txb_fileName.Text = fileo.SafeFileName.Substring(0,fileo.SafeFileName.Length - 4);
+                        if (file.Length > 0)
                         {
-                            dbs.List.Add(item);
+                            XmlSerializer xml = new XmlSerializer(typeof(jsonKeySave));
+                            var result = xml.Deserialize(file) as jsonKeySave;
+
+                            BindingSource dbs = new BindingSource();
+                            foreach (var item in result.list)
+                            {
+                                dbs.List.Add(item);
+                            }
+                            data_View.DataSource = dbs;
                         }
-                        data_View.DataSource = dbs;
                     }
                 }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
         }

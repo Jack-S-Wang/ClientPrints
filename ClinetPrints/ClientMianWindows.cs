@@ -95,9 +95,12 @@ namespace ClinetPrints
                 this.Hide();
                 //注册系统检测USB插拔功能
                 registerForHandle();
-                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml";
-                if (!System.IO.File.Exists(flod))
-                    Directory.CreateDirectory(flod);
+                //string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml\\cfg";
+                //if (!System.IO.File.Exists(flod))
+                //    Directory.CreateDirectory(flod);
+                //flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml\\info";
+                //if (!System.IO.File.Exists(flod))
+                //    Directory.CreateDirectory(flod);
                 printerViewSingle.Enabled = true;
                 printerViewSingle.Visible = true;
                 printerViewFlock.Enabled = false;
@@ -108,50 +111,50 @@ namespace ClinetPrints
                 tool.SetToolTip(printerViewSingle, "双击打印机即可查看消息内容！");
                 tool.SetToolTip(printerViewFlock, "双击打印机即可查看消息内容！");
                 listView1.ShowItemToolTips = true;
-                bool imageF = true;
-                timer1.Tick += (o, ae) =>
-                {
-                    if (this.Visible)
-                    {
-                        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
-                        imageF = true;
-                        timer1.Enabled = false;
-                        return;
-                    }
-                    else
-                    {
-                        if (imageF)
-                        {
-                            notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
-                            imageF = false;
-                        }
-                        else
-                        {
-                            notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
-                            imageF = true;
-                        }
-                    }
-                };
+                //bool imageF = true;
+                //timer1.Tick += (o, ae) =>
+                //{
+                //    if (this.Visible)
+                //    {
+                //        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                //        imageF = true;
+                //        timer1.Enabled = false;
+                //        return;
+                //    }
+                //    else
+                //    {
+                //        if (imageF)
+                //        {
+                //            notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
+                //            imageF = false;
+                //        }
+                //        else
+                //        {
+                //            notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                //            imageF = true;
+                //        }
+                //    }
+                //};
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
                 AddMunConten();
                 //得到连接服务信息内容
-                getServerCode();
+                //getServerCode();
                 //添加分组的排布
                 AddGroupMap();
                 //添加群打印机分组排布
-                AddFlockGroupMap();
+                //AddFlockGroupMap();
                 //添加打印机信息
                 AddPrinterMap();
                 //添加群打印机
-                AddFlockPrinterMap();
+                //AddFlockPrinterMap();
                 //获取在某段时间所执行的定时查询
-                getMonTime();
+                //getMonTime();
                 //定时查询状态进行更新
-                tiState.Interval = 5000;
-                tiState.Enabled = true;
-                tiState.Elapsed += TiState_Elapsed;
+                //tiState.Interval = 5000;
+                //tiState.Enabled = true;
+                //tiState.Elapsed += TiState_Elapsed;
                 //查询是否登录中有需要密码的还是需要更新版本的
                 checkPrinter();
             }

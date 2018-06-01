@@ -46,7 +46,7 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.txb_tempertaure = new System.Windows.Forms.TextBox();
-            this.txb_sensor = new System.Windows.Forms.TextBox();
+            this.txb_sensor0 = new System.Windows.Forms.TextBox();
             this.txb_workNum = new System.Windows.Forms.TextBox();
             this.txb_printPorcess = new System.Windows.Forms.TextBox();
             this.txb_acceptSpace = new System.Windows.Forms.TextBox();
@@ -72,6 +72,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.txb_sensor1 = new System.Windows.Forms.TextBox();
+            this.txb_sensor2 = new System.Windows.Forms.TextBox();
+            this.txb_sensor3 = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -85,7 +91,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(622, 624);
+            this.panel1.Size = new System.Drawing.Size(622, 747);
             this.panel1.TabIndex = 0;
             // 
             // groupBox2
@@ -99,7 +105,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(356, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(266, 624);
+            this.groupBox2.Size = new System.Drawing.Size(266, 747);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "控制";
@@ -168,7 +174,7 @@
             this.txb_commandText.Location = new System.Drawing.Point(18, 390);
             this.txb_commandText.Multiline = true;
             this.txb_commandText.Name = "txb_commandText";
-            this.txb_commandText.Size = new System.Drawing.Size(236, 228);
+            this.txb_commandText.Size = new System.Drawing.Size(236, 351);
             this.txb_commandText.TabIndex = 3;
             this.txb_commandText.TextChanged += new System.EventHandler(this.txb_commandText_TextChanged);
             // 
@@ -202,12 +208,18 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txb_sensor3);
+            this.groupBox1.Controls.Add(this.label19);
+            this.groupBox1.Controls.Add(this.label18);
+            this.groupBox1.Controls.Add(this.txb_sensor2);
+            this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Controls.Add(this.txb_outFarme);
+            this.groupBox1.Controls.Add(this.txb_sensor1);
             this.groupBox1.Controls.Add(this.txb_outPutJobnum);
             this.groupBox1.Controls.Add(this.label15);
             this.groupBox1.Controls.Add(this.label14);
             this.groupBox1.Controls.Add(this.txb_tempertaure);
-            this.groupBox1.Controls.Add(this.txb_sensor);
+            this.groupBox1.Controls.Add(this.txb_sensor0);
             this.groupBox1.Controls.Add(this.txb_workNum);
             this.groupBox1.Controls.Add(this.txb_printPorcess);
             this.groupBox1.Controls.Add(this.txb_acceptSpace);
@@ -235,14 +247,14 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(356, 624);
+            this.groupBox1.Size = new System.Drawing.Size(356, 747);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "监控";
             // 
             // txb_outFarme
             // 
-            this.txb_outFarme.Location = new System.Drawing.Point(118, 590);
+            this.txb_outFarme.Location = new System.Drawing.Point(118, 710);
             this.txb_outFarme.Name = "txb_outFarme";
             this.txb_outFarme.ReadOnly = true;
             this.txb_outFarme.Size = new System.Drawing.Size(153, 21);
@@ -250,7 +262,7 @@
             // 
             // txb_outPutJobnum
             // 
-            this.txb_outPutJobnum.Location = new System.Drawing.Point(118, 554);
+            this.txb_outPutJobnum.Location = new System.Drawing.Point(118, 670);
             this.txb_outPutJobnum.Name = "txb_outPutJobnum";
             this.txb_outPutJobnum.ReadOnly = true;
             this.txb_outPutJobnum.Size = new System.Drawing.Size(153, 21);
@@ -259,7 +271,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(15, 593);
+            this.label15.Location = new System.Drawing.Point(15, 713);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
             this.label15.TabIndex = 27;
@@ -268,7 +280,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 557);
+            this.label14.Location = new System.Drawing.Point(3, 673);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(77, 12);
             this.label14.TabIndex = 26;
@@ -276,19 +288,19 @@
             // 
             // txb_tempertaure
             // 
-            this.txb_tempertaure.Location = new System.Drawing.Point(118, 510);
+            this.txb_tempertaure.Location = new System.Drawing.Point(118, 630);
             this.txb_tempertaure.Name = "txb_tempertaure";
             this.txb_tempertaure.ReadOnly = true;
             this.txb_tempertaure.Size = new System.Drawing.Size(153, 21);
             this.txb_tempertaure.TabIndex = 25;
             // 
-            // txb_sensor
+            // txb_sensor0
             // 
-            this.txb_sensor.Location = new System.Drawing.Point(118, 470);
-            this.txb_sensor.Name = "txb_sensor";
-            this.txb_sensor.ReadOnly = true;
-            this.txb_sensor.Size = new System.Drawing.Size(153, 21);
-            this.txb_sensor.TabIndex = 24;
+            this.txb_sensor0.Location = new System.Drawing.Point(118, 470);
+            this.txb_sensor0.Name = "txb_sensor0";
+            this.txb_sensor0.ReadOnly = true;
+            this.txb_sensor0.Size = new System.Drawing.Size(153, 21);
+            this.txb_sensor0.TabIndex = 24;
             // 
             // txb_workNum
             // 
@@ -382,7 +394,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(39, 513);
+            this.label13.Location = new System.Drawing.Point(39, 633);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(41, 12);
             this.label13.TabIndex = 12;
@@ -393,9 +405,9 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(27, 473);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(53, 12);
+            this.label12.Size = new System.Drawing.Size(59, 12);
             this.label12.TabIndex = 11;
-            this.label12.Text = "传感器：";
+            this.label12.Text = "传感器0：";
             // 
             // label11
             // 
@@ -500,11 +512,62 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // txb_sensor1
+            // 
+            this.txb_sensor1.Location = new System.Drawing.Point(118, 510);
+            this.txb_sensor1.Name = "txb_sensor1";
+            this.txb_sensor1.ReadOnly = true;
+            this.txb_sensor1.Size = new System.Drawing.Size(153, 21);
+            this.txb_sensor1.TabIndex = 30;
+            // 
+            // txb_sensor2
+            // 
+            this.txb_sensor2.Location = new System.Drawing.Point(118, 550);
+            this.txb_sensor2.Name = "txb_sensor2";
+            this.txb_sensor2.ReadOnly = true;
+            this.txb_sensor2.Size = new System.Drawing.Size(153, 21);
+            this.txb_sensor2.TabIndex = 31;
+            // 
+            // txb_sensor3
+            // 
+            this.txb_sensor3.Location = new System.Drawing.Point(118, 590);
+            this.txb_sensor3.Name = "txb_sensor3";
+            this.txb_sensor3.ReadOnly = true;
+            this.txb_sensor3.Size = new System.Drawing.Size(153, 21);
+            this.txb_sensor3.TabIndex = 33;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(21, 513);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(59, 12);
+            this.label17.TabIndex = 30;
+            this.label17.Text = "传感器1：";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(21, 553);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(59, 12);
+            this.label18.TabIndex = 31;
+            this.label18.Text = "传感器2：";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(21, 593);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(59, 12);
+            this.label19.TabIndex = 32;
+            this.label19.Text = "传感器3：";
+            // 
             // monitorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(622, 624);
+            this.ClientSize = new System.Drawing.Size(622, 747);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.Name = "monitorForm";
@@ -541,7 +604,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txb_tempertaure;
-        private System.Windows.Forms.TextBox txb_sensor;
+        private System.Windows.Forms.TextBox txb_sensor0;
         private System.Windows.Forms.TextBox txb_workNum;
         private System.Windows.Forms.TextBox txb_printPorcess;
         private System.Windows.Forms.TextBox txb_acceptSpace;
@@ -568,5 +631,11 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.CheckBox ckb_monitor;
+        private System.Windows.Forms.TextBox txb_sensor3;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txb_sensor2;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox txb_sensor1;
     }
 }

@@ -55,7 +55,7 @@ namespace ClinetPrints.SettingWindows
                 this.cmb_command.Items.Add("测试卡2");
                 this.cmb_command.Items.Add("卡擦除");
                 this.cmb_command.Items.Add("重启设备");
-               
+
                 this.cmb_command.SelectedIndex = 0;
                 demandTime.Enabled = true;
                 demandTime.Elapsed += ((b, o) =>
@@ -86,32 +86,61 @@ namespace ClinetPrints.SettingWindows
             }
             var method = printerObject.MethodsObject as IMethodObjects;
             //系统状态
-            byte[] redata = new byte[] { 0x30 };
+            byte[] redata = new byte[] { 0 };
             var stateStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, ref redata);
-            if (stateStr.Contains("false") || stateStr == "")
+            if (stateStr.Contains("false"))
             {
                 MessageBox.Show("设备可能已经离线，将主动关闭监控！");
                 return;
             }
+            dataJson dj = new dataJson();
             int stateCode = 0;
             string majorState = "";
-            string StateMessage = "";
-            switch (printerObject.model)
+            string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State");
+            if (mainState.Contains("0"))
             {
-                case "DC-1300":
-                    var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
-                    stateCode = keyState.stateCode;
-                    majorState = keyState.majorState;
-                    StateMessage = keyState.StateMessage;
-                    break;
-                case "DL-210":
-                    var key210State = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210State>(stateStr);
-                    stateCode = key210State.stateCode;
-                    majorState = key210State.majorState;
-                    StateMessage = key210State.StateMessage;
-                    break;
-
+                majorState = "空闲";
+                stateCode = 1;
             }
+            else if (mainState.Contains("1"))
+            {
+                majorState = "工作中";
+                stateCode = 3;
+            }
+            else if (mainState.Contains("2"))
+            {
+                majorState = "就绪";
+                stateCode = 2;
+            }
+            else if (mainState.Contains("3"))
+            {
+                majorState = "繁忙";
+                stateCode = 4;
+            }
+            else if (mainState.Contains("255"))
+            {
+                majorState = "异常";
+                stateCode = 6;
+            }
+
+            string StateMessage = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error");
+            StateMessage = StateMessage.Substring((StateMessage.IndexOf(';') + 1));
+            //switch (printerObject.model)
+            //{
+            //    case "DC-1300":
+            //        var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(stateStr);
+            //        stateCode = keyState.stateCode;
+            //        majorState = keyState.majorState;
+            //        StateMessage = keyState.StateMessage;
+            //        break;
+            //    case "DL-210":
+            //        var key210State = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210State>(stateStr);
+            //        stateCode = key210State.stateCode;
+            //        majorState = key210State.majorState;
+            //        StateMessage = key210State.StateMessage;
+            //        break;
+
+            //}
             if (stateType != stateCode)
             {
                 stateType = stateCode;
@@ -122,38 +151,40 @@ namespace ClinetPrints.SettingWindows
                 txb_error.Text = StateMessage;
             }
             //数据处理
-            redata = new byte[] { 0x32 };
-            var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle,ref redata );
-            if (dataPorcessStr.Contains("false"))
-            {
-                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                return;
-            }
-            int datastateCode = 0;
-            string datamajorState = "";
-            string dataStateMessage = "";
-            int dataworkIndex = 0;
-            int dataFrames = 0;
-            switch (printerObject.model)
-            {
-                case "DC-1300":
-                    var dataPor = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataState>(dataPorcessStr);
-                    datastateCode = dataPor.stateCode;
-                    datamajorState = dataPor.majorState;
-                    dataStateMessage = dataPor.StateMessage;
-                    dataworkIndex = dataPor.workIndex;
-                    dataFrames = dataPor.dataFrames;
-                    break;
-                case "DL-210":
-                    var data210Por = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataState>(dataPorcessStr);
-                    datastateCode = data210Por.stateCode;
-                    datamajorState = data210Por.majorState;
-                    dataStateMessage = data210Por.StateMessage;
-                    dataworkIndex = data210Por.workIndex;
-                    dataFrames = data210Por.dataFrames;
-                    break;
+            string ds = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Process");
+            int datastateCode = Int32.Parse(ds.Substring(0, ds.IndexOf(';')));
+            string datamajorState = ds.Substring(ds.IndexOf(';') + 1);
+            string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Error Code");
+            string dataStateMessage = error.Substring(error.IndexOf(';') + 1);
+            int dataworkIndex = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Job Number"));
+            int dataFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Frame Number"));
+            //redata = new byte[] { 0x32 };
+            //var dataPorcessStr = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle,ref redata );
+            //if (dataPorcessStr.Contains("false"))
+            //{
+            //    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+            //    return;
+            //}
+            //switch (printerObject.model)
+            //{
+            //    case "DC-1300":
+            //        var dataPor = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataState>(dataPorcessStr);
+            //        datastateCode = dataPor.stateCode;
+            //        datamajorState = dataPor.majorState;
+            //        dataStateMessage = dataPor.StateMessage;
+            //        dataworkIndex = dataPor.workIndex;
+            //        dataFrames = dataPor.dataFrames;
+            //        break;
+            //    case "DL-210":
+            //        var data210Por = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataState>(dataPorcessStr);
+            //        datastateCode = data210Por.stateCode;
+            //        datamajorState = data210Por.majorState;
+            //        dataStateMessage = data210Por.StateMessage;
+            //        dataworkIndex = data210Por.workIndex;
+            //        dataFrames = data210Por.dataFrames;
+            //        break;
 
-            }
+            //}
 
             if (dataStateType != datastateCode)
             {
@@ -173,44 +204,58 @@ namespace ClinetPrints.SettingWindows
                 txb_frame.Text = dataFrames.ToString();
             }
             //打印输出
-            redata = new byte[] { 0x33 };
-            var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle,ref redata );
-            if (printOutPut.Contains("false"))
-            {
-                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                return;
-            }
-            int OutstateCode = 0;
-            string OutmajorState = "";
-            int taskNumber = 0;
-            int OutworkIndex = 0;
-            int OutdataFrames = 0;
-            int temperature = 0;
-            string sensor = "";
-            switch (printerObject.model)
-            {
-                case "DC-1300":
-                    var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-                    OutstateCode = printOut.stateCode;
-                    OutmajorState = printOut.majorState;
-                    OutworkIndex = printOut.workIndex;
-                    OutdataFrames = printOut.dataFrames;
-                    taskNumber = printOut.taskNumber;
-                    temperature = printOut.temperature;
-                    sensor = printOut.sensor;
-                    break;
-                case "DL-210":
-                    var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
-                    OutstateCode = print210Out.stateCode;
-                    OutmajorState = print210Out.majorState;
-                    OutworkIndex = print210Out.workIndex;
-                    OutdataFrames = print210Out.dataFrames;
-                    taskNumber = print210Out.taskNumber;
-                    temperature = print210Out.temperature;
-                    sensor = print210Out.sensor;
-                    break;
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 1");
+            string oc = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Output State");
+            int OutstateCode = Int32.Parse(oc.Substring(0,oc.IndexOf(';')));
+            string OutmajorState = oc.Substring(oc.IndexOf(';')+1);
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 2");
+            int taskNumber = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Number of Print"));
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 3");
+            int OutworkIndex = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Completed Job Number"));
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 4");
+            int OutdataFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Completed Frame Number"));
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 5");
+            int temperature = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Device Temperature"));
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 6");
+            string sensor0 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor0");
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 7");
+            string sensor1 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor1");
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 8");
+            string sensor2 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor2");
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 9");
+            string sensor3 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor3");
+            //redata = new byte[] { 0x33 };
+            //var printOutPut = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, ref redata);
+            //if (printOutPut.Contains("false"))
+            //{
+            //    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+            //    return;
+            //}
 
-            }
+            //switch (printerObject.model)
+            //{
+            //    case "DC-1300":
+            //        var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
+            //        OutstateCode = printOut.stateCode;
+            //        OutmajorState = printOut.majorState;
+            //        OutworkIndex = printOut.workIndex;
+            //        OutdataFrames = printOut.dataFrames;
+            //        taskNumber = printOut.taskNumber;
+            //        temperature = printOut.temperature;
+            //        sensor = printOut.sensor;
+            //        break;
+            //    case "DL-210":
+            //        var print210Out = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210PrintState>(printOutPut);
+            //        OutstateCode = print210Out.stateCode;
+            //        OutmajorState = print210Out.majorState;
+            //        OutworkIndex = print210Out.workIndex;
+            //        OutdataFrames = print210Out.dataFrames;
+            //        taskNumber = print210Out.taskNumber;
+            //        temperature = print210Out.temperature;
+            //        sensor = print210Out.sensor;
+            //        break;
+
+            //}
 
             if (printStateType != OutstateCode)
             {
@@ -225,40 +270,54 @@ namespace ClinetPrints.SettingWindows
             {
                 txb_outPutJobnum.Text = OutworkIndex.ToString();
             }
-            if (!txb_outFarme.Text.Contains(OutdataFrames.ToString()))
-            {
-                txb_outFarme.Text = OutdataFrames.ToString();
-            }
+            //if (!txb_outFarme.Text.Contains(OutdataFrames.ToString()))
+            //{
+            //    txb_outFarme.Text = OutdataFrames.ToString();
+            //}
             if (!txb_tempertaure.Text.Contains(temperature.ToString()))
             {
                 txb_tempertaure.Text = temperature.ToString();
             }
-            if (!txb_sensor.Text.Contains(sensor))
+            if (!txb_sensor0.Text.Contains(sensor0))
             {
-                txb_sensor.Text = sensor;
+                txb_sensor0.Text = sensor0;
             }
-            redata = new byte[] { 0x34 };
-            var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, ref redata);
-            if (printInfo.Contains("false"))
+            if (!txb_sensor1.Text.Contains(sensor1))
             {
-                MessageBox.Show("设备可能已经离线，将主动关闭监控！");
-                return;
+                txb_sensor1.Text = sensor1;
             }
-            int InCache = 0;
-            int residueCache = 0;
-            switch (printerObject.model)
+            if (!txb_sensor2.Text.Contains(sensor2))
             {
-                case "DC-1300":
-                    var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
-                    InCache = printInfoJson.InCache;
-                    residueCache = printInfoJson.residueCache;
-                    break;
-                case "DL-210":
-                    var print210InfoJson = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataPortState>(printInfo);
-                    InCache = print210InfoJson.InCache;
-                    residueCache = print210InfoJson.residueCache;
-                    break;
+                txb_sensor2.Text = sensor2;
             }
+            if (!txb_sensor3.Text.Contains(sensor3))
+            {
+                txb_sensor3.Text = sensor3;
+            }
+            //redata = new byte[] { 0x34 };
+            //var printInfo = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, printerObject.pHandle, ref redata);
+            //if (printInfo.Contains("false"))
+            //{
+            //    MessageBox.Show("设备可能已经离线，将主动关闭监控！");
+            //    return;
+            //}
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 10");
+            int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data Interface State.The percentage point ratio of the received buffer data"));
+            System.Diagnostics.Trace.TraceInformation("++++++++++++++++++ 11");
+            int residueCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data Interface State.The remaining space in the receiving buffer"));
+            //switch (printerObject.model)
+            //{
+            //    case "DC-1300":
+            //        var printInfoJson = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300DataPortState>(printInfo);
+            //        InCache = printInfoJson.InCache;
+            //        residueCache = printInfoJson.residueCache;
+            //        break;
+            //    case "DL-210":
+            //        var print210InfoJson = JsonConvert.DeserializeObject<PrinterDL210Json.PrinterDL210DataPortState>(printInfo);
+            //        InCache = print210InfoJson.InCache;
+            //        residueCache = print210InfoJson.residueCache;
+            //        break;
+            //}
 
             if (!txb_cache.Text.Contains(InCache.ToString()))
             {
@@ -289,7 +348,7 @@ namespace ClinetPrints.SettingWindows
                     }
                     else
                     {
-                        txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "执行失败！"+str);
+                        txb_commandText.AppendText(DateTime.Now.ToString() + "：指令" + cmb_command.SelectedText + "执行失败！" + str);
                     }
                 }
                 else

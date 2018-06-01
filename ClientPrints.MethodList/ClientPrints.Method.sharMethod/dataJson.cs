@@ -28,8 +28,9 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         /// <param name="isCfgObject"></param>
         public void getDataJsonInfo(byte[] data, uint devEntpy, List<string> keyList, bool isCfgObject)
         {
-            IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
+            IntPtr pt = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
+            //lodeFile();
             foreach (var mk in keyList)
             {
                 string name = mk;
@@ -39,10 +40,19 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
 
         public string getDataJsonInfo(byte[] data, uint devEntpy, string key)
         {
-            IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
+            IntPtr pt = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
-            showNodeVal(devEntpy, pt, (uint)data.Length, ref key, false);
-            return key;
+            //lodeFile();
+            string k = key;
+            showNodeVal(devEntpy, pt, (uint)data.Length, ref k, false);
+            string kk = k;
+            if (key == "Print State.Completed Job Number")
+            {
+                System.Diagnostics.Trace.TraceInformation("ssd");
+            }
+            System.Diagnostics.Trace.TraceInformation("kk = " + kk+";key="+key);
+            System.Diagnostics.Trace.Flush();
+            return kk;
         }
 
         /// <summary>
@@ -136,14 +146,14 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         /// <param name="isCfgObject">是否将获取的值进行存入cfg数据对象里</param>
         private void showNodeVal(uint entpy, IntPtr pt, uint len, ref string mk, bool isCfgObject)
         {
-            IntPtr npt = Marshal.AllocCoTaskMem(256);
+            IntPtr npt = Marshal.AllocHGlobal(256);
             structClassDll.UNION union = new structClassDll.UNION()
             {
                 lpDats = npt
             };
             structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL()
             {
-                datLen = 256,
+                datLen = 500,
                 union = union
             };
             structClassDll.JSVAL_INFO valInfo = new structClassDll.JSVAL_INFO()
@@ -170,7 +180,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                     case WDevCmdObjects.NODE_VAL_STR:
                         byte[] datastr = new byte[mVal.datLen];
                         Marshal.Copy(mVal.union.lpDats, datastr, 0, datastr.Length);
-                        int index = 0;
+                        int index = datastr.Length;
                         for (int i = 0; i < datastr.Length; i++)
                         {
                             if (datastr[i] == '\0')
@@ -196,7 +206,22 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                             CfgDataObjects cdo = new CfgDataObjects(mk, mVal.val.ToString(), mmk, mVal.type);
                             listCfg.Add(cdo);
                         }
-                        reVal = mVal.val.ToString();
+                        byte[] liStr = new byte[mVal.datLen];
+                        Marshal.Copy(mVal.union.lpDats, liStr, 0, liStr.Length);
+                        int ind = liStr.Length;
+                        for (int i = 0; i < liStr.Length; i++)
+                        {
+                            if (liStr[i] == '\0')
+                            {
+                                ind = i;
+                                break;
+                            }
+                            
+                        }
+                        byte[] ldata = new byte[ind];
+                        Array.Copy(liStr, ldata, ind);
+                        string str = Encoding.UTF8.GetString(ldata);
+                        reVal = mVal.val.ToString()+";"+str;
                         break;
                     case WDevCmdObjects.NODE_VAL_DATA:
                         byte[] dataS = new byte[mVal.datLen];
@@ -231,6 +256,25 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                         }
                         break;
                     case WDevCmdObjects.NODE_VAL_MULTISTR:
+                        byte[] ms = new byte[mVal.datLen];
+                        Marshal.Copy(mVal.union.lpDats, ms, 0, ms.Length);
+                        //int idx = ms.Length;
+                        //for (int i = 0; i < ms.Length; i++)
+                        //{
+                        //    if (ms[i] == '\0')
+                        //    {
+                        //        idx = i;
+                        //        break;
+                        //    }
+                        //}
+                        //byte[] md = new byte[idx];
+                        //Array.Copy(ms, md, idx);
+                        reVal = Encoding.UTF8.GetString(ms);
+                        if (isCfgObject)
+                        {
+                            CfgDataObjects cdo = new CfgDataObjects(mk, reVal, "", mVal.type);
+                            listCfg.Add(cdo);
+                        }
                         break;
                 }
                 mk = reVal;
@@ -239,7 +283,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
 
         private byte[] setNodeVal(uint entpy, IntPtr pt, uint len, string mk, string value, int selectIndex)
         {
-            IntPtr npt = Marshal.AllocCoTaskMem(256);
+            IntPtr npt = Marshal.AllocHGlobal(256);
             structClassDll.UNION union = new structClassDll.UNION()
             {
                 lpDats = npt
