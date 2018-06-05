@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<jsonKeySave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <list>
+    <DataItem>
+      <keyName>1</keyName>
+      <showName>COM Port.Datas</showName>
+      <jsonKeyName>COM Port.Datas</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>2</keyName>
+      <showName>COM Port.Stop</showName>
+      <jsonKeyName>COM Port.Stop</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>3</keyName>
+      <showName>COM Port.Parity</showName>
+      <jsonKeyName>COM Port.Parity</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>4</keyName>
+      <showName>COM Port.Baud</showName>
+      <jsonKeyName>COM Port.Baud</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>5</keyName>
+      <showName>Cutter</showName>
+      <jsonKeyName>Cutter</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>6</keyName>
+      <showName>Language</showName>
+      <jsonKeyName>Language</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>7</keyName>
+      <showName>ASCII Font</showName>
+      <jsonKeyName>ASCII Font</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>8</keyName>
+      <showName>Auto label</showName>
+      <jsonKeyName>Auto label</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>9</keyName>
+      <showName>Paper Sensor</showName>
+      <jsonKeyName>Paper Sensor</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>10</keyName>
+      <showName>Black Mark</showName>
+      <jsonKeyName>Black Mark</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>11</keyName>
+      <showName>AD Value</showName>
+      <jsonKeyName>AD Value</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>12</keyName>
+      <showName>Command Set</showName>
+      <jsonKeyName>Command Set</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>13</keyName>
+      <showName>Gap Size</showName>
+      <jsonKeyName>Gap Size</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>14</keyName>
+      <showName>Auto PaperOut</showName>
+      <jsonKeyName>Auto PaperOut</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>15</keyName>
+      <showName>Code Page</showName>
+      <jsonKeyName>Code Page</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>16</keyName>
+      <showName>Auto calibration</showName>
+      <jsonKeyName>Auto calibration</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>17</keyName>
+      <showName>Page Length</showName>
+      <jsonKeyName>Page Length</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>18</keyName>
+      <showName>Left Margin</showName>
+      <jsonKeyName>Left Margin</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>19</keyName>
+      <showName>DA Value</showName>
+      <jsonKeyName>DA Value</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>20</keyName>
+      <showName>Page Type</showName>
+      <jsonKeyName>Page Type</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>21</keyName>
+      <showName>Print Media</showName>
+      <jsonKeyName>Print Media</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>22</keyName>
+      <showName>Page Mode</showName>
+      <jsonKeyName>Page Mode</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>23</keyName>
+      <showName>AD_Lab Value</showName>
+      <jsonKeyName>AD_Lab Value</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>24</keyName>
+      <showName>AD_Gap Value</showName>
+      <jsonKeyName>AD_Gap Value</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>25</keyName>
+      <showName>AD_Black Value</showName>
+      <jsonKeyName>AD_Black Value</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>26</keyName>
+      <showName>Print Speed</showName>
+      <jsonKeyName>Print Speed</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>27</keyName>
+      <showName>Print Darkness</showName>
+      <jsonKeyName>Print Darkness</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>28</keyName>
+      <showName>Peel Option</showName>
+      <jsonKeyName>Peel Option</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>29</keyName>
+      <showName>Start Adjustment</showName>
+      <jsonKeyName>Start Adjustment</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>30</keyName>
+      <showName>Cut Adjustment</showName>
+      <jsonKeyName>Cut Adjustment</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>31</keyName>
+      <showName>Photo TRGain</showName>
+      <jsonKeyName>Photo TRGain</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>32</keyName>
+      <showName>BMB FeedPos</showName>
+      <jsonKeyName>BMB FeedPos</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>33</keyName>
+      <showName>ZPL_Print Darkness</showName>
+      <jsonKeyName>ZPL_Print Darkness</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>34</keyName>
+      <showName>Label Length</showName>
+      <jsonKeyName>Label Length</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>35</keyName>
+      <showName>Cont_Paper Length</showName>
+      <jsonKeyName>Cont_Paper Length</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>36</keyName>
+      <showName>Vertical Adjustment</showName>
+      <jsonKeyName>Vertical Adjustment</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>37</keyName>
+      <showName>Tear Adjustment</showName>
+      <jsonKeyName>Tear Adjustment</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>38</keyName>
+      <showName>IP</showName>
+      <jsonKeyName>IP</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>39</keyName>
+      <showName>Ethernet.SubnetMask</showName>
+      <jsonKeyName>Ethernet.SubnetMask</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>40</keyName>
+      <showName>Ethernet.Gateway</showName>
+      <jsonKeyName>Ethernet.Gateway</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>41</keyName>
+      <showName>Ethernet.DHCP</showName>
+      <jsonKeyName>Ethernet.DHCP</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>42</keyName>
+      <showName>Ethernet.Port Number</showName>
+      <jsonKeyName>Ethernet.Port Number</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>43</keyName>
+      <showName>Ethernet.Timeout</showName>
+      <jsonKeyName>Ethernet.Timeout</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>44</keyName>
+      <showName>CutMode</showName>
+      <jsonKeyName>CutMode</jsonKeyName>
+    </DataItem>
+  </list>
+</jsonKeySave>

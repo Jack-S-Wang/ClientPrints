@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<jsonKeySave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <list>
+    <DataItem>
+      <keyName>1</keyName>
+      <showName>USB_ID</showName>
+      <jsonKeyName>USB_ID</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>2</keyName>
+      <showName>Emulation</showName>
+      <jsonKeyName>Emulation</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>3</keyName>
+      <showName>WiFi Cfg.WiFi Enable</showName>
+      <jsonKeyName>WiFi Cfg.WiFi Enable</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>4</keyName>
+      <showName>WiFi Cfg.WiFi Mode</showName>
+      <jsonKeyName>WiFi Cfg.WiFi Mode</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>5</keyName>
+      <showName>WiFi Cfg.DHCP</showName>
+      <jsonKeyName>WiFi Cfg.DHCP</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>6</keyName>
+      <showName>WiFi Cfg.SSID</showName>
+      <jsonKeyName>WiFi Cfg.SSID</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>7</keyName>
+      <showName>WiFi Cfg.IP Address</showName>
+      <jsonKeyName>WiFi Cfg.IP Address</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>8</keyName>
+      <showName>WiFi Cfg.Subnet Mask</showName>
+      <jsonKeyName>WiFi Cfg.Subnet Mask</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>9</keyName>
+      <showName>WiFi Cfg.Gateway</showName>
+      <jsonKeyName>WiFi Cfg.Gateway</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>10</keyName>
+      <showName>WiFi Cfg.DNS</showName>
+      <jsonKeyName>WiFi Cfg.DNS</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>11</keyName>
+      <showName>WiFi Cfg.Password</showName>
+      <jsonKeyName>WiFi Cfg.Password</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>12</keyName>
+      <showName>Blue Tooth.Model</showName>
+      <jsonKeyName>Blue Tooth.Model</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>13</keyName>
+      <showName>Blue Tooth.Password</showName>
+      <jsonKeyName>Blue Tooth.Password</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>14</keyName>
+      <showName>Ethernet.IP Address</showName>
+      <jsonKeyName>Ethernet.IP Address</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>15</keyName>
+      <showName>Ethernet.Port</showName>
+      <jsonKeyName>Ethernet.Port</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>16</keyName>
+      <showName>Ethernet.Gateway</showName>
+      <jsonKeyName>Ethernet.Gateway</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>17</keyName>
+      <showName>Card Type</showName>
+      <jsonKeyName>Card Type</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>18</keyName>
+      <showName>Input Card</showName>
+      <jsonKeyName>Input Card</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>19</keyName>
+      <showName>Output Card</showName>
+      <jsonKeyName>Output Card</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>20</keyName>
+      <showName>Print Temp</showName>
+      <jsonKeyName>Print Temp</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>21</keyName>
+      <showName>Print Speed</showName>
+      <jsonKeyName>Print Speed</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>22</keyName>
+      <showName>Erase Temp</showName>
+      <jsonKeyName>Erase Temp</jsonKeyName>
+    </DataItem>
+  </list>
+</jsonKeySave>

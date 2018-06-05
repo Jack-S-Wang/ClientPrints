@@ -103,16 +103,18 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
                         this.dataGrieViewControl11.handers = headerColls;
                         List<CfgDataObjects> liob = new List<CfgDataObjects>();
-                        jsonKeyDic jk = new jsonKeyDic();
+                        
                         if (redata[0] == 1 && redata[1] == 1)//210
                         {
                             dataJson dj = new dataJson();
-                            dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, jk.cfgL210Key, true);
+                            dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, jsonKeyDic.cfgL210Key, true);
                             liob = dj.listCfg;
                         }
                         else if (redata[0] == 2 && redata[1] == 1)//D300
                         {
-
+                            dataJson dj = new dataJson();
+                            dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, jsonKeyDic.cfgD300Key, true);
+                            liob = dj.listCfg;
                         }
                         UserItems items = new UserItems(this.dataGrieViewControl11);
                         List<string> parentLi = new List<string>();

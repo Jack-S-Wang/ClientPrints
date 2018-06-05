@@ -30,7 +30,6 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         {
             IntPtr pt = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
-            //lodeFile();
             foreach (var mk in keyList)
             {
                 string name = mk;
@@ -42,16 +41,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         {
             IntPtr pt = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
-            //lodeFile();
-            string k = key;
-            showNodeVal(devEntpy, pt, (uint)data.Length, ref k, false);
-            string kk = k;
-            if (key == "Print State.Completed Job Number")
-            {
-                System.Diagnostics.Trace.TraceInformation("ssd");
-            }
-            System.Diagnostics.Trace.TraceInformation("kk = " + kk+";key="+key);
-            System.Diagnostics.Trace.Flush();
+            string kk = key;
+            showNodeVal(devEntpy, pt, (uint)data.Length, ref kk, false);
             return kk;
         }
 
@@ -146,25 +137,43 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         /// <param name="isCfgObject">是否将获取的值进行存入cfg数据对象里</param>
         private void showNodeVal(uint entpy, IntPtr pt, uint len, ref string mk, bool isCfgObject)
         {
-            IntPtr npt = Marshal.AllocHGlobal(256);
-            structClassDll.UNION union = new structClassDll.UNION()
-            {
-                lpDats = npt
-            };
-            structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL()
-            {
-                datLen = 500,
-                union = union
-            };
+            string reVal = "";
+            structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL();
             structClassDll.JSVAL_INFO valInfo = new structClassDll.JSVAL_INFO()
             {
                 jsEntry = entpy,
                 keyPath = mk,
                 tag = WDevCmdObjects.JSVAL_TAG_DATVAL
             };
+            int dlen = 0;
+            int mcount = 0;
+            while (!WDevJsonDll.dllFunc_getDevJsonVal(ref valInfo, pt, len, ref mVal))
+            {
+                dlen = mVal.datLen;
+                IntPtr npt = Marshal.AllocHGlobal(mVal.datLen*2);
+                structClassDll.UNION union = new structClassDll.UNION()
+                {
+                    lpDats = npt
+                };
+                mVal.union = union;
+                mVal.datLen = (ushort)(mVal.datLen * 2);
+                mcount++;
+                if (mcount == 3)
+                {
+                    break;
+                }
+            }
+            IntPtr npt1 = Marshal.AllocHGlobal(dlen*2);
+            structClassDll.UNION union1 = new structClassDll.UNION()
+            {
+                lpDats = npt1
+            };
+            mVal = new structClassDll.NODEITEM_VAL();
+            mVal.union = union1;
+            mVal.datLen = (ushort)(dlen*2);
             if (WDevJsonDll.dllFunc_getDevJsonVal(ref valInfo, pt, len, ref mVal))
             {
-                string reVal = "";
+
                 switch (mVal.type)
                 {
                     case WDevCmdObjects.NODE_VAL_NONE:
@@ -216,12 +225,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                                 ind = i;
                                 break;
                             }
-                            
+
                         }
                         byte[] ldata = new byte[ind];
                         Array.Copy(liStr, ldata, ind);
                         string str = Encoding.UTF8.GetString(ldata);
-                        reVal = mVal.val.ToString()+";"+str;
+                        reVal = mVal.val.ToString() + ";" + str;
                         break;
                     case WDevCmdObjects.NODE_VAL_DATA:
                         byte[] dataS = new byte[mVal.datLen];
@@ -277,20 +286,21 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                         }
                         break;
                 }
-                mk = reVal;
             }
+
+            mk = reVal;
         }
 
         private byte[] setNodeVal(uint entpy, IntPtr pt, uint len, string mk, string value, int selectIndex)
         {
-            IntPtr npt = Marshal.AllocHGlobal(256);
+            IntPtr npt = Marshal.AllocHGlobal(500);
             structClassDll.UNION union = new structClassDll.UNION()
             {
                 lpDats = npt
             };
             structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL()
             {
-                datLen = 256,
+                datLen = 500,
                 union = union
             };
             structClassDll.JSVAL_INFO valInfo = new structClassDll.JSVAL_INFO()
@@ -317,7 +327,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                     int count = 0;
                     if (mVal.tag == 4)
                     {
-                        byte[] dt=new byte[4];
+                        byte[] dt = new byte[4];
                         string v = "";
                         for (int i = 0; i < value.Length; i++)
                         {
@@ -326,7 +336,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                                 dt[count] = (byte)Int32.Parse(v);
                                 v = "";
                                 count++;
-                            }else
+                            }
+                            else
                             {
                                 v += value[i];
                                 if (i == value.Length - 1)
@@ -336,11 +347,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                             }
                         }
                         Marshal.Copy(dt, 0, mVal.union.lpDats, 4);
-                    }else
+                    }
+                    else
                     {
 
                     }
-                   
+
                 }
 
                 if (WDevJsonDll.dllFunc_setDevJsonVal(ref valInfo, pt, len, ref mVal))

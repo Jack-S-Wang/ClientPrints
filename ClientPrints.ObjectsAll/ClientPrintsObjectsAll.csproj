@@ -65,6 +65,7 @@
     <Compile Include="ClientPrints.Objects.DevDll\WDevCmdObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objects.Printers.JSON\PrinterDL210Json.cs" />
     <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objects.Printers.JSON\PrinterJson.cs" />
+    <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objects.Printers.JSON\PrinterSharJson.cs" />
     <Compile Include="ClientPrints.Objects.Printers\ClientPrints.Objetcs.Printers.Interface\IMethodObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterObjects.cs" />
     <Compile Include="ClientPrints.Objects.Printers\PrinterParams.cs" />

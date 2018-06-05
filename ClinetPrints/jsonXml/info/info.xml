@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<jsonKeySave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <list>
+    <DataItem>
+      <keyName>Generic</keyName>
+      <showName>Generic</showName>
+      <jsonKeyName>Generic</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>SEP</keyName>
+      <showName>SEP</showName>
+      <jsonKeyName>SEP</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>Datas</keyName>
+      <showName>Datas</showName>
+      <jsonKeyName>Datas</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>InterfaceRecvice</keyName>
+      <showName>InterfaceRecvice</showName>
+      <jsonKeyName>Interface.Recvice</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>InterfaceFrame</keyName>
+      <showName>InterfaceFrame</showName>
+      <jsonKeyName>Interface.Frame</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>InterfaceCompress</keyName>
+      <showName>InterfaceCompress</showName>
+      <jsonKeyName>Interface.Compress</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageWidth</keyName>
+      <showName>PageWidth</showName>
+      <jsonKeyName>Page.Width</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageHeight</keyName>
+      <showName>PageHeight</showName>
+      <jsonKeyName>Page.Height</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageMargin</keyName>
+      <showName>PageMargin</showName>
+      <jsonKeyName>Page.Margin</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageXDPI</keyName>
+      <showName>PageXDPI</showName>
+      <jsonKeyName>Page.XDPI</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageYDPI</keyName>
+      <showName>PageYDPI</showName>
+      <jsonKeyName>Page.YDPI</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageBPPS</keyName>
+      <showName>PageBPPS</showName>
+      <jsonKeyName>Page.BPPS</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageBMP_FMT</keyName>
+      <showName>PageBMP_FMT</showName>
+      <jsonKeyName>Page.BMP_FMT</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PageDSBMP</keyName>
+      <showName>PageDSBMP</showName>
+      <jsonKeyName>Page.DSBMP</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>SSRunState</keyName>
+      <showName>SSRunState</showName>
+      <jsonKeyName>System State.Run State</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>SSError</keyName>
+      <showName>SSError</showName>
+      <jsonKeyName>System State.Error</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>DSProcess</keyName>
+      <showName>DSProcess</showName>
+      <jsonKeyName>Data State.Process</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>DSJobNumber</keyName>
+      <showName>DSJobNumber</showName>
+      <jsonKeyName>Data State.Job Number</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>DSFrameNumber</keyName>
+      <showName>DSFrameNumber</showName>
+      <jsonKeyName>Data State.Frame Number</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>DSErrorCode</keyName>
+      <showName>DSErrorCode</showName>
+      <jsonKeyName>Data State.Error Code</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSOutputState</keyName>
+      <showName>PSOutputState</showName>
+      <jsonKeyName>Print State.Output State</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSNumberOfPrint</keyName>
+      <showName>PSNumberOfPrint</showName>
+      <jsonKeyName>Print State.Number of Print</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSCompletedJobNumber</keyName>
+      <showName>PSCompletedJobNumber</showName>
+      <jsonKeyName>Print State.Completed Job Number</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSCompletedFrameNumber</keyName>
+      <showName>PSCompletedFrameNumber</showName>
+      <jsonKeyName>Print State.Completed Frame Number</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSTemperature</keyName>
+      <showName>PSTemperature</showName>
+      <jsonKeyName>Print State.Device Temperature</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSSensor0</keyName>
+      <showName>PSSensor0</showName>
+      <jsonKeyName>Print State.Sensor0</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSSensor1</keyName>
+      <showName>PSSensor1</showName>
+      <jsonKeyName>Print State.Sensor1</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSSensor2</keyName>
+      <showName>PSSensor2</showName>
+      <jsonKeyName>Print State.Sensor2</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>PSSensor3</keyName>
+      <showName>PSSensor3</showName>
+      <jsonKeyName>Print State.Sensor3</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>DISInCache</keyName>
+      <showName>DISInCache</showName>
+      <jsonKeyName>Data Interface State.The percentage point ratio of the received buffer data</jsonKeyName>
+    </DataItem>
+    <DataItem>
+      <keyName>DISResidueCache</keyName>
+      <showName>DISResidueCache</showName>
+      <jsonKeyName>Data Interface State.The remaining space in the receiving buffer</jsonKeyName>
+    </DataItem>
+  </list>
+</jsonKeySave>

@@ -95,12 +95,9 @@ namespace ClinetPrints
                 this.Hide();
                 //注册系统检测USB插拔功能
                 registerForHandle();
-                //string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml\\cfg";
-                //if (!System.IO.File.Exists(flod))
-                //    Directory.CreateDirectory(flod);
-                //flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\jsonXml\\info";
-                //if (!System.IO.File.Exists(flod))
-                //    Directory.CreateDirectory(flod);
+                string flod = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints";
+                if (!System.IO.File.Exists(flod))
+                    Directory.CreateDirectory(flod);
                 printerViewSingle.Enabled = true;
                 printerViewSingle.Visible = true;
                 printerViewFlock.Enabled = false;
@@ -111,50 +108,52 @@ namespace ClinetPrints
                 tool.SetToolTip(printerViewSingle, "双击打印机即可查看消息内容！");
                 tool.SetToolTip(printerViewFlock, "双击打印机即可查看消息内容！");
                 listView1.ShowItemToolTips = true;
-                //bool imageF = true;
-                //timer1.Tick += (o, ae) =>
-                //{
-                //    if (this.Visible)
-                //    {
-                //        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
-                //        imageF = true;
-                //        timer1.Enabled = false;
-                //        return;
-                //    }
-                //    else
-                //    {
-                //        if (imageF)
-                //        {
-                //            notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
-                //            imageF = false;
-                //        }
-                //        else
-                //        {
-                //            notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
-                //            imageF = true;
-                //        }
-                //    }
-                //};
+                bool imageF = true;
+                timer1.Tick += (o, ae) =>
+                {
+                    if (this.Visible)
+                    {
+                        notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                        imageF = true;
+                        timer1.Enabled = false;
+                        return;
+                    }
+                    else
+                    {
+                        if (imageF)
+                        {
+                            notifyIcon.Icon = Properties.Resources.ooopic_1502413321;
+                            imageF = false;
+                        }
+                        else
+                        {
+                            notifyIcon.Icon = Properties.Resources.ooopic_1502413293;
+                            imageF = true;
+                        }
+                    }
+                };
                 //添加图片
                 AddImage();
                 //主程序任务栏中右键显示的控制
                 AddMunConten();
+                //加载json键值集合
+                jsonKeyDic jk = new jsonKeyDic();
                 //得到连接服务信息内容
-                //getServerCode();
+                getServerCode();
                 //添加分组的排布
                 AddGroupMap();
                 //添加群打印机分组排布
-                //AddFlockGroupMap();
+                AddFlockGroupMap();
                 //添加打印机信息
                 AddPrinterMap();
                 //添加群打印机
-                //AddFlockPrinterMap();
+                AddFlockPrinterMap();
                 //获取在某段时间所执行的定时查询
-                //getMonTime();
+                getMonTime();
                 //定时查询状态进行更新
-                //tiState.Interval = 5000;
-                //tiState.Enabled = true;
-                //tiState.Elapsed += TiState_Elapsed;
+                tiState.Interval = 5000;
+                tiState.Enabled = true;
+                tiState.Elapsed += TiState_Elapsed;
                 //查询是否登录中有需要密码的还是需要更新版本的
                 checkPrinter();
             }
@@ -270,22 +269,57 @@ namespace ClinetPrints
                         {
                             var method = key.MethodsObject as IMethodObjects;
                             var po = key;
-                            byte[] redata = new byte[] { 0x30 };
+                            byte[] redata = new byte[] { 0};
                             string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, key.pHandle, ref redata);
                             if (!str.Contains("false"))
                             {
-                                var keyState = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300State>(str);
-                                if (key.stateCode != keyState.stateCode)
+                                dataJson dj = new dataJson();
+                                string state = "";
+                                int stateType = 0;
+                                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State");
+                                if (mainState.Contains("idle"))
+                                {
+                                    state = "空闲";
+                                    stateType = 1;
+                                }
+                                else if (mainState.Contains("At work"))
+                                {
+                                    state = "工作中";
+                                    stateType = 3;
+                                }
+                                else if (mainState.Contains("Ready"))
+                                {
+                                    state = "就绪";
+                                    stateType = 2;
+                                }
+                                else if (mainState.Contains("Busy"))
+                                {
+                                    state = "繁忙";
+                                    stateType = 4;
+                                }
+                                else if (mainState.Contains("Pause"))
+                                {
+                                    state = "暂停";
+                                    stateType = 5;
+                                }
+                                else if (mainState.Contains("Error"))
+                                {
+                                    state = "异常";
+                                    stateType = 6;
+                                }
+                                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error");
+                                error = error.Substring(error.IndexOf(';') + 1);
+                                if (key.stateCode != stateType)
                                 {
                                     this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
                                     {
                                         printerViewSingle.BeginUpdate();
-                                        key.stateMessage = keyState.majorState + ":" + keyState.StateMessage;
-                                        key.state = keyState.majorState;
-                                        key.stateCode = keyState.stateCode;
+                                        key.stateMessage = state + ":" + error;
+                                        key.state = state;
+                                        key.stateCode = stateType;
                                         printerViewSingle.EndUpdate();
                                     }));
-                                    if (keyState.stateCode == 4 || keyState.stateCode == 5 || keyState.stateCode == 6)
+                                    if (stateType == 4 || stateType == 5 || stateType == 6)
                                     {
                                         Interlocked.Increment(ref errorCount);
                                         SpeechSynthesizer sp = new SpeechSynthesizer();

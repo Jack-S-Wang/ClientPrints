@@ -35,7 +35,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
             {
                 int maxWidth = (data[2] << 8) + data[3];
                 int maxHeight = (data[4] << 8) + data[5];
-                int confin = (data[6] << 24) + (data[7] << 16) + (data[8] << 8) + data[9];
+                string confin = string.Format("{0:x2}{1:x2}{2:x2}{3:x2}",data[6],data[7],data[8], data[9]);
                 int xDPL = data[10];
                 int yDOPL = data[11];
                 int colorDepth = data[12];

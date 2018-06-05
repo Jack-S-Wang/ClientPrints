@@ -26,8 +26,17 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass
         }
         public class DataItem
         {
+            /// <summary>
+            /// 登记的键值
+            /// </summary>
             public string keyName { get; set; }
+           /// <summary>
+           /// 界面显示的名称
+           /// </summary>
             public string showName { get; set; }
+            /// <summary>
+            /// json查询键值名称
+            /// </summary>
             public string jsonKeyName { get; set; }
         }
     }

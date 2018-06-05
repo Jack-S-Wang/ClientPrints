@@ -54,7 +54,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// <summary>
         /// 页面边界，从左到右，上到下，单位像素
         /// </summary>
-        public int confin { get; set; }
+        public string confin { get; set; }
         /// <summary>
         /// 横向分辨率
         /// </summary>

@@ -321,6 +321,15 @@
     <Content Include="ds_dev_bmp.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="jsonXml\cfg\cfg210.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="jsonXml\cfg\cfgD300.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="jsonXml\info\info.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ooopic_1502413321.ico" />
     <Content Include="wDevJson.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -390,7 +399,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>REM xcopy /S /I /Y "$(ProjectDir)SansDLL" "$(ProjectDir)$(OutDir)"
-</PreBuildEvent>
+REM xcopy /S /I /Y "$(ProjectDir)jsonXml" "$(ProjectDir)$(OutDir)"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
