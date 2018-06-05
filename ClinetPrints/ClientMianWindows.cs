@@ -138,6 +138,7 @@ namespace ClinetPrints
                 AddMunConten();
                 //加载json键值集合
                 jsonKeyDic jk = new jsonKeyDic();
+                PrinterSharJson.getJsonKey();
                 //得到连接服务信息内容
                 getServerCode();
                 //添加分组的排布

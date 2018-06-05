@@ -97,5 +97,20 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
             }
 
         }
+
+
+        int index = 0;
+        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (index > 0)
+            {
+                //data_View.SelectedRows[index]
+            }
+        }
+
+        private void data_View_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
+        {
+            
+        }
     }
 }

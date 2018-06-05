@@ -1,20 +1,16 @@
 <?xml version="1.0"?>
 <jsonKeySave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <list>
+    <DataItem />
     <DataItem>
-      <keyName>Generic</keyName>
-      <showName>Generic</showName>
-      <jsonKeyName>Generic</jsonKeyName>
+      <keyName>GenericSEP</keyName>
+      <showName>GenericSEP</showName>
+      <jsonKeyName>Generic.SEP</jsonKeyName>
     </DataItem>
     <DataItem>
-      <keyName>SEP</keyName>
-      <showName>SEP</showName>
-      <jsonKeyName>SEP</jsonKeyName>
-    </DataItem>
-    <DataItem>
-      <keyName>Datas</keyName>
-      <showName>Datas</showName>
-      <jsonKeyName>Datas</jsonKeyName>
+      <keyName>GenericDatas</keyName>
+      <showName>GenericDatas</showName>
+      <jsonKeyName>Generic.Datas</jsonKeyName>
     </DataItem>
     <DataItem>
       <keyName>InterfaceRecvice</keyName>

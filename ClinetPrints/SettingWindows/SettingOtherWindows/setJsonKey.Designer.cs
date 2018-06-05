@@ -31,23 +31,26 @@
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txb_fileName = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.chk_entpy = new System.Windows.Forms.CheckBox();
+            this.btn_save = new System.Windows.Forms.Button();
+            this.btn_Load = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.data_View = new System.Windows.Forms.DataGridView();
-            this.btn_Load = new System.Windows.Forms.Button();
-            this.btn_save = new System.Windows.Forms.Button();
-            this.chk_entpy = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txb_fileName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.jsonKeySaveBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.keyNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.showNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.jsonKeyNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.jsonKeySaveBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.data_View)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.jsonKeySaveBindingSource)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -74,6 +77,62 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "控制";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.Red;
+            this.label2.Location = new System.Drawing.Point(274, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 12);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "*无需后辍名";
+            // 
+            // txb_fileName
+            // 
+            this.txb_fileName.Location = new System.Drawing.Point(110, 33);
+            this.txb_fileName.Name = "txb_fileName";
+            this.txb_fileName.Size = new System.Drawing.Size(131, 21);
+            this.txb_fileName.TabIndex = 4;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(39, 36);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(65, 12);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "文件名称：";
+            // 
+            // chk_entpy
+            // 
+            this.chk_entpy.AutoSize = true;
+            this.chk_entpy.Location = new System.Drawing.Point(290, 88);
+            this.chk_entpy.Name = "chk_entpy";
+            this.chk_entpy.Size = new System.Drawing.Size(102, 16);
+            this.chk_entpy.TabIndex = 2;
+            this.chk_entpy.Text = "是否是cfg类型";
+            this.chk_entpy.UseVisualStyleBackColor = true;
+            // 
+            // btn_save
+            // 
+            this.btn_save.Location = new System.Drawing.Point(166, 84);
+            this.btn_save.Name = "btn_save";
+            this.btn_save.Size = new System.Drawing.Size(75, 23);
+            this.btn_save.TabIndex = 1;
+            this.btn_save.Text = "保存";
+            this.btn_save.UseVisualStyleBackColor = true;
+            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
+            // 
+            // btn_Load
+            // 
+            this.btn_Load.Location = new System.Drawing.Point(27, 84);
+            this.btn_Load.Name = "btn_Load";
+            this.btn_Load.Size = new System.Drawing.Size(75, 23);
+            this.btn_Load.TabIndex = 0;
+            this.btn_Load.Text = "导入";
+            this.btn_Load.UseVisualStyleBackColor = true;
+            this.btn_Load.Click += new System.EventHandler(this.btn_Load_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.data_View);
@@ -98,67 +157,7 @@
             this.data_View.RowTemplate.Height = 23;
             this.data_View.Size = new System.Drawing.Size(406, 413);
             this.data_View.TabIndex = 0;
-            // 
-            // btn_Load
-            // 
-            this.btn_Load.Location = new System.Drawing.Point(27, 84);
-            this.btn_Load.Name = "btn_Load";
-            this.btn_Load.Size = new System.Drawing.Size(75, 23);
-            this.btn_Load.TabIndex = 0;
-            this.btn_Load.Text = "导入";
-            this.btn_Load.UseVisualStyleBackColor = true;
-            this.btn_Load.Click += new System.EventHandler(this.btn_Load_Click);
-            // 
-            // btn_save
-            // 
-            this.btn_save.Location = new System.Drawing.Point(166, 84);
-            this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(75, 23);
-            this.btn_save.TabIndex = 1;
-            this.btn_save.Text = "保存";
-            this.btn_save.UseVisualStyleBackColor = true;
-            this.btn_save.Click += new System.EventHandler(this.btn_save_Click);
-            // 
-            // chk_entpy
-            // 
-            this.chk_entpy.AutoSize = true;
-            this.chk_entpy.Location = new System.Drawing.Point(290, 88);
-            this.chk_entpy.Name = "chk_entpy";
-            this.chk_entpy.Size = new System.Drawing.Size(102, 16);
-            this.chk_entpy.TabIndex = 2;
-            this.chk_entpy.Text = "是否是cfg类型";
-            this.chk_entpy.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(39, 36);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 12);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "文件名称：";
-            // 
-            // txb_fileName
-            // 
-            this.txb_fileName.Location = new System.Drawing.Point(110, 33);
-            this.txb_fileName.Name = "txb_fileName";
-            this.txb_fileName.Size = new System.Drawing.Size(131, 21);
-            this.txb_fileName.TabIndex = 4;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(274, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(71, 12);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "*无需后辍名";
-            // 
-            // jsonKeySaveBindingSource
-            // 
-            this.jsonKeySaveBindingSource.DataMember = "list";
-            this.jsonKeySaveBindingSource.DataSource = typeof(ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.jsonKeySave);
+            this.data_View.CellContextMenuStripNeeded += new System.Windows.Forms.DataGridViewCellContextMenuStripNeededEventHandler(this.data_View_CellContextMenuStripNeeded);
             // 
             // keyNameDataGridViewTextBoxColumn
             // 
@@ -180,11 +179,31 @@
             this.jsonKeyNameDataGridViewTextBoxColumn.Name = "jsonKeyNameDataGridViewTextBoxColumn";
             this.jsonKeyNameDataGridViewTextBoxColumn.Width = 150;
             // 
+            // jsonKeySaveBindingSource
+            // 
+            this.jsonKeySaveBindingSource.DataMember = "list";
+            this.jsonKeySaveBindingSource.DataSource = typeof(ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.jsonKeySave);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.删除ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 26);
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
+            // 
             // setJsonKey
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(454, 612);
+            this.ContextMenuStrip = this.contextMenuStrip1;
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.Name = "setJsonKey";
@@ -195,6 +214,7 @@
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.data_View)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.jsonKeySaveBindingSource)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -215,5 +235,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn keyNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn showNameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn jsonKeyNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
     }
 }

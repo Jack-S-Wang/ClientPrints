@@ -97,7 +97,7 @@ namespace ClinetPrints.SettingWindows
             dataJson dj = new dataJson();
             int stateCode = 0;
             string majorState = "";
-            string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State");
+            string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSRunState);
             if (mainState.Contains("idle"))
             {
                 majorState = "空闲";
@@ -128,7 +128,7 @@ namespace ClinetPrints.SettingWindows
                 stateCode = 6;
             }
 
-            string StateMessage = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error");
+            string StateMessage = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSError);
             StateMessage = StateMessage.Substring((StateMessage.IndexOf(';') + 1));
 
             if (stateType != stateCode)
@@ -141,13 +141,13 @@ namespace ClinetPrints.SettingWindows
                 txb_error.Text = StateMessage;
             }
             //数据处理
-            string ds = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Process");
+            string ds = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSProcess);
             int datastateCode = Int32.Parse(ds.Substring(0, ds.IndexOf(';')));
             string datamajorState = ds.Substring(ds.IndexOf(';') + 1);
-            string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Error Code");
+            string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSErrorCode);
             string dataStateMessage = error.Substring(error.IndexOf(';') + 1);
-            string dataworkIndex = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Job Number");
-            string dataFrames = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data State.Frame Number");
+            string dataworkIndex = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSJobNumber);
+            string dataFrames = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSFrameNumber);
 
             if (dataStateType != datastateCode)
             {
@@ -167,17 +167,17 @@ namespace ClinetPrints.SettingWindows
                 txb_frame.Text = dataFrames.ToString();
             }
             //打印输出
-            string oc = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Output State");
+            string oc = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSOutputState);
             int OutstateCode = Int32.Parse(oc.Substring(0, oc.IndexOf(';')));
             string OutmajorState = oc.Substring(oc.IndexOf(';') + 1);
-            int taskNumber = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Number of Print"));
-            int OutworkIndex = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Completed Job Number"));
-            int OutdataFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Completed Frame Number "));
-            int temperature = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Device Temperature"));
-            string sensor0 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor0");
-            string sensor1 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor1");
-            string sensor2 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor2");
-            string sensor3 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Sensor3");
+            int taskNumber = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSNumberOfPrint));
+            int OutworkIndex = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedJobNumber));
+            int OutdataFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedFrameNumber));
+            int temperature = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSTemperature));
+            string sensor0 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor0);
+            string sensor1 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor1);
+            string sensor2 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor2);
+            string sensor3 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor3);
 
 
             if (printStateType != OutstateCode)
@@ -219,8 +219,8 @@ namespace ClinetPrints.SettingWindows
                 txb_sensor3.Text = sensor3;
             }
 
-            int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data Interface State.The percentage point ratio of the received buffer data"));
-            int residueCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Data Interface State.The remaining space in the receiving buffer"));
+            int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DISInCache));
+            int residueCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DISResidueCache));
 
 
             if (!txb_cache.Text.Contains(InCache.ToString()))

@@ -395,7 +395,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                
                 dataJson dj = new dataJson();
                 //获取主次状态和输出作业号
-                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State");
+                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSRunState);
                 if (mainState.Contains("idle"))
                 {
                     state = "空闲";
@@ -426,10 +426,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     state = "异常";
                     stateType = 6;
                 }
-                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error");
+                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSError);
                 error = error.Substring(error.IndexOf(';') + 1);
                 stateMessage = state + ";" + error;
-                string inwork = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Print State.Completed Job Number");
+                string inwork = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedJobNumber);
                 int workIndex = Int32.Parse(inwork);
 
                 
@@ -439,11 +439,11 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 //设备数据信息
                 redata = new byte[] { 0 };
                 string dataInfo = reInformation(WDevCmdObjects.DEV_GET_DEVINFO, pHandle, ref redata);
-                int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Interface.Recvice"));
-                int maxFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Interface.Frame"));
-                byte compressType = byte.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Interface.Compress"));
+                int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.InterfaceRecvice));
+                int maxFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.InterfaceFrame));
+                byte compressType = byte.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.InterfaceCompress));
                 bool bType = false;
-                string DevInfo = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Generic.Datas");
+                string DevInfo = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.GenericDatas);
                 switch (printerModel)
                 {
                     case "DC-1300":
@@ -469,16 +469,16 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                 }
                 
                 //设备页面信息
-                int maxWidth = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.Width"));
-                int maxHeight = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.Height"));
-                string confin= dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.Margin");
-                int xDPL = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.XDPI"));
-                int yDPL = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.YDPI"));
-                int colorDepth = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.BPPS"));
-                string p = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.BMP_FMT");
+                int maxWidth = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageWidth));
+                int maxHeight = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageHeight));
+                string confin= dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageMargin);
+                int xDPL = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageXDPI));
+                int yDPL = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageYDPI));
+                int colorDepth = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageBPPS));
+                string p = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageBMP_FMT);
                 p = p.Substring(0, p.IndexOf(';'));
                 byte pixelformat = byte.Parse(p);
-                string s = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "Page.DSBMP");
+                string s = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PageDSBMP);
                 s = s.Substring(0, s.IndexOf(';'));
                 byte isSupport = byte.Parse(s);
                 

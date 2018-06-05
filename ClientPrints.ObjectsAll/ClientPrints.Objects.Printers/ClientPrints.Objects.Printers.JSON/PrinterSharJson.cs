@@ -10,9 +10,8 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
 {
     public static class PrinterSharJson
     {
-        public static string Generic { get; set; }
-        public static string SEP { get; set; }
-        public static string Datas { get; set; }
+        public static string GenericSEP { get; set; }
+        public static string GenericDatas { get; set; }
         public static string InterfaceRecvice { get; set; }
         public static string InterfaceFrame { get; set; }
         public static string InterfaceCompress { get; set; }
@@ -54,14 +53,12 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Obje
                     {
                         switch (item.keyName)
                         {
-                            case "Generic":
-                                Generic = item.jsonKeyName;
+                           
+                            case "GenericSEP":
+                                GenericSEP = item.jsonKeyName;
                                 break;
-                            case "SEP":
-                                SEP = item.jsonKeyName;
-                                break;
-                            case "Datas":
-                                Datas = item.jsonKeyName;
+                            case "GenericDatas":
+                                GenericDatas = item.jsonKeyName;
                                 break;
                             case "InterfaceRecvice":
                                 InterfaceRecvice = item.jsonKeyName;
