@@ -2,6 +2,7 @@
 using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
 using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
+using System;
 
 namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
 {
@@ -50,7 +51,8 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         public void getPrinterObjects()
         {
             string[] path = EnumPath();
-            WDevDllMethod.dllFunc_OpenLog(@"./DevLog.log");
+            string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\DevLog.Log";
+            WDevDllMethod.dllFunc_OpenLog(filePath);
             foreach (string pathAddress in path)
             {
                 new PrintersGeneralFunction(pathAddress,new byte[0]);

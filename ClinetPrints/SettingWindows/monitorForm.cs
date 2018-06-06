@@ -97,7 +97,7 @@ namespace ClinetPrints.SettingWindows
             dataJson dj = new dataJson();
             int stateCode = 0;
             string majorState = "";
-            string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSRunState);
+            string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSRunState,false);
             if (mainState.Contains("idle"))
             {
                 majorState = "空闲";
@@ -128,7 +128,7 @@ namespace ClinetPrints.SettingWindows
                 stateCode = 6;
             }
 
-            string StateMessage = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSError);
+            string StateMessage = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.SSError,false);
             StateMessage = StateMessage.Substring((StateMessage.IndexOf(';') + 1));
 
             if (stateType != stateCode)
@@ -141,13 +141,13 @@ namespace ClinetPrints.SettingWindows
                 txb_error.Text = StateMessage;
             }
             //数据处理
-            string ds = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSProcess);
+            string ds = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSProcess,false);
             int datastateCode = Int32.Parse(ds.Substring(0, ds.IndexOf(';')));
             string datamajorState = ds.Substring(ds.IndexOf(';') + 1);
-            string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSErrorCode);
+            string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSErrorCode,false);
             string dataStateMessage = error.Substring(error.IndexOf(';') + 1);
-            string dataworkIndex = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSJobNumber);
-            string dataFrames = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSFrameNumber);
+            string dataworkIndex = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSJobNumber,false);
+            string dataFrames = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DSFrameNumber,false);
 
             if (dataStateType != datastateCode)
             {
@@ -167,17 +167,17 @@ namespace ClinetPrints.SettingWindows
                 txb_frame.Text = dataFrames.ToString();
             }
             //打印输出
-            string oc = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSOutputState);
+            string oc = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSOutputState,false);
             int OutstateCode = Int32.Parse(oc.Substring(0, oc.IndexOf(';')));
             string OutmajorState = oc.Substring(oc.IndexOf(';') + 1);
-            int taskNumber = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSNumberOfPrint));
-            int OutworkIndex = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedJobNumber));
-            int OutdataFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedFrameNumber));
-            int temperature = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSTemperature));
-            string sensor0 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor0);
-            string sensor1 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor1);
-            string sensor2 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor2);
-            string sensor3 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor3);
+            int taskNumber = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSNumberOfPrint,false));
+            int OutworkIndex = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedJobNumber,false));
+            int OutdataFrames = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedFrameNumber,false));
+            int temperature = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSTemperature,false));
+            string sensor0 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor0,false);
+            string sensor1 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor1,false);
+            string sensor2 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor2,false);
+            string sensor3 = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSSensor3,false);
 
 
             if (printStateType != OutstateCode)
@@ -219,8 +219,8 @@ namespace ClinetPrints.SettingWindows
                 txb_sensor3.Text = sensor3;
             }
 
-            int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DISInCache));
-            int residueCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DISResidueCache));
+            int InCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DISInCache,false));
+            int residueCache = Int32.Parse(dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.DISResidueCache,true));
 
 
             if (!txb_cache.Text.Contains(InCache.ToString()))

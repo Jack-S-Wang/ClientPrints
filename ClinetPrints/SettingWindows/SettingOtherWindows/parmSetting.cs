@@ -233,7 +233,12 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                             selectIndex = 0;
                             
                         }
-                        dj.setDataJsonInfo(ref cfgData, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, name, val, selectIndex);
+                        bool isCloseLog = false;
+                        if(i== (dataGrieViewControl11.items.Count - 1))
+                        {
+                            isCloseLog = true;
+                        }
+                        dj.setDataJsonInfo(ref cfgData, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, name, val, selectIndex,isCloseLog);
                         if (i == (dataGrieViewControl11.items.Count - 1))//判断是否是最后一个数
                         {
                             //直接发送空数据，通知存入设备中

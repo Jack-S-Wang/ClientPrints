@@ -10,7 +10,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
     public class WDevJsonDll
     {
         [DllImport("wDevJson.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        public static extern bool dllFunc_OpenLog(string filePath);
+        public static extern bool dllFunc_openLog(string filePath);
 
         [DllImport("wDevJson.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         public static extern bool dllFunc_loadDevJson(byte[] jsonDoc, uint devJsonEntry);

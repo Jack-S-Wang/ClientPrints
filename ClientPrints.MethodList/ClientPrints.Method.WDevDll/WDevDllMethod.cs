@@ -128,7 +128,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.WDevDll
         /// 关闭设备日志
         /// </summary>
         /// <param name="pHandle">由dllFunc_OpenDev返回的设备端口句柄</param>
-        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode)]
+        [DllImport("WDevObj.dll", CharSet = CharSet.Unicode,CallingConvention =CallingConvention.Cdecl)]
         public static extern void dllFunc_CloseLog(IntPtr pHandle);
 
         /// <summary>

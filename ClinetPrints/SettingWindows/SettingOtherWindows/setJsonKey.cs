@@ -99,18 +99,19 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
         }
 
 
-        int index = 0;
+        int index = -1;
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (index > 0)
+            if (index !=-1)
             {
-                //data_View.SelectedRows[index]
+                data_View.Rows.RemoveAt(index);
+                index = -1;
             }
         }
 
         private void data_View_CellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
         {
-            
+            index=e.RowIndex;
         }
     }
 }

@@ -277,7 +277,7 @@ namespace ClinetPrints
                                 dataJson dj = new dataJson();
                                 string state = "";
                                 int stateType = 0;
-                                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State");
+                                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State",false);
                                 if (mainState.Contains("idle"))
                                 {
                                     state = "空闲";
@@ -308,7 +308,7 @@ namespace ClinetPrints
                                     state = "异常";
                                     stateType = 6;
                                 }
-                                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error");
+                                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error",true);
                                 error = error.Substring(error.IndexOf(';') + 1);
                                 if (key.stateCode != stateType)
                                 {
@@ -1671,16 +1671,17 @@ namespace ClinetPrints
                         //输出作业
                         if (!printer.isWifi)
                         {
-                            byte[] redata = new byte[] { 0x33 };
+                            byte[] redata = new byte[] { 0 };
                             var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle,ref redata);
                             if (printOutPut.Contains("false"))
                             {
                                 MessageBox.Show("打印机已离线或无法获取！");
                                 break;
                             }
-                            var printOut = JsonConvert.DeserializeObject<PrinterJson.PrinterDC1300PrintState>(printOutPut);
-
-                            if (printOut.workIndex == po.pParams.outJobNum)
+                            dataJson dj = new dataJson();
+                            string inwork = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, PrinterSharJson.PSCompletedJobNumber, true);
+                            int workIndex = Int32.Parse(inwork);
+                            if (workIndex == po.pParams.outJobNum)
                             {
                                 string str = "设备:" + po.alias + ",所有打印已完成！";
                                 PrinterInformation pi = new PrinterInformation();
