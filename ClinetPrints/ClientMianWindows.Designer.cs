@@ -487,6 +487,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(843, 597);
             this.Controls.Add(this.pan_mainWin1);
             this.Controls.Add(this.menuStrip1);
@@ -495,6 +496,7 @@
             this.Name = "ClientMianWindows";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "客户端打印控制 V1.11";
+            this.TransparencyKey = System.Drawing.Color.White;
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ClientMianWindows_FormClosing);
             this.Load += new System.EventHandler(this.ClientMianWindows_Load);

@@ -331,6 +331,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ooopic_1502413321.ico" />
+    <Content Include="SansDLL\x64\ds_dev_bmp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SansDLL\x64\WDevObj.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SansDLL\x86WDevdll\ds_dev_bmp.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="wDevJson.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

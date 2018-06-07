@@ -11,7 +11,6 @@ using System.Threading;
 using static System.Windows.Forms.ListViewItem;
 using System.Collections.Generic;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
-using static System.Windows.Forms.ListView;
 using System.Runtime.InteropServices;
 using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
@@ -22,16 +21,11 @@ using Newtonsoft.Json;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objects.Printers.JSON;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using System.Xml.Serialization;
-using ClinetPrints.CreatContorl;
 using System.Drawing.Drawing2D;
 using System.Speech.Synthesis;
 using IWshRuntimeLibrary;
-using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
-using System.ComponentModel;
-using System.Net.Mail;
 using static ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.ServerSettingObject;
 using System.Text;
-
 namespace ClinetPrints
 {
     public partial class ClientMianWindows : Form
@@ -56,7 +50,6 @@ namespace ClinetPrints
                 this.WindowState = FormWindowState.Normal;
             };
             SharMethod.user = new UserCommend();
-
         }
 
 

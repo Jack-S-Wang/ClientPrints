@@ -669,7 +669,6 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                     //        onlyMethod = new PrinterDL210();
                     //        strCode = onlyMethod.getPrinterState(reData);
                     //        break;
-
                     //}
                     strCode = "true";
                     break;
