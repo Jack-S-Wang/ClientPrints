@@ -20,7 +20,7 @@ namespace ClinetPrints.CreatContorl
         }
 
         private UserColumnHanderCollection _handers;
-        [Description("标头信息集合")]
+        [Description("标头信息集合"),Browsable(false)]
         public UserColumnHanderCollection handers
         {
             get { return _handers; }
@@ -51,7 +51,7 @@ namespace ClinetPrints.CreatContorl
 
         }
         private UserItems _items;
-        [Description("字项目集合")]
+        [Description("字项目集合"),Browsable(false)]
         public UserItems items
         {
             get { return _items; }

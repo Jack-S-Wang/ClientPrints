@@ -26,7 +26,7 @@ namespace ClinetPrints.CreatContorl
             InitializeComponent();
         }
 
-        [Description("打印机对象,使用时可传入")]
+        [Description("打印机对象,使用时可传入"),Browsable(false)]
         public PrinterObjects PrinterObject
         {
             get { return _prinerObject; }
@@ -69,8 +69,8 @@ namespace ClinetPrints.CreatContorl
                 }
             }
         }
-        [Browsable(false)]
         private PrinterObjects _prinerObject;
+        [Browsable(false)]
         [Description("图片路径地址")]
         public string fileAddress
         {
@@ -96,8 +96,8 @@ namespace ClinetPrints.CreatContorl
                 }
             }
         }
-        [Browsable(false)]
         private string _fileAddress;
+        [Browsable(false)]
         [Description("纸张大小，列：500x600,或500*600；宽乘高,单位/毫米")]
         public string page
         {
@@ -141,19 +141,16 @@ namespace ClinetPrints.CreatContorl
                 }
             }
         }
-        [Description("打印的任务号,默认是1")]
+        [Description("打印的任务号,默认是1"),Browsable(false)]
         public string jobNum = "1";
-        [Description("打印的数量，默认是1")]
+        [Description("打印的数量，默认是1"), Browsable(false)]
         public int num = 1;
-        [Browsable(false)]
         private string _page;
-        [Browsable(false)]
         private XmlSerializer xml = new XmlSerializer(new printPiewControlXml().GetType());
-        [Browsable(false)]
         private Bitmap oldmap;
-        [Description("退出按钮事件")]
+        [Description("退出按钮事件"), Browsable(false)]
         public event Action<object, EventArgs> OnBtnClose;
-        [Description("打印按钮事件")]
+        [Description("打印按钮事件"), Browsable(false)]
         public event Action<object, EventArgs> onBtnPrint;
 
         private void printPiewControl_Load(object sender, EventArgs e)
