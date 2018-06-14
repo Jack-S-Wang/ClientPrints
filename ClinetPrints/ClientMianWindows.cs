@@ -303,12 +303,13 @@ namespace ClinetPrints
                                 }
                                 string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error",true);
                                 error = error.Substring(error.IndexOf(';') + 1);
-                                if (key.stateCode != stateType)
+                                string Errormessage = state + ";" + error;
+                                if (key.stateCode != stateType || key.stateMessage!=Errormessage)
                                 {
                                     this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
                                     {
                                         printerViewSingle.BeginUpdate();
-                                        key.stateMessage = state + ":" + error;
+                                        key.stateMessage = Errormessage;
                                         key.state = state;
                                         key.stateCode = stateType;
                                         printerViewSingle.EndUpdate();

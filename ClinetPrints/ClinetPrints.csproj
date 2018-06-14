@@ -340,6 +340,7 @@
     <Content Include="SansDLL\x86WDevdll\ds_dev_bmp.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SansDLL\x86WDevdll\wDevJson.dll" />
     <Content Include="wDevJson.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

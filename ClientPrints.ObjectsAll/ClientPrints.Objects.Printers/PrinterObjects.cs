@@ -48,13 +48,11 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         public int stateCode
         {
             get { return stateCode_; }
-            set {
-                if (stateCode_ != value)
-                {
-                    stateCode_ = value;
-                    //StateCodeChanged对象可为空，不为空直接调用方法
-                    StateCodeChanged?.Invoke(this);
-                }
+            set
+            {
+                stateCode_ = value;
+                //StateCodeChanged对象可为空，不为空直接调用方法
+                StateCodeChanged?.Invoke(this);
             }
         }
         /// <summary>
@@ -65,7 +63,7 @@ namespace ClientPrintsObjectsAll.ClientPrints.Objects.Printers
         /// 状态的信息内容
         /// </summary>
         public string stateMessage { get; set; }
-       
+
         /// <summary>
         /// 别名信息
         /// </summary>
