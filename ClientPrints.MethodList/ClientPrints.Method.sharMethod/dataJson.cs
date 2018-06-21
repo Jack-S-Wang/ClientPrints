@@ -18,7 +18,10 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         {
             lodeFile();
             string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\DevJson.Log";
-            WDevJsonDll.dllFunc_openLog(filePath);
+            if (WDevJsonDll.dllFunc_openLog(filePath))
+            {
+
+            }
         }
 
         /// <summary>
@@ -31,7 +34,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         public void getDataJsonInfo(byte[] data, uint devEntpy, List<string> keyList, bool isCfgObject)
         {
             IntPtr pt = Marshal.AllocHGlobal(data.Length);
-
+            Marshal.Copy(data, 0, pt, data.Length);
             foreach (var mk in keyList)
             {
                 string name = mk;
@@ -41,7 +44,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             WDevJsonDll.dllFunc_closeLog();
         }
 
-        public string getDataJsonInfo(byte[] data, uint devEntpy, string key,bool isCloseLog)
+        public string getDataJsonInfo(byte[] data, uint devEntpy, string key, bool isCloseLog)
         {
             IntPtr pt = Marshal.AllocHGlobal(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
@@ -63,7 +66,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         /// <param name="mk"></param>
         /// <param name="value"></param>
         /// <param name="selectIndex"></param>
-        public void setDataJsonInfo(ref byte[] data, uint devEntpy, string mk, string value, int selectIndex,bool isCloseLog)
+        public void setDataJsonInfo(ref byte[] data, uint devEntpy, string mk, string value, int selectIndex, bool isCloseLog)
         {
             IntPtr pt = Marshal.AllocCoTaskMem(data.Length);
             Marshal.Copy(data, 0, pt, data.Length);
@@ -74,11 +77,13 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                 WDevJsonDll.dllFunc_closeLog();
             }
         }
+
+
         /// <summary>
         /// 导入文件内容
         /// </summary>
         /// <returns></returns>
-        private bool lodeFile()
+        public bool lodeFile()
         {
             bool flag = false;
             string path = "C:\\Project\\wDevJsonLib\\json";
@@ -88,8 +93,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             };
             uint[] entpystr = new uint[]
             {
-                (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY,
-                (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY
+                1,2
             };
             for (int i = 0; i < filestr.Length; i++)
             {
@@ -153,6 +157,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         {
             string reVal = "";
             structClassDll.NODEITEM_VAL mVal = new structClassDll.NODEITEM_VAL();
+
             structClassDll.JSVAL_INFO valInfo = new structClassDll.JSVAL_INFO()
             {
                 jsEntry = entpy,
@@ -172,7 +177,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                 };
                 mVal.union = union;
                 mVal.datLen = (ushort)(mVal.datLen * 2);
-                
+
                 mcount++;
                 if (mcount == 5)
                 {
@@ -296,6 +301,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             Marshal.FreeHGlobal(npt);
             Marshal.FreeHGlobal(npt1);
             mk = reVal;
+            WDevJsonDll.dllFunc_fflushLog();
         }
 
         private byte[] setNodeVal(uint entpy, IntPtr pt, uint len, string mk, string value, int selectIndex)
@@ -385,7 +391,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                         {
                             if (value[i] == ',')
                             {
-                                dt[count] = Convert.ToByte(v,16);
+                                dt[count] = Convert.ToByte(v, 16);
                                 v = "";
                                 count++;
                             }
@@ -394,16 +400,17 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
                                 v += value[i];
                                 if (i == value.Length - 1)
                                 {
-                                    dt[count] =Convert.ToByte(v,16);
+                                    dt[count] = Convert.ToByte(v, 16);
                                 }
                             }
                         }
                         Marshal.Copy(dt, 0, mVal.union.lpDats, mVal.datLen);
                     }
 
-                }else if (mVal.type == 5)
+                }
+                else if (mVal.type == 5)
                 {
-                    mVal.union.lpDats=Marshal.StringToBSTR(value);
+                    mVal.union.lpDats = Marshal.StringToBSTR(value);
                 }
 
                 if (WDevJsonDll.dllFunc_setDevJsonVal(ref valInfo, pt, len, ref mVal))
@@ -415,6 +422,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
             }
             Marshal.FreeHGlobal(npt1);
             Marshal.FreeHGlobal(npt);
+            WDevJsonDll.dllFunc_fflushLog();
             return new byte[0];
         }
     }

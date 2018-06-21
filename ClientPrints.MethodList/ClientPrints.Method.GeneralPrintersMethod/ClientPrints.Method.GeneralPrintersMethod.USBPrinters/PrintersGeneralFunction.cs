@@ -876,6 +876,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                             break;
                         }
                         outJobNum = outJobNum + 1;
+                        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\DevLog.Log";
                         var lope = new structClassDll.UNCMPR_INFO()
                         {
                             cmprLen = 0,
@@ -885,7 +886,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
                             resultTag = 0,
                             cmprType = 0,
                             frmIdx = 0,
-                            userParm = "DevLog.log"
+                            userParm = filePath
                         };
                         try
                         {

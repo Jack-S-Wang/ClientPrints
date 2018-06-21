@@ -16,6 +16,7 @@ using System.Text;
 using System.Windows.Forms;
 using static ClinetPrints.CreatContorl.dataGrieViewControl1;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace ClinetPrints.SettingWindows.SettingOtherWindows
 {
@@ -103,9 +104,18 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         UserColumnHanderCollection headerColls = new UserColumnHanderCollection(this.dataGrieViewControl11, new UserColumnHander[] { new UserColumnHander("名称"), new UserColumnHander("值") });
                         this.dataGrieViewControl11.handers = headerColls;
                         List<CfgDataObjects> liob = new List<CfgDataObjects>();
-                        
+
                         if (redata[0] == 1 && redata[1] == 1)//210
                         {
+                //            byte[] dd = new byte[] {
+                //       0x00,0x02,0x00,0x04,0x0b,0x30,0x02,0x00,0x00,0x00,0x00,0x00,
+                //0x00,0x00,0x00,0x08,0x32,0x00,0x00,0x00,0x00,0x00,0x00,0x0d,0x33,0x00,0x00,0x00,
+                //0x00,0x00,0x00,0x1a,0x00,0x00,0x00,0x00,0x0d,0x34,0x00,0x00,0x00,0x00,0x03,0xfc,
+                //0x00,0x00,0x00,0x00,0x00,0};
+                //            dataJson dj = new dataJson();
+                //            string mainState = dj.getDataJsonInfo(dd, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State", false);
+
+                //            string StateMessage = dj.getDataJsonInfo(dd, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error", false);
                             dataJson dj = new dataJson();
                             dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, jsonKeyDic.cfgL210Key, true);
                             liob = dj.listCfg;
@@ -231,14 +241,14 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                         {
                             val = dataGrieViewControl11.items[i].Value[1].control.Text;
                             selectIndex = 0;
-                            
+
                         }
                         bool isCloseLog = false;
-                        if(i== (dataGrieViewControl11.items.Count - 1))
+                        if (i == (dataGrieViewControl11.items.Count - 1))
                         {
                             isCloseLog = true;
                         }
-                        dj.setDataJsonInfo(ref cfgData, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, name, val, selectIndex,isCloseLog);
+                        dj.setDataJsonInfo(ref cfgData, (uint)WDevCmdObjects.DEVJSON_CFG_ENTRY, name, val, selectIndex, isCloseLog);
                         if (i == (dataGrieViewControl11.items.Count - 1))//判断是否是最后一个数
                         {
                             //直接发送空数据，通知存入设备中
