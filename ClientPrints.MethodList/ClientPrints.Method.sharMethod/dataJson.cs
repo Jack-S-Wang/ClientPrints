@@ -16,12 +16,12 @@ namespace ClientPrintsMethodList.ClientPrints.Method.sharMethod
         public List<CfgDataObjects> listCfg = new List<CfgDataObjects>();
         public dataJson()
         {
-            lodeFile();
             string filePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ClientPrints\\DevJson.Log";
             if (WDevJsonDll.dllFunc_openLog(filePath))
             {
 
             }
+            lodeFile();
         }
 
         /// <summary>
