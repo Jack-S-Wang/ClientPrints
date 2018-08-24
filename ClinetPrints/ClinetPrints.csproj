@@ -11,7 +11,8 @@
     <RootNamespace>ClinetPrints</RootNamespace>
     <AssemblyName>ClinetPrints</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>C:\Users\DS-031\Desktop\ClientPrints V1.12\</PublishUrl>
@@ -85,9 +86,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\ClientPrints.MethodList\ClientPrints.Method.DLL\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -309,7 +309,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClientPrints.MethodList\ClientPrintsMethodList.csproj">
-      <Project>{8EE0204A-59E4-4515-8EE9-D0484D9CF066}</Project>
+      <Project>{8ee0204a-59e4-4515-8ee9-d0484d9cf066}</Project>
       <Name>ClientPrintsMethodList</Name>
     </ProjectReference>
     <ProjectReference Include="..\ClientPrints.ObjectsAll\ClientPrintsObjectsAll.csproj">

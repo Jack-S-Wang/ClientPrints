@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using ClinetPrints.SettingWindows;
 using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
-using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
 using System.Threading;
 using ClientPrintsObjectsAll.ClientPrints.Objects.treeNodeObject;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;

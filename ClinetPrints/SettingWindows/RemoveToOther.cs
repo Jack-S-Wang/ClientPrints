@@ -4,9 +4,7 @@ using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
 using ClinetPrints.MenuGroupMethod;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Windows.Forms;
-using static System.Windows.Forms.ListView;
 
 namespace ClinetPrints.SettingWindows
 {

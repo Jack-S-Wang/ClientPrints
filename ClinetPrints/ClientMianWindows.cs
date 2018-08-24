@@ -263,14 +263,14 @@ namespace ClinetPrints
                         {
                             var method = key.MethodsObject as IMethodObjects;
                             var po = key;
-                            byte[] redata = new byte[] { 0};
+                            byte[] redata = new byte[] { 0 };
                             string str = method.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, key.pHandle, ref redata);
                             if (!str.Contains("false"))
                             {
                                 dataJson dj = new dataJson();
                                 string state = "";
                                 int stateType = 0;
-                                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State",false);
+                                string mainState = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Run State", false);
                                 if (mainState.Contains("idle"))
                                 {
                                     state = "空闲";
@@ -301,10 +301,10 @@ namespace ClinetPrints
                                     state = "异常";
                                     stateType = 6;
                                 }
-                                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error",true);
+                                string error = dj.getDataJsonInfo(redata, (uint)WDevCmdObjects.DEVJSON_INFO_ENTRY, "System State.Error", true);
                                 error = error.Substring(error.IndexOf(';') + 1);
                                 string Errormessage = state + ";" + error;
-                                if (key.stateCode != stateType || key.stateMessage!=Errormessage)
+                                if (key.stateCode != stateType || key.stateMessage != Errormessage)
                                 {
                                     this.printerViewSingle.BeginInvoke(new MethodInvoker(() =>
                                     {
@@ -1185,8 +1185,25 @@ namespace ClinetPrints
                     {
                         return;
                     }
+                    //List<Bitmap> li = new List<Bitmap>();
                     try
                     {
+                        //string f = openfile.SafeFileName;
+                        //f = f.ToLower();
+                        //if (f.Contains("pdf"))
+                        //{
+                        //    PdfToImage pti = new PdfToImage();
+                        //    li = pti.getImage(openfile.FileName);
+                        //    if (addfile + li.Count > 19)
+                        //    {
+                        //        MessageBox.Show("该pdf文件转换的图片数已经超过20个任务，无法添加！");
+                        //        return;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    li.Add(new Bitmap(openfile.FileName));
+                        //}
                         imageSubItems.Images.Add(new Bitmap(openfile.FileName));
                     }
                     catch
@@ -1194,17 +1211,16 @@ namespace ClinetPrints
                         MessageBox.Show("添加的图片有误！");
                         return;
                     }
-
-                    //添加作业的时候加的图片
-                    this.listView1.SmallImageList = imageSubItems;
-                    Interlocked.Increment(ref addfile);
-                    ListViewItem item = new ListViewItem(new ListViewSubItem[] { new ListViewSubItem(), new ListViewSubItem(), new ListViewSubItem(), new ListViewSubItem() }, addfile - 1);
-                    item.SubItems[1].Text = addfile.ToString();
-                    item.SubItems[2].Text = openfile.FileName;
-                    item.SubItems[3].Text = "1";
-                    item.Name = (addfile - 1).ToString();
-                    this.listView1.Items.Add(item);
-                    this.listView1.Items[addfile - 1].ToolTipText = openfile.FileName;
+                        //添加作业的时候加的图片
+                        this.listView1.SmallImageList = imageSubItems;
+                        Interlocked.Increment(ref addfile);
+                        ListViewItem item = new ListViewItem(new ListViewSubItem[] { new ListViewSubItem(), new ListViewSubItem(), new ListViewSubItem(), new ListViewSubItem() }, addfile - 1);
+                        item.SubItems[1].Text = addfile.ToString();
+                        item.SubItems[2].Text = openfile.FileName;
+                        item.SubItems[3].Text = "1";
+                        item.Name = (addfile - 1).ToString();
+                        this.listView1.Items.Add(item);
+                        this.listView1.Items[addfile - 1].ToolTipText = openfile.FileName;
                 }
                 else
                 {
@@ -1666,7 +1682,7 @@ namespace ClinetPrints
                         if (!printer.isWifi)
                         {
                             byte[] redata = new byte[] { 0 };
-                            var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle,ref redata);
+                            var printOutPut = me.reInformation(WDevCmdObjects.DEV_GET_DEVSTAT, po.pHandle, ref redata);
                             if (printOutPut.Contains("false"))
                             {
                                 MessageBox.Show("打印机已离线或无法获取！");

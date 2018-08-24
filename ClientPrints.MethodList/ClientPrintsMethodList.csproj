@@ -56,6 +56,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ClientPrints.Method.DLL\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Spire.License, Version=1.3.6.40, Culture=neutral, PublicKeyToken=b1144360237c8b3f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.PDF.4.6.8\lib\net40\Spire.License.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spire.Pdf, Version=4.6.8.2040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
+      <HintPath>..\packages\Spire.PDF.4.6.8\lib\net40\Spire.Pdf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -75,6 +83,7 @@
     <Compile Include="ClientPrints.Method.Interfaces\IUSBPrinterOnlyMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\dataJson.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\errorToMail.cs" />
+    <Compile Include="ClientPrints.Method.sharMethod\PdfToImage.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\PrinterUSBMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\SharMethod.cs" />
     <Compile Include="ClientPrints.Method.sharMethod\wifiDevMethod.cs" />

@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml.Serialization;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using static ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass.printPiewControlXml;
 using System.Threading;
-using System.Runtime.InteropServices;
 using System.Drawing.Drawing2D;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;

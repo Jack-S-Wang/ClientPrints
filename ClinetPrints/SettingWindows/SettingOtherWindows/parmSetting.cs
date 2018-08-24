@@ -1,22 +1,13 @@
-﻿using ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.ClientPrints.Method.GeneralPrintersMethod.USBPrinters;
-using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
+﻿using ClientPrintsObjectsAll.ClientPrints.Objects.Printers;
 using ClientPrintsObjectsAll.ClientPrints.Objects.Printers.ClientPrints.Objetcs.Printers.Interface;
 using ClientPrintsObjectsAll.ClientPrints.Objects.SharObjectClass;
 using ClientPrintsMethodList.ClientPrints.Method.sharMethod;
-using ClientPrintsMethodList.ClientPrints.Method.WDevDll;
 using ClientPrsintsObjectsAll.ClientPrints.Objects.DevDll;
-using ClinetPrints.CreatContorl;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using static ClinetPrints.CreatContorl.dataGrieViewControl1;
-using System.Runtime.InteropServices;
-using System.IO;
 
 namespace ClinetPrints.SettingWindows.SettingOtherWindows
 {
