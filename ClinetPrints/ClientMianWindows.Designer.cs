@@ -313,9 +313,9 @@
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(3, 42);
+            this.listView1.Location = new System.Drawing.Point(3, 54);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(622, 507);
+            this.listView1.Size = new System.Drawing.Size(622, 495);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -343,6 +343,8 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.Font = new System.Drawing.Font("Microsoft YaHei UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(30, 30);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStBtn_add,
             this.toolStBtn_delete,
@@ -356,7 +358,7 @@
             this.toolStBtn_otherControl});
             this.toolStrip1.Location = new System.Drawing.Point(3, 17);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(622, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(622, 37);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -366,7 +368,7 @@
             this.toolStBtn_add.Image = global::ClinetPrints.Properties.Resources.Add;
             this.toolStBtn_add.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_add.Name = "toolStBtn_add";
-            this.toolStBtn_add.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_add.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_add.Text = "添加";
             this.toolStBtn_add.ToolTipText = "添加作业";
             this.toolStBtn_add.Click += new System.EventHandler(this.toolStBtn_add_Click);
@@ -377,7 +379,7 @@
             this.toolStBtn_delete.Image = global::ClinetPrints.Properties.Resources.Delete;
             this.toolStBtn_delete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_delete.Name = "toolStBtn_delete";
-            this.toolStBtn_delete.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_delete.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_delete.Text = "删除";
             this.toolStBtn_delete.ToolTipText = "删除作业";
             this.toolStBtn_delete.Click += new System.EventHandler(this.toolStBtn_delete_Click);
@@ -388,7 +390,7 @@
             this.toolStbtn_moveUp.Image = global::ClinetPrints.Properties.Resources.ooopic_1502413412;
             this.toolStbtn_moveUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStbtn_moveUp.Name = "toolStbtn_moveUp";
-            this.toolStbtn_moveUp.Size = new System.Drawing.Size(23, 22);
+            this.toolStbtn_moveUp.Size = new System.Drawing.Size(34, 34);
             this.toolStbtn_moveUp.Text = "置前";
             this.toolStbtn_moveUp.ToolTipText = "作业置前";
             this.toolStbtn_moveUp.Click += new System.EventHandler(this.toolStbtn_moveUp_Click);
@@ -399,7 +401,7 @@
             this.toolStBtn_moveNext.Image = global::ClinetPrints.Properties.Resources.down;
             this.toolStBtn_moveNext.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_moveNext.Name = "toolStBtn_moveNext";
-            this.toolStBtn_moveNext.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_moveNext.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_moveNext.Text = "置后";
             this.toolStBtn_moveNext.ToolTipText = "作业置后";
             this.toolStBtn_moveNext.Click += new System.EventHandler(this.toolStBtn_moveNext_Click);
@@ -410,7 +412,7 @@
             this.toolStBtn_monitor.Image = global::ClinetPrints.Properties.Resources.Modify;
             this.toolStBtn_monitor.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_monitor.Name = "toolStBtn_monitor";
-            this.toolStBtn_monitor.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_monitor.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_monitor.Text = "监控打印机";
             this.toolStBtn_monitor.ToolTipText = "实时监控控制打印机";
             this.toolStBtn_monitor.Click += new System.EventHandler(this.toolStBtn_monitor_Click);
@@ -419,7 +421,7 @@
             // 
             this.toolStTxb_printer.Name = "toolStTxb_printer";
             this.toolStTxb_printer.ReadOnly = true;
-            this.toolStTxb_printer.Size = new System.Drawing.Size(100, 25);
+            this.toolStTxb_printer.Size = new System.Drawing.Size(100, 37);
             this.toolStTxb_printer.ToolTipText = "选择的打印机名称";
             // 
             // toolStBtn_print
@@ -428,7 +430,7 @@
             this.toolStBtn_print.Image = global::ClinetPrints.Properties.Resources.Print;
             this.toolStBtn_print.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_print.Name = "toolStBtn_print";
-            this.toolStBtn_print.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_print.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_print.Text = "打印";
             this.toolStBtn_print.Click += new System.EventHandler(this.toolStBtn_print_Click);
             // 
@@ -438,7 +440,7 @@
             this.toolStBtn_printPerview.Image = global::ClinetPrints.Properties.Resources.s16;
             this.toolStBtn_printPerview.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_printPerview.Name = "toolStBtn_printPerview";
-            this.toolStBtn_printPerview.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_printPerview.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_printPerview.Text = "打印预览";
             this.toolStBtn_printPerview.Click += new System.EventHandler(this.toolStBtn_printPerview_Click);
             // 
@@ -448,7 +450,7 @@
             this.toolStBtn_parmSet.Image = global::ClinetPrints.Properties.Resources.scroll;
             this.toolStBtn_parmSet.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_parmSet.Name = "toolStBtn_parmSet";
-            this.toolStBtn_parmSet.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_parmSet.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_parmSet.Text = "参数设置";
             this.toolStBtn_parmSet.Click += new System.EventHandler(this.toolStBtn_parmSet_Click);
             // 
@@ -458,7 +460,7 @@
             this.toolStBtn_otherControl.Image = global::ClinetPrints.Properties.Resources._16r___副本;
             this.toolStBtn_otherControl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStBtn_otherControl.Name = "toolStBtn_otherControl";
-            this.toolStBtn_otherControl.Size = new System.Drawing.Size(23, 22);
+            this.toolStBtn_otherControl.Size = new System.Drawing.Size(34, 34);
             this.toolStBtn_otherControl.Text = "其他控制指令的实现";
             this.toolStBtn_otherControl.ToolTipText = "其它控制指令的实现";
             this.toolStBtn_otherControl.Click += new System.EventHandler(this.toolStBtn_otherControl_Click);
