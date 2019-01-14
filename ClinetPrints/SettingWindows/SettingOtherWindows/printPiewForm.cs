@@ -34,7 +34,6 @@ namespace ClinetPrints.SettingWindows.SettingOtherWindows
                 printPiewControl1.PrinterObject = lipo;
                 printPiewControl1.OnBtnClose += PrintPiewControl1_OnBtnClose;
                 printPiewControl1.onBtnPrint += PrintPiewControl1_onBtnPrint;
-
             }
             catch (Exception ex)
             {

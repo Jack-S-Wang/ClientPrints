@@ -46,7 +46,7 @@ namespace ClientPrintsMethodList.ClientPrints.Method.GeneralPrintersMethod.Clien
         public PrintersGeneralFunction(JToken printerWifi)
         {
             //赋值wifi设备的信息内容
-            setPrinterWifiInfo(printerWifi);
+            //setPrinterWifiInfo(printerWifi);
         }
 
 

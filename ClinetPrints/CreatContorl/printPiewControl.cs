@@ -155,7 +155,6 @@ namespace ClinetPrints.CreatContorl
             {
                 ToolTip tool = new ToolTip();
                 tool.SetToolTip(this.txb_customPage, "格式是500x600或500*600，其他格式将会出问题！");
-                
                 ptb_page.MouseWheel += Ptb_page_MouseWheel;
             }
             catch (Exception ex)
